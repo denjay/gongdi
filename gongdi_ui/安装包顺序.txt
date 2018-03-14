@@ -1,0 +1,13 @@
+ 2304  pip install flask_qrcode
+ 2305  python3 run.py config.ini
+ 2306  cnpm install
+ 2307  cnpm run dev
+ 2311  python3 rightmanage-test.py
+ 2312  cnpm i vue@2.5.13
+ 2313  cnpm i vue-router@3.0.1
+ 2314  cnpm i vuex@3.0.1
+ 2315  cnpm i axios@0.17.1
+ 2316  cnpm i element-ui@2.0.9
+ 2317  cnpm i
+ 2325* cnpm i vue-template-compiler@2.5.13
+ 2326* npm run dev

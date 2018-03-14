@@ -1,0 +1,40 @@
+.a{
+    /*margin:auto;*/
+    width: 100%;
+    border: 1px solid black;
+	min-height: 25px; 
+	line-height: 25px; 
+	text-align: center; 
+	border-collapse: collapse; 
+	padding:2px;
+}
+ 
+table  caption{
+    /*color: blue;*/
+    font: 34px consolas bold;
+} 
+.a th {
+    border: 1px solid black;
+    text-align:center;
+    font: 20px consolas bold;
+    background-color: #C0C0C0;
+}
+.a td {
+    border: 1px solid black;
+    text-align:center;
+}
+@media print { 
+	.noprint {display:none!important;}
+}
+.btn2{
+	display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #c4c4c4;
+    color: #1f2d3d;
+    margin: 0;
+    padding: 10px 15px;
+    border-radius: 4px;
+}
