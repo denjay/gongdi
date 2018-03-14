@@ -55,7 +55,7 @@
       <el-table-column
         prop="description"
         label="描述"
-        width="120">
+        width="150">
       </el-table-column>
       <el-table-column
         prop="dantiid"
@@ -69,15 +69,14 @@
       </el-table-column>
       <el-table-column
         prop="comp_name"
-        label="公司名称"
-        width="120">
+        label="公司名称">
       </el-table-column>
       <el-table-column
         fixed="right"
         label="操作"
         width="100">
         <template slot-scope="scope">
-          <el-button @click="delete(scope.row)" type="text" size="mini" icon="el-icon-delete"></el-button>
+          <el-button @click="remove(scope.row)" type="text" size="mini" icon="el-icon-delete"></el-button>
           <el-button type="text" size="mini" icon="el-icon-edit"></el-button>
         </template>
       </el-table-column>
@@ -159,10 +158,18 @@
         this.dialogVisible = true
       },
       submitData(){
-        this.dispatch('postDantis',this.insertData)
+        let insertData = this.insertData
+        insertData['companyid'] = parseInt(this.companyid)
+        this.$store.dispatch('postDantis',insertData)
       },
-      delete(row) {
-        console.log(row);
+      remove(data) {
+        this.$confirm('此操作將永久刪除該資料, 是否繼續?', '提示', {
+          confirmButtonText: '確定',
+          cancelButtonText: '取消',
+        }).then(() => {
+          this.$store.dispatch('removeDantis',data);
+        }).catch(() => {         
+        });
       },
       handleClose(done) {
         this.$confirm('确认关闭？')
@@ -182,6 +189,9 @@
 </script>
 
 <style>
+  .el-dialog {
+    width: 350px !important;
+  }
   .el-input {
     width: 180px;
     margin-right: 20px;

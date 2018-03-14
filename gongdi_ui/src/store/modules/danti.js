@@ -17,6 +17,10 @@ const  mutations = {
     },
     setDantis(state, data){
         state.datas = data
+    },
+    removeDanti(state,data){
+        var index = state.datas.indexOf(data)
+        state.datas.splice(index,1)
     }
 }
 
@@ -33,7 +37,7 @@ const actions = {
 		})
     },
     postDantis(context,data){
-        axios.post(`/kong/gongdi_mng/v1.0/dantis`,data)
+        axios.post('/kong/gongdi_mng/v1.0/dantis',data)
 		.then(response => {
             if (response.status === 201) {
                 context.commit('setDantis', data)
@@ -42,13 +46,19 @@ const actions = {
             else {
                 alert('新增失败')
             }
-            context.commit('setDantis',response.data)
-            // alert(context.state.tableDatas);
             console.log("actions",response);
 		}).catch(function(error){
-			console.log("actions");
-			// commit('loadMlillegalCategory',response.data)
+			alert('请求失败')
 		})
+    },
+    removeDantis(context,data){
+        axios.delete(`http://127.0.0.1:8889/gongdi_mng/v1.0/dantis/${data.id}`)
+			.then(function(response){
+                if(response.status === 204){
+                    context.commit('removeDanti',data)
+                }
+			}).catch(function(error){
+			})
     }
 }
 
