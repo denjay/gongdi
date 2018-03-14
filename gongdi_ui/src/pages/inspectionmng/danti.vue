@@ -90,7 +90,7 @@
       :before-close="handleClose">
 
       <el-form label-position="right" label-width="100px" :model="insertData">
-        <el-form-item label="名称">
+        <el-form-item label="单体名称">
           <el-input v-model="insertData.name"></el-input>
         </el-form-item>
         <el-form-item label="单体结构类型">
@@ -118,7 +118,7 @@
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="submitData">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -157,6 +157,9 @@
       },
       insert(){
         this.dialogVisible = true
+      },
+      submitData(){
+        this.dispatch('postDantis',this.insertData)
       },
       delete(row) {
         console.log(row);
