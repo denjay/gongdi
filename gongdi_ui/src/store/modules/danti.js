@@ -29,24 +29,23 @@ const actions = {
         axios.get(`/kong/gongdi_mng/v1.0/company/${context.state.companyid}/dantis`)
 		.then(function(response){
             context.commit('setDantis',response.data)
-            // alert(context.state.tableDatas);
             console.log("actions",response);
 		}).catch(function(error){
 			console.log("actions");
-			// commit('loadMlillegalCategory',response.data)
 		})
     },
     postDantis(context,data){
         axios.post('/kong/gongdi_mng/v1.0/dantis',data)
 		.then(response => {
             if (response.status === 201) {
+                data = state.datas 
+                data.unshift(response.data)
                 context.commit('setDantis', data)
                 alert('新增成功！')
             }
             else {
                 alert('新增失败')
             }
-            console.log("actions",response);
 		}).catch(function(error){
 			alert('请求失败')
 		})

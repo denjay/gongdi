@@ -140,11 +140,10 @@
           build_type: '',
           framework_type: '',
           dt_area: '',
-          de_plies_num: '',
+          dt_plies_num: '',
           eaves_height: '',
           build_schedule: '',
-          description: '',
-          dantiid: ''
+          description: ''
         }
       }
     },
