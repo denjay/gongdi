@@ -77,13 +77,13 @@
         width="100">
         <template slot-scope="scope">
           <el-button @click="remove(scope.row)" type="text" size="mini" icon="el-icon-delete"></el-button>
-          <el-button type="text" size="mini" icon="el-icon-edit"></el-button>
+          <el-button @click="edit(scope.row)" type="text" size="mini" icon="el-icon-edit"></el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <el-dialog
-      title="新增单体"
+      :title="title"
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
@@ -135,6 +135,7 @@
       return {
         companyid: '',
         dialogVisible: false,
+        title: '',
         insertData:{
           name: '',
           build_type: '',
@@ -154,12 +155,29 @@
         this.$store.dispatch('getDantis')
       },
       insert(){
+        this.title = '新增单体'
+        this.dialogVisible = true
+      },
+      edit(data){
+        this.title = '编辑单体'
+        var { ...data_copy } = data
+        this.insertData = data_copy
         this.dialogVisible = true
       },
       submitData(){
-        let insertData = this.insertData
-        insertData['companyid'] = parseInt(this.companyid)
-        this.$store.dispatch('postDantis',insertData)
+        if(this.title === '新增单体'){
+          let insertData = this.insertData
+          insertData['companyid'] = parseInt(this.companyid)
+          this.$store.dispatch('postDantis',insertData)
+        }
+        else if(this.title === '编辑单体'){
+          this.$store.dispatch('putDantis',this.insertData)
+        }
+        // this.dialogVisible = false
+        // var key = ''
+        // for(key in this.insertData){
+        //   this.insertData[key] = ''
+        // }
       },
       remove(data) {
         this.$confirm('此操作將永久刪除該資料, 是否繼續?', '提示', {
