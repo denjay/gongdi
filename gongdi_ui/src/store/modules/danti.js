@@ -57,14 +57,13 @@ const actions = {
         axios.put(`/kong/gongdi_mng/v1.0/dantis/${data.id}`,data)
         .then(response => {
             if(response.status === 201){
-                var i = 0, len = state.datas.length
+                var i = 0, len = context.getters.dantis.length
                 for(;i<len;i++){
-                    if(state.datas[i].id === data.id){
-                        var newDatas = state.datas
-                        console.log(newDatas)
+                    if(context.getters.dantis[i].id === data.id){
+                        var newDatas = context.getters.dantis
                         newDatas[i] = response.data 
-                        console.log(newDatas)                        
                         context.commit('setDantis',newDatas)
+                        // console.log(context.getters.dantis)
                         break
                     }
                 }

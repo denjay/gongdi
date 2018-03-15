@@ -127,10 +127,6 @@
 <script>
   import {mapGetters} from 'vuex'
   export default {
-    // mounted(){
-    //   this.$store.dispatch('getdantiss')
-    // },
-
     data() {
       return {
         companyid: '',
@@ -165,19 +161,27 @@
         this.dialogVisible = true
       },
       submitData(){
+        var {...insertData} = this.insertData
         if(this.title === '新增单体'){
-          let insertData = this.insertData
           insertData['companyid'] = parseInt(this.companyid)
+          console.log(insertData)
           this.$store.dispatch('postDantis',insertData)
         }
         else if(this.title === '编辑单体'){
-          this.$store.dispatch('putDantis',this.insertData)
+          this.$store.dispatch('putDantis',insertData)
         }
-        // this.dialogVisible = false
-        // var key = ''
-        // for(key in this.insertData){
-        //   this.insertData[key] = ''
-        // }
+        // 重置form
+        this.dialogVisible = false
+        this.insertData = {
+          name: '',
+          build_type: '',
+          framework_type: '',
+          dt_area: '',
+          dt_plies_num: '',
+          eaves_height: '',
+          build_schedule: '',
+          description: ''
+        }
       },
       remove(data) {
         this.$confirm('此操作將永久刪除該資料, 是否繼續?', '提示', {
