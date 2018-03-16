@@ -2,11 +2,14 @@
   <div>
     <div class="">
       <div class="el-input">
-        <el-input
-          placeholder="请输入公司id"
-          v-model="companyid"
-          clearable>
-        </el-input>
+        <el-select v-model="companyid" filterable placeholder="请选择公司">
+          <el-option
+            v-for="company in companies"
+            :key="company.id"
+            :label="company.company_name"
+            :value="company.id">
+          </el-option>
+        </el-select>
       </div>
       <el-button @click="getDantis" type="primary" :disabled="!companyid">查询</el-button>
       <el-button @click="insert" type="primary" :disabled="!companyid">新增</el-button>
@@ -127,6 +130,10 @@
 <script>
   import {mapGetters} from 'vuex'
   export default {
+    mounted(){
+      this.$store.dispatch('getCompanies')
+    },
+
     data() {
       return {
         companyid: '',
@@ -164,7 +171,6 @@
         var {...insertData} = this.insertData
         if(this.title === '新增单体'){
           insertData['companyid'] = parseInt(this.companyid)
-          console.log(insertData)
           this.$store.dispatch('postDantis',insertData)
         }
         else if(this.title === '编辑单体'){
@@ -203,7 +209,8 @@
 
     computed: {
       ...mapGetters([
-			  'dantis'
+        'dantis',
+        'companies'
 		  ])
     }
   }

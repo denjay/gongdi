@@ -8,7 +8,6 @@ from flask import send_file
 @auth.valid_login
 @p.check("danti",["insert"])
 def dantis_post(body,jwt = None) -> str:
-    print('dfgdgdgdgdfgfggdgsdgeef==============================')
     try:
         data = Danti(**body)
         db.session.add(data)

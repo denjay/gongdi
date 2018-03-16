@@ -1,0 +1,20 @@
+########################################
+# create by :cxh-PC
+# create time :2018-03-02 10:34:15.198587
+########################################
+__pycache__
+.idea
+config.ini
+*.pyc
+*.sqlite
+lib
+*_backup
+docker-compose.yaml
+run.sh
+migrate_run.py
+migrate_run.bat
+migrate_run.sh
+migrations
+*.bak
+test.csv
+

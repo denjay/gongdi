@@ -1,0 +1,1768 @@
+########################################
+# create by :cxh-pc
+# create time :2018-03-15 18:39:26.803641
+########################################
+swagger: "2.0"
+info:
+  description: ""
+  version: v1.0
+  title: employeemng
+#host: localhost:8000
+basePath: /employeemng/v1.0
+tags:
+- name: companymng
+  description: "公司管理"
+- name: employeemng
+  description: "员工管理"
+- name: authmng
+  description: "公司授权"
+- name: departmng
+  description: "部门管理"
+- name: work_experiencemng
+  description: "工作经历"
+- name: emp_degreemng
+  description: "教育经历"
+- name: healthmng
+  description: ""
+- name: appusermng
+  description: "用户管理"
+schemes:
+- http
+- https
+paths:
+  /appusers:
+    get:
+      tags:
+      - appusermng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.appusermng.appusers_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/appuser"
+  /company_auths:
+    get:
+      tags:
+      - authmng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.authmng.company_auths_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/company_auth"
+    post:
+      tags:
+      - authmng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.authmng.company_auths_post
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: ""
+          required: True
+          schema:
+            $ref: "#/definitions/company_auth"
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        201:
+          description: ""
+          schema:
+            $ref: "#/definitions/company_auth"
+  /company_auths/{id}:
+    get:
+      tags:
+      - authmng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.authmng.company_auths_id_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: "#/definitions/company_auth"
+    put:
+      tags:
+      - authmng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.authmng.company_auths_id_put
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: body
+          name: body
+          description: ""
+          required: True
+          schema:
+            $ref: "#/definitions/company_auth"
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        201:
+          description: ""
+          schema:
+            $ref: "#/definitions/company_auth"
+    delete:
+      tags:
+      - authmng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.authmng.company_auths_id_delete
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        204:
+          description: ""
+          schema:
+            $ref: "#/definitions/company_auth"
+  /empid_companyauth:
+    get:
+      tags:
+      - authmng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.authmng.empid_companyauth_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: "#/definitions/company_auth"
+  /employeename_company:
+    get:
+      tags:
+      - authmng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.authmng.employeename_company_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: "#/definitions/employee"
+  /companys:
+    get:
+      tags:
+      - companymng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.companymng.companys_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/company"
+    post:
+      tags:
+      - companymng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.companymng.companys_post
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: ""
+          required: True
+          schema:
+            $ref: "#/definitions/company"
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        201:
+          description: ""
+          schema:
+            $ref: "#/definitions/company"
+  /companys_lk:
+    get:
+      tags:
+      - companymng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.companymng.companys_lk_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/company"
+  /companys/{id}:
+    get:
+      tags:
+      - companymng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.companymng.companys_id_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: "id"
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: "#/definitions/company"
+    put:
+      tags:
+      - companymng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.companymng.companys_id_put
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: body
+          name: body
+          description: ""
+          required: True
+          schema:
+            $ref: "#/definitions/company"
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        201:
+          description: ""
+          schema:
+            $ref: "#/definitions/company"
+    delete:
+      tags:
+      - companymng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.companymng.companys_id_delete
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        204:
+          description: ""
+          schema:
+            $ref: "#/definitions/company"
+  /companysappid/{id}:
+    get:
+      tags:
+      - companymng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.companymng.companysappid_id_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: string
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/company"
+  /company/{id}/departs:
+    get:
+      tags:
+      - departmng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.departmng.company_id_departs_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: "#/definitions/depart"
+  /company/{id}/departs_lk:
+    get:
+      tags:
+      - departmng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.departmng.company_id_departs_lk_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: "#/definitions/depart"
+  /depart_trees:
+    get:
+      tags:
+      - departmng
+      summary: "部门树结构"
+      description: ""
+      operationId: app.api.v1_0.departmng.depart_trees_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: c_id
+          description: "公司id"
+          required: True
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: ""
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/depart_tree"
+  /departs:
+    get:
+      tags:
+      - departmng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.departmng.departs_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/depart"
+    post:
+      tags:
+      - departmng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.departmng.departs_post
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: ""
+          required: True
+          schema:
+            $ref: "#/definitions/depart"
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        201:
+          description: ""
+          schema:
+            $ref: "#/definitions/depart"
+  /departs/{id}:
+    get:
+      tags:
+      - departmng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.departmng.departs_id_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: "id"
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: "#/definitions/depart"
+    put:
+      tags:
+      - departmng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.departmng.departs_id_put
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: body
+          name: body
+          description: ""
+          required: True
+          schema:
+            $ref: "#/definitions/depart"
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        201:
+          description: ""
+          schema:
+            $ref: "#/definitions/depart"
+    delete:
+      tags:
+      - departmng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.departmng.departs_id_delete
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        204:
+          description: ""
+          schema:
+            $ref: "#/definitions/depart"
+  /emp_degreess:
+    get:
+      tags:
+      - emp_degreemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.emp_degreemng.emp_degreess_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/emp_degree"
+    post:
+      tags:
+      - emp_degreemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.emp_degreemng.emp_degreess_post
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: ""
+          required: True
+          schema:
+            $ref: "#/definitions/emp_degree"
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        201:
+          description: ""
+          schema:
+            $ref: "#/definitions/emp_degree"
+  /emp_degreess/{id}:
+    get:
+      tags:
+      - emp_degreemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.emp_degreemng.emp_degreess_id_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: "id"
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: "#/definitions/emp_degree"
+    put:
+      tags:
+      - emp_degreemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.emp_degreemng.emp_degreess_id_put
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: body
+          name: body
+          description: ""
+          required: True
+          schema:
+            $ref: "#/definitions/emp_degree"
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        201:
+          description: ""
+          schema:
+            $ref: "#/definitions/emp_degree"
+    delete:
+      tags:
+      - emp_degreemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.emp_degreemng.emp_degreess_id_delete
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        204:
+          description: ""
+          schema:
+            $ref: "#/definitions/emp_degree"
+  /employee/{id}/emp_degreess:
+    get:
+      tags:
+      - emp_degreemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.emp_degreemng.employee_id_emp_degreess_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: page
+          description: ""
+          required: False
+          type: integer
+          format: int32
+        - in: query
+          name: perpage
+          description: ""
+          required: False
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: "#/definitions/emp_degree"
+  /depart/{id}/employees:
+    get:
+      tags:
+      - employeemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.employeemng.depart_id_employees_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: page
+          description: ""
+          required: False
+          type: integer
+          format: int32
+        - in: query
+          name: perpage
+          description: ""
+          required: False
+          type: integer
+          format: int32
+        - in: query
+          name: emp_name
+          description: ""
+          required: False
+          type: string
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: "#/definitions/employee"
+  /depart/{id}/employees_lk:
+    get:
+      tags:
+      - employeemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.employeemng.depart_id_employees_lk_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: page
+          description: ""
+          required: False
+          type: integer
+          format: int32
+        - in: query
+          name: perpage
+          description: ""
+          required: False
+          type: integer
+          format: int32
+        - in: query
+          name: emp_name
+          description: ""
+          required: False
+          type: string
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: "#/definitions/employee"
+  /employees:
+    get:
+      tags:
+      - employeemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.employeemng.employees_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: page
+          description: ""
+          required: False
+          type: integer
+          format: int32
+        - in: query
+          name: perpage
+          description: ""
+          required: False
+          type: integer
+          format: int32
+        - in: query
+          name: emp_name
+          description: ""
+          required: False
+          type: string
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/employee"
+    post:
+      tags:
+      - employeemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.employeemng.employees_post
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: ""
+          required: True
+          schema:
+            $ref: "#/definitions/company"
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        201:
+          description: ""
+          schema:
+            $ref: "#/definitions/employee"
+  /employees_lk:
+    get:
+      tags:
+      - employeemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.employeemng.employees_lk_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: page
+          description: ""
+          required: False
+          type: integer
+          format: int32
+        - in: query
+          name: perpage
+          description: ""
+          required: False
+          type: integer
+          format: int32
+        - in: query
+          name: emp_name
+          description: ""
+          required: False
+          type: string
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/employee"
+  /employees/{id}:
+    get:
+      tags:
+      - employeemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.employeemng.employees_id_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: "id"
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: "#/definitions/employee"
+    put:
+      tags:
+      - employeemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.employeemng.employees_id_put
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: body
+          name: body
+          description: ""
+          required: True
+          schema:
+            $ref: "#/definitions/company"
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        201:
+          description: ""
+          schema:
+            $ref: "#/definitions/employee"
+    delete:
+      tags:
+      - employeemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.employeemng.employees_id_delete
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        204:
+          description: ""
+          schema:
+            $ref: "#/definitions/employee"
+  /import_csv:
+    post:
+      tags:
+      - employeemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.employeemng.import_csv_post
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+        - application/x-www-form-urlencoded
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: file_csv
+          description: ""
+          required: True
+          type: file
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        201:
+          description: ""
+          schema:
+            type: string
+  /import_xls:
+    post:
+      tags:
+      - employeemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.employeemng.import_xls_post
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+        - application/x-www-form-urlencoded
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: file_csv
+          description: ""
+          required: True
+          type: file
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        201:
+          description: ""
+          schema:
+            type: string
+  /health:
+    get:
+      tags:
+      - healthmng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.healthmng.health_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            type: string
+  /employee/{id}/work_experiences:
+    get:
+      tags:
+      - work_experiencemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.work_experiencemng.employee_id_work_experiences_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: page
+          description: ""
+          required: False
+          type: integer
+          format: int32
+        - in: query
+          name: perpage
+          description: ""
+          required: False
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: "#/definitions/work_experience"
+  /work_experiences:
+    get:
+      tags:
+      - work_experiencemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.work_experiencemng.work_experiences_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/work_experience"
+    post:
+      tags:
+      - work_experiencemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.work_experiencemng.work_experiences_post
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: ""
+          required: True
+          schema:
+            $ref: "#/definitions/work_experience"
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        201:
+          description: ""
+          schema:
+            $ref: "#/definitions/work_experience"
+  /work_experiences/{id}:
+    get:
+      tags:
+      - work_experiencemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.work_experiencemng.work_experiences_id_get
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: "id"
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: "#/definitions/work_experience"
+    delete:
+      tags:
+      - work_experiencemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.work_experiencemng.work_experiences_id_delete
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        204:
+          description: ""
+          schema:
+            $ref: "#/definitions/work_experience"
+    put:
+      tags:
+      - work_experiencemng
+      summary: ""
+      description: ""
+      operationId: app.api.v1_0.work_experiencemng.work_experiences_id_put
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: ""
+          required: True
+          type: integer
+          format: int32
+        - in: body
+          name: body
+          description: ""
+          required: True
+          schema:
+            $ref: "#/definitions/work_experience"
+        - in: query
+          name: jwt
+          description: ""
+          required: False
+          type: string
+      responses:
+        201:
+          description: ""
+          schema:
+            $ref: "#/definitions/work_experience"
+definitions:
+  company:
+    type: object
+    description: "None"
+    properties:
+      company_code:
+        description: "公司编码"
+        type: string
+      company_name:
+        description: "公司名称"
+        type: string
+      remark:
+        description: "描述"
+        type: string
+      id:
+        description: ""
+        type: integer
+        format: int32
+  employee:
+    type: object
+    description: "None"
+    properties:
+      id:
+        description: ""
+        type: integer
+        format: int32
+      emp_name:
+        description: "姓名"
+        type: string
+      emp_id:
+        description: "工号"
+        type: string
+      id_card:
+        description: "身份证"
+        type: string
+      hire_date:
+        description: "入职日期"
+        type: string
+        format: date
+      address:
+        description: "住址"
+        type: string
+      sex:
+        description: "性别
+值：男，女"
+        type: string
+      marriage:
+        description: "婚姻状况
+值：未婚，已婚，离异，丧偶"
+        type: string
+      birth_date:
+        description: "生日"
+        type: string
+        format: date
+      temp_month:
+        description: "试用期"
+        type: integer
+        format: int32
+      join_date:
+        description: "转正日"
+        type: string
+        format: date
+      cardbeg_date:
+        description: "合同生效日"
+        type: string
+        format: date
+      cardend_date:
+        description: "合同终止日"
+        type: string
+        format: date
+      link_man:
+        description: "紧急联络人"
+        type: string
+      link_phone:
+        description: "联络电话"
+        type: string
+      phone:
+        description: "电话"
+        type: string
+      qq:
+        description: "QQ"
+        type: string
+      email:
+        description: "电子邮箱"
+        type: string
+      leave_date:
+        description: "离职日期"
+        type: string
+        format: date
+      leave_cause:
+        description: "离职原因"
+        type: string
+      login_user:
+        description: "登录用户
+1，员工离职时，需清除login_user
+2,设定login_user时，要保证一个登录用户只能分配给一个员工"
+        type: string
+      departid:
+        description: ""
+        type: integer
+        format: int32
+      code:
+        description: ""
+        type: string
+      job_title:
+        description: ""
+        type: string
+      nation:
+        description: ""
+        type: string
+  company_auth:
+    type: object
+    description: "None"
+    properties:
+      companyid:
+        description: ""
+        type: string
+      appuserid:
+        description: ""
+        type: string
+      id:
+        description: ""
+        type: integer
+        format: int32
+  depart:
+    type: object
+    description: "None"
+    properties:
+      id:
+        description: ""
+        type: integer
+        format: int32
+      inside_id:
+        description: "内部ID， 不允许修改，自动由上级编码 "
+        type: string
+      depart_name:
+        description: "部门名称"
+        type: string
+      linkman:
+        description: "联系人"
+        type: string
+      linktel:
+        description: "联系电话"
+        type: string
+      remark:
+        description: "备注"
+        type: string
+      companyid:
+        description: ""
+        type: integer
+        format: int32
+  depart_tree:
+    type: object
+    description: "None"
+    properties:
+      d_name:
+        description: "部门treee，如：铨鼎/电脑部/第一开发组"
+        type: string
+      id:
+        description: "部门id"
+        type: integer
+        format: int32
+      inside_id:
+        description: ""
+        type: string
+  work_experience:
+    type: object
+    description: "None"
+    properties:
+      work_unit:
+        description: "服务单位"
+        type: string
+      work_begin:
+        description: "起始日期"
+        type: string
+        format: date
+      work_end:
+        description: "终止日期"
+        type: string
+        format: date
+      work_title:
+        description: "职称"
+        type: string
+      remark:
+        description: "备注"
+        type: string
+      work_context:
+        description: "工作内容"
+        type: string
+      id:
+        description: ""
+        type: integer
+        format: int32
+      employeeid:
+        description: ""
+        type: integer
+        format: int32
+  emp_degree:
+    type: object
+    description: "None"
+    properties:
+      employeeid:
+        description: ""
+        type: integer
+        format: int32
+      id:
+        description: ""
+        type: integer
+        format: int32
+      school_name:
+        description: "学校名称"
+        type: string
+      department:
+        description: "科系"
+        type: string
+      study_begin:
+        description: "开始日期"
+        type: string
+        format: date
+      study_end:
+        description: "结束日期"
+        type: string
+        format: date
+      degree_type:
+        description: "毕/肄业"
+        type: string
+      remark:
+        description: "备注"
+        type: string
+      degree_name:
+        description: "学历名称"
+        type: string
+  appuser:
+    type: object
+    description: "None"
+    properties:
+      id:
+        description: ""
+        type: string
+      name:
+        description: ""
+        type: string
+      manageuserid:
+        description: ""
+        type: string
+      ismanage:
+        description: ""
+        type: boolean

@@ -79,8 +79,15 @@ module.exports = (options = {}) => ({
           '^/kong/auth': ''
         }
       },
-	  '/kong/gongdi_mng': {
-        target: 'http://192.168.101.170:8008',
+	  // '/kong/gongdi_mng': {
+    //     target: 'http://192.168.101.170:8008',
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       '^/kong': ''
+    //     }
+    //   },
+      '/kong/employeemng': {
+        target: 'http://192.168.101.170:8001',
         changeOrigin: true,
         pathRewrite: {
           '^/kong': ''
