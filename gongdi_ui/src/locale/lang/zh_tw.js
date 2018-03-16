@@ -5,4 +5,5 @@ chg= {
 	test:'测试',
 	illegal_type:'违规类型',
 	danti: '单体',
+	gongdi:'工地',
 }

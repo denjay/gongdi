@@ -5,6 +5,7 @@ import illegalCategory from './modules/illegalCategory'
 import illegalType from './modules/illegalType' 
 import mypermissions from './modules/mypermissions'
 import danti from './modules/danti'
+import gongdi from './modules/gongdi'
 
 Vue.use(Vuex)
 
@@ -18,6 +19,7 @@ export default new Vuex.Store({
 		illegalCategory,
 		illegalType,
 		mypermissions,
-		danti
+		danti,
+		gongdi
     }
 })

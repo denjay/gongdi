@@ -8,7 +8,8 @@
 			</el-submenu>  
 			<el-submenu index="accident1">
 				<template slot="title"><i class="fa fa-handshake-o"></i>巡检管理</template>	
-				<el-menu-item  index="/pages/inspectionmng/danti"><i class="fa fa-users"></i>单体管理</el-menu-item>
+				<el-menu-item  index="/pages/inspectionmng/danti"><i class="fa fa-building"></i>单体管理</el-menu-item>
+				<el-menu-item  index="/pages/inspectionmng/gongdi"><i class="fa fa-cubes"></i>工地管理</el-menu-item>
 			</el-submenu> 
 			<el-submenu index="base">
 				<template slot="title"><i class="el-icon-setting"></i>權限管理</template>
