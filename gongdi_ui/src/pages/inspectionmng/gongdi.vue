@@ -11,68 +11,64 @@
           </el-option>
         </el-select>
       </div>
-      <el-button @click="getDantis" type="primary" :disabled="!companyid">查询</el-button>
-      <el-button @click="insert" type="primary" :disabled="!companyid">新增</el-button>
+      <el-button @click="getGongdis" type="primary" :disabled="!companyid">查询</el-button>
+      <el-button @click="insert" type="primary" :disabled="companyid && Boolean(gongdis.length)">新增</el-button>
     </div>
 
     <el-table
-      :data="dantis"
+      :data="gongdis"
       border
       style="width: 100%">
       <el-table-column
         fixed
-        prop="name"
-        label="名称"
+        prop="code"
+        label="工地代码"
         width="150">
       </el-table-column>
       <el-table-column
-        prop="framework_type"
-        label="单体结构类型"
-        width="120">
+        prop="lon"
+        label="经度"
+        width="80">
       </el-table-column>
       <el-table-column
-        prop="build_type"
-        label="单体建筑类型"
-        width="120">
+        prop="lat"
+        label="纬度"
+        width="80">
       </el-table-column>
       <el-table-column
-        prop="dt_area"
-        label="单体面积"
+        prop="starttime"
+        label="开工时间"
         width="100">
       </el-table-column>
       <el-table-column
-        prop="dt_plies_num"
-        label="单体层数"
+        prop="complete_time"
+        label="竣工时间"
         width="120">
       </el-table-column>
       <el-table-column
-        prop="eaves_height"
-        label="屋檐高度"
+        prop="build_unit"
+        label="建设单位"
         width="120">
       </el-table-column>
       <el-table-column
-        prop="build_schedule"
-        label="施工进度"
+        prop="design_unit"
+        label="设计单位"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="monitor_unit"
+        label="监理单位"
+        width="150">
+      </el-table-column>
+      <el-table-column
+        prop="construct_unit"
+        label="土建施工单位"
         width="120">
       </el-table-column>
       <el-table-column
         prop="description"
         label="描述"
         width="150">
-      </el-table-column>
-      <el-table-column
-        prop="dantiid"
-        label="单体id"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        prop="companyid"
-        label="公司id"
-        width="50">
-      </el-table-column>
-      <el-table-column
-        prop="comp_name"
-        label="公司名称">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -91,27 +87,33 @@
       width="30%"
       :before-close="handleClose">
 
-      <el-form label-position="right" label-width="100px" :model="insertData">
-        <el-form-item label="单体名称">
-          <el-input v-model="insertData.name"></el-input>
+      <el-form label-position="right" label-width="100px" :model="insertData" :rules="rules" ref="ruleForm">
+        <el-form-item label="工地代码">
+          <el-input v-model="insertData.code"></el-input>
         </el-form-item>
-        <el-form-item label="单体结构类型">
-          <el-input v-model="insertData.framework_type"></el-input>
+        <el-form-item label="经度" prop="lon">
+          <el-input v-model.number="insertData.lon"></el-input>
         </el-form-item>
-        <el-form-item label="单体建筑类型">
-          <el-input v-model="insertData.build_type"></el-input>
+        <el-form-item label="纬度" prop="lat">
+          <el-input v-model.number="insertData.lat"></el-input>
         </el-form-item>
-        <el-form-item label="单体面积">
-          <el-input v-model="insertData.dt_area"></el-input>
+        <el-form-item label="开工时间" prop="starttime">
+          <el-input v-model="insertData.starttime"></el-input>
         </el-form-item>
-        <el-form-item label="单体层数">
-          <el-input v-model="insertData.dt_plies_num"></el-input>
+        <el-form-item label="竣工时间" prop="complete_time">
+          <el-input v-model="insertData.complete_time"></el-input>
         </el-form-item>
-        <el-form-item label="屋檐高度">
-          <el-input v-model="insertData.eaves_height"></el-input>
+        <el-form-item label="建设单位">
+          <el-input v-model="insertData.build_unit"></el-input>
         </el-form-item>
-        <el-form-item label="施工进度">
-          <el-input v-model="insertData.build_schedule"></el-input>
+        <el-form-item label="设计单位">
+          <el-input v-model="insertData.design_unit"></el-input>
+        </el-form-item>
+        <el-form-item label="监理单位">
+          <el-input v-model="insertData.monitor_unit"></el-input>
+        </el-form-item>
+        <el-form-item label="土建施工单位">
+          <el-input v-model="insertData.construct_unit"></el-input>
         </el-form-item>
         <el-form-item label="描述">
           <el-input v-model="insertData.description"></el-input>
@@ -120,7 +122,7 @@
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitData">确 定</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -140,52 +142,80 @@
         dialogVisible: false,
         title: '',
         insertData:{
-          name: '',
-          build_type: '',
-          framework_type: '',
-          dt_area: '',
-          dt_plies_num: '',
-          eaves_height: '',
-          build_schedule: '',
+          code: '',
+          lon: '',
+          lat: '',
+          starttime: '',
+          complete_time: '',
+          build_unit: '',
+          design_unit: '',
+          monitor_unit: '',
+          construct_unit: '',
           description: ''
+        },
+        rules: {
+          lon: [
+              { type:'float',trigger: 'blur' }
+          ],
+          lat: [
+              { type:'float',trigger: 'blur' }
+          ],
+          starttime: [
+              { type:'date',trigger: 'blur' }
+          ],
+          complete_time: [
+              { type:'date',trigger: 'blur' }
+          ],
         }
       }
     },
 
     methods: {
-      getDantis(){
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.submitData();
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      getGongdis(){
         this.$store.commit('setCompanyid', this.companyid)
-        this.$store.dispatch('getDantis')
+        this.$store.dispatch('getGongdis')
       },
       insert(){
-        this.title = '新增单体'
+        this.title = '新增工地'
         this.dialogVisible = true
       },
       edit(data){
-        this.title = '编辑单体'
+        this.title = '编辑工地'
         var { ...data_copy } = data
         this.insertData = data_copy
         this.dialogVisible = true
       },
       submitData(){
         var {...insertData} = this.insertData
-        if(this.title === '新增单体'){
+        if(this.title === '新增工地'){
           insertData['companyid'] = parseInt(this.companyid)
-          this.$store.dispatch('postDantis',insertData)
+          this.$store.dispatch('postGongdis',insertData)
         }
-        else if(this.title === '编辑单体'){
-          this.$store.dispatch('putDantis',insertData)
+        else if(this.title === '编辑工地'){
+          this.$store.dispatch('putGongdis',insertData)
         }
         // 重置form
         this.dialogVisible = false
         this.insertData = {
-          name: '',
-          build_type: '',
-          framework_type: '',
-          dt_area: '',
-          dt_plies_num: '',
-          eaves_height: '',
-          build_schedule: '',
+          code: '',
+          lon: '',
+          lat: '',
+          starttime: '',
+          complete_time: '',
+          build_unit: '',
+          design_unit: '',
+          monitor_unit: '',
+          construct_unit: '',
           description: ''
         }
       },
@@ -194,7 +224,7 @@
           confirmButtonText: '確定',
           cancelButtonText: '取消',
         }).then(() => {
-          this.$store.dispatch('removeDantis',data);
+          this.$store.dispatch('removeGongdis',data);
         }).catch(() => {         
         });
       },
@@ -209,7 +239,7 @@
 
     computed: {
       ...mapGetters([
-        'dantis',
+        'gongdis',
         'companies'
 		  ])
     }
