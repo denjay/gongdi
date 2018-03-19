@@ -1,4 +1,6 @@
-# 初始化权限资料
+'''
+初始化权限资料
+'''
 from seeds.models_rm import *
 from app.models import *
 from app import create_app_swagger

@@ -11,7 +11,7 @@
           </el-option>
         </el-select>
       </div>
-      <el-button @click="getDantis" type="primary" :disabled="!companyid">查询</el-button>
+      <!-- <el-button @click="getDantis" type="primary" :disabled="!companyid">查询</el-button> -->
       <el-button @click="insert" type="primary" :disabled="!companyid">新增</el-button>
     </div>
 
@@ -212,7 +212,11 @@
         'dantis',
         'companies'
 		  ])
-    }
+    },
+
+    watch:{
+      'companyid': 'getDantis'
+    }    
   }
 </script>
 

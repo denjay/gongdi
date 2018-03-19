@@ -1,4 +1,6 @@
-# 开发数据
+'''
+开发用的测试数据
+'''
 from app import create_app_swagger,db
 from app.models import *
 from seeds.seed_utils import add_seed

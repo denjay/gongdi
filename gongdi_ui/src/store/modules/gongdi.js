@@ -16,7 +16,7 @@ const  mutations = {
         state.companyid = data
     },
     setGongdis(state, data){
-        state.datas = [data]
+        state.datas = data
     },
     removeGongdi(state,data){
         var index = state.datas.indexOf(data)
@@ -39,8 +39,12 @@ const actions = {
     getGongdis(context){
         axios.get(`/kong/gongdi_mng/v1.0/companys/${context.state.companyid}/gongdis`)
 		.then(response => {
-            context.commit('setGongdis',response.data)
-            console.log("actions",response);
+            if(response.data.length === 0){
+                context.commit('setGongdis',[])
+            }
+            else {
+                context.commit('setGongdis',[response.data])
+            }
 		}).catch(function(error){
 			console.log("actions");
 		})
@@ -63,6 +67,12 @@ const actions = {
     putGongdis(context,data){
         delete data.comp_name
         delete data.gongdiid
+        if (data.starttime === null){
+            data.starttime = ""
+        }
+        if (data.complete_time === null){
+            data.complete_time = ""
+        }
         axios.put(`/kong/gongdi_mng/v1.0/gongdis/${data.id}`,data)
         .then(response => {
             if(response.status === 201){
@@ -78,9 +88,9 @@ const actions = {
                 }
             }
         })
-        .catch(error => {
-            alert('出错')
-        })
+        // .catch(error => {
+        //     alert('出错')
+        // })
     },
     removeGongdis(context,data){
         axios.delete(`http://127.0.0.1:8889/gongdi_mng/v1.0/gongdis/${data.id}`)

@@ -1,12 +1,12 @@
 ########################################
-# create by :cxh-PC
-# create time :2018-03-02 15:55:36.701374
+# create by :cxh-pc
+# create time :2018-03-16 11:02:38.254755
 ########################################
 from app import auth, db, p
 from app.models import *
 def health_() -> str:
     pass
-def health_get() -> str:
+def health_get():
     try:
         data = {}
         return data, 200, {"content-type": "chatset=utf8"}

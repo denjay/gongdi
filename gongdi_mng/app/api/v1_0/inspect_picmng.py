@@ -1,6 +1,6 @@
 ########################################
-# create by :cxh-PC
-# create time :2018-03-02 15:55:36.474167
+# create by :cxh-pc
+# create time :2018-03-16 11:02:38.223503
 ########################################
 from app import auth, db, p
 from app.models import *
@@ -9,7 +9,7 @@ from PIL import Image
 import os
 @auth.valid_login
 @p.check("inspect_pic",["insert"])
-def inspect_pics_post(pic,inspectid,jwt = None) -> str:
+def inspect_pics_post(pic,inspectid,jwt = None):
     def get_rate(ws,wd,hs,hd):
         if ws < wd or hs < hd:
             return 1
@@ -42,12 +42,12 @@ def inspect_pics_post(pic,inspectid,jwt = None) -> str:
         return {"error": str(e)}, 422, {"content-type": "chatset=utf8"}\
 @auth.valid_login
 @p.check("inspect_pic",["view"])
-def inspect_pics_id_get(id,jwt = None) -> str:
+def inspect_pics_id_get(id,jwt = None):
     data = Inspect_pic.query.filter_by(id=id).first_or_404()
     return send_file(data.save_file_name,mimetype='image/jpeg')
 @auth.valid_login
 @p.check("inspect_pic",["delete"])
-def inspect_pics_id_delete(id,jwt = None) -> str:
+def inspect_pics_id_delete(id,jwt = None):
     try:
         ispt_pic = Inspect_pic.query.filter(Inspect_pic.id == id).first()
         try:
@@ -62,6 +62,6 @@ def inspect_pics_id_delete(id,jwt = None) -> str:
     return "", 204
 @auth.valid_login
 @p.check("inspect_pic",["view"])
-def inspects_id_pics_get(id,jwt = None) -> str:
+def inspects_id_pics_get(id,jwt = None):
     datas = Inspect_pic.query.filter(Inspect_pic.inspectid==id).all()
     return [data.to_json() for data in datas],200,{"content-type": "chatset=utf8"}

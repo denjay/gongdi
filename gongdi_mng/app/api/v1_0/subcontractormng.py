@@ -1,13 +1,13 @@
 ########################################
-# create by :cxh-PC
-# create time :2018-03-02 15:55:36.105836
+# create by :cxh-pc
+# create time :2018-03-16 11:02:38.192260
 ########################################
 from app import auth, db, p
 from app.models import *
 from app.utils import str2date,get_login_user
 @auth.valid_login
 @p.check("subcontractor",["view"])
-def subcontractors_get(page = None,per_page = None,comp_name = None,manager = None,jwt = None) -> str:
+def subcontractors_get(page = None,per_page = None,comp_name = None,manager = None,jwt = None):
     user = get_login_user()
     if user.issystemuser:
         datap = Subcontractor.query.order_by(Subcontractor.comp_name).paginate(page,per_page)
@@ -24,7 +24,7 @@ def subcontractors_get(page = None,per_page = None,comp_name = None,manager = No
             200 ,{"content-type": "chatset=utf8","x-page":datap.page,"x-total":datap.total}
 @auth.valid_login
 @p.check("subcontractor",["insert"])
-def subcontractors_post(body,jwt = None) -> str:
+def subcontractors_post(body,jwt = None):
     try:
         str2date(body,['approach_date','departure_date'])
         data = Subcontractor(**body)
@@ -36,12 +36,12 @@ def subcontractors_post(body,jwt = None) -> str:
     return data.to_json(), 201, {"content-type": "chatset=utf8"}
 @auth.valid_login
 @p.check("subcontractor",["view"])
-def subcontractors_id_get(id,jwt = None) -> str:
+def subcontractors_id_get(id,jwt = None):
     data = Subcontractor.query.filter_by(id=id).first_or_404()
     return data.to_json(), 200, {"content-type": "chatset=utf8"}
 @auth.valid_login
 @p.check("subcontractor",["edit"])
-def subcontractors_id_put(id,body,jwt = None) -> str:
+def subcontractors_id_put(id,body,jwt = None):
     try:
         Subcontractor.query.filter(Subcontractor.id == id).update(body)
     except Exception as e:
@@ -51,7 +51,7 @@ def subcontractors_id_put(id,body,jwt = None) -> str:
     return data.to_json(), 201, {"content-type": "chatset=utf8"}
 @auth.valid_login
 @p.check("subcontractor",["delete"])
-def subcontractors_id_delete(id,jwt = None) -> str:
+def subcontractors_id_delete(id,jwt = None):
     try:
         db.session.query(Subcontractor).filter(Subcontractor.id == id).delete()
     except Exception as e:

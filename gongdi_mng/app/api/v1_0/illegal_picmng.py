@@ -1,6 +1,6 @@
 ########################################
-# create by :cxh-PC
-# create time :2018-03-02 15:55:36.175898
+# create by :cxh-pc
+# create time :2018-03-16 11:02:38.192260
 ########################################
 from app import auth, p
 from app.models import *
@@ -9,12 +9,12 @@ from PIL import Image
 import os
 @auth.valid_login
 @p.check("illegal_pic",["view"])
-def illegal_pics_id_get(id,jwt = None) -> str:
+def illegal_pics_id_get(id,jwt = None):
     data = Illegal_pic.query.filter_by(id=id).first_or_404()
     return send_file(data.save_file_name,mimetype='image/jpeg')
 @auth.valid_login
 @p.check("illegal_pic",["delete"])
-def illegal_pics_id_delete(id,jwt = None) -> str:
+def illegal_pics_id_delete(id,jwt = None):
     try:
         ill_pic = Illegal_pic.query.filter(Illegal_pic.id == id).first()
         try:
@@ -30,7 +30,7 @@ def illegal_pics_id_delete(id,jwt = None) -> str:
     return "", 204
 @auth.valid_login
 @p.check("illegal_pic",["insert"])
-def illegal_pics_post(pic,illegalid,jwt = None) -> str:
+def illegal_pics_post(pic,illegalid,jwt = None):
     def get_rate(ws,wd,hs,hd):
         if ws < wd or hs < hd:
             return 1
@@ -64,7 +64,7 @@ def illegal_pics_post(pic,illegalid,jwt = None) -> str:
         return {"error": str(e)}, 422, {"content-type": "chatset=utf8"}
 @auth.valid_login
 @p.check("illegal_pic",["view"])
-def illegal_id_pics_get(id,jwt = None) -> str:
+def illegal_id_pics_get(id,jwt = None):
     datas = Illegal_pic.query.filter(Illegal_pic.illegalid==id).all()
     return [data.to_json() for data in datas] ,\
             200 ,{"content-type": "chatset=utf8"}

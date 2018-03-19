@@ -1,6 +1,6 @@
 ########################################
-# create by :cxh-PC
-# create time :2018-03-02 15:55:35.791555
+# create by :cxh-pc
+# create time :2018-03-16 11:02:38.161021
 ########################################
 from app import auth, db, p
 from app.models import *
@@ -8,7 +8,7 @@ from app.utils import tzstr2datetime,get_login_user
 import os
 @auth.valid_login
 @p.check("emp_illegal",["view"])
-def emp_illegals_get(page = None,per_page = None,auditing_status = None,illegal_emp_name = None,illegal_typeid = None,jwt = None) -> str:
+def emp_illegals_get(page = None,per_page = None,auditing_status = None,illegal_emp_name = None,illegal_typeid = None,jwt = None):
     user = get_login_user()
     # if user.issystemuser:
     #     datap = Emp_illegal.query. \
@@ -30,7 +30,7 @@ def emp_illegals_get(page = None,per_page = None,auditing_status = None,illegal_
             200 ,{"content-type": "chatset=utf8","x-page":datap.page,"x-total":datap.total}
 @auth.valid_login
 @p.check("emp_illegal",["insert"])
-def emp_illegals_post(body,jwt = None) -> str:
+def emp_illegals_post(body,jwt = None):
     try:
         tzstr2datetime(body,['illegal_time','rectify_time'])
         if body.get('illegal_time') is None:
@@ -44,12 +44,12 @@ def emp_illegals_post(body,jwt = None) -> str:
     return data.to_jsonex(), 201, {"content-type": "chatset=utf8"}
 @auth.valid_login
 @p.check("emp_illegal",["view"])
-def emp_illegals_id_get(id,jwt = None) -> str:
+def emp_illegals_id_get(id,jwt = None):
     data = Emp_illegal.query.filter_by(id=id).first_or_404()
     return data.to_jsonex(), 200, {"content-type": "chatset=utf8"}
 @auth.valid_login
 @p.check("emp_illegal",["edit"])
-def emp_illegals_id_put(id,body,jwt = None) -> str:
+def emp_illegals_id_put(id,body,jwt = None):
     try:
         Emp_illegal.query.filter(Emp_illegal.id == id).update(body)
     except Exception as e:
@@ -59,7 +59,7 @@ def emp_illegals_id_put(id,body,jwt = None) -> str:
     return data.to_jsonex(), 201, {"content-type": "chatset=utf8"}
 @auth.valid_login
 @p.check("emp_illegal",["delete"])
-def emp_illegals_id_delete(id,jwt = None) -> str:
+def emp_illegals_id_delete(id,jwt = None):
     emp_illegal = Emp_illegal.query.filter(Emp_illegal.id == id).first_or_404()
     try:
         for ill_pic  in emp_illegal.illegal_pics:

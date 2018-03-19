@@ -11,7 +11,7 @@
           </el-option>
         </el-select>
       </div>
-      <el-button @click="getGongdis" type="primary" :disabled="!companyid">查询</el-button>
+      <!-- <el-button @click="getGongdis" type="primary" :disabled="!companyid">查询</el-button> -->
       <el-button @click="insert" type="primary" :disabled="companyid && Boolean(gongdis.length)">新增</el-button>
     </div>
 
@@ -97,11 +97,13 @@
         <el-form-item label="纬度" prop="lat">
           <el-input v-model.number="insertData.lat"></el-input>
         </el-form-item>
-        <el-form-item label="开工时间" prop="starttime">
-          <el-input v-model="insertData.starttime"></el-input>
+        <el-form-item label="开工时间">
+          <el-date-picker type="date" placeholder="选择日期" v-model="insertData.starttime" style="width: 100%;"></el-date-picker>
+          <!-- <el-input v-model="insertData.starttime"></el-input> -->
         </el-form-item>
-        <el-form-item label="竣工时间" prop="complete_time">
-          <el-input v-model="insertData.complete_time"></el-input>
+        <el-form-item label="竣工时间">
+          <el-date-picker type="date" placeholder="选择日期" v-model="insertData.complete_time" style="width: 100%;"></el-date-picker>          
+          <!-- <el-input v-model="insertData.complete_time"></el-input> -->
         </el-form-item>
         <el-form-item label="建设单位">
           <el-input v-model="insertData.build_unit"></el-input>
@@ -155,17 +157,11 @@
         },
         rules: {
           lon: [
-              { type:'float',trigger: 'blur' }
+              { type:'float',trigger: 'blur', message: '经度必须是数字类型' }
           ],
           lat: [
-              { type:'float',trigger: 'blur' }
-          ],
-          starttime: [
-              { type:'date',trigger: 'blur' }
-          ],
-          complete_time: [
-              { type:'date',trigger: 'blur' }
-          ],
+              { type:'float',trigger: 'blur', message: '纬度必须是数字类型' }
+          ]
         }
       }
     },
@@ -183,6 +179,8 @@
       },
       getGongdis(){
         this.$store.commit('setCompanyid', this.companyid)
+        this.$store.commit('setGongdis', [])
+        console.table(this.gongdis)
         this.$store.dispatch('getGongdis')
       },
       insert(){
@@ -242,6 +240,10 @@
         'gongdis',
         'companies'
 		  ])
+    },
+
+    watch:{
+      'companyid': 'getGongdis'
     }
   }
 </script>

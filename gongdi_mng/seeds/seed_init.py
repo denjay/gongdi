@@ -1,4 +1,6 @@
-# 基本资料初始化
+'''
+系统默认资料的初始化
+'''
 from app import create_app_swagger
 from app.models import *
 from seeds.seed_utils import add_seed

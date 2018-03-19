@@ -57,3 +57,11 @@ flask db migrate
 5. 执行升级资料库
 ```bash
 flask db upgrade
+```
+### 增加seed
+```bash
+cd seeds
+```
+```python
+python seed_run.py
+```

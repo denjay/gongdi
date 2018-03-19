@@ -2,7 +2,7 @@
 # create by :cxh-PC
 # create time :2018-01-31 11:55:31.548170
 ########################################
-FROM cxhjet/flask3.5:1.5
+FROM cxhjet/flask-py3.6:1.0
 #FROM python:3.5-alpine
 COPY ./requirements.txt /var/requirements.txt
 #RUN pip3 install -r /var/requirements.txt

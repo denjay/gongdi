@@ -1,6 +1,6 @@
 ########################################
-# create by :cxh-PC
-# create time :2018-03-02 15:55:36.819479
+# create by :cxh-pc
+# create time :2018-03-16 11:02:38.270382
 ########################################
 from app import auth,p,db
 from app.models import *
@@ -11,12 +11,12 @@ import unicodedata
 import urllib
 @auth.valid_login
 @p.check("doc_file",["view"])
-def docs_docsid_files_get(docsid,jwt = None) -> str:
+def docs_docsid_files_get(docsid,jwt = None):
     datas = Doc_file.query.filter(Doc_file.docid==docsid).all()
     return [data.to_json() for data in datas],200,{"content-type": "chatset=utf8"}
 @auth.valid_login
 @p.check("doc_file",["view"])
-def doc_files_id_get(id,jwt = None) -> str:
+def doc_files_id_get(id,jwt = None):
     data = Doc_file.query.filter_by(id=id).first_or_404()
     # filename_s, ext_name = data.file_name.rsplit('.', 1)
     rv = send_file(filename_or_fp=data.save_file_name,
@@ -28,7 +28,7 @@ def doc_files_id_get(id,jwt = None) -> str:
     return rv
 @auth.valid_login
 @p.check("doc_file",["delete"])
-def doc_files_id_delete(id,jwt = None) -> str:
+def doc_files_id_delete(id,jwt = None):
     try:
         doc_file = Doc_file.query.filter(Doc_file.id == id).first()
         if doc_file:
@@ -44,7 +44,7 @@ def doc_files_id_delete(id,jwt = None) -> str:
     return "", 204
 @auth.valid_login
 @p.check("doc_file",["insert"])
-def doc_files_post(doc,docsid,jwt = None) -> str:
+def doc_files_post(doc,docsid,jwt = None):
     try:
         file_path = os.path.join(current_app.config['UPLOAD_FOLDER'],'docs')
         os.makedirs(file_path,exist_ok=True)

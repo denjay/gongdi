@@ -1,6 +1,6 @@
 ########################################
-# create by :cxh-PC
-# create time :2018-03-02 15:55:35.845599
+# create by :cxh-pc
+# create time :2018-03-16 11:02:38.176628
 ########################################
 from app import auth, db, p
 from app.models import *
@@ -10,7 +10,7 @@ from flask import g
 import os
 @auth.valid_login
 @p.check("subcon_illegal",["view"])
-def subcon_illegals_get(page = None,per_page = None,auditing_status = None,subcon_name = None,illegal_typeid = None,jwt = None) -> str:
+def subcon_illegals_get(page = None,per_page = None,auditing_status = None,subcon_name = None,illegal_typeid = None,jwt = None):
     user = get_login_user()
     if user.issystemuser:
         datap = Subcon_illegal.query. \
@@ -31,7 +31,7 @@ def subcon_illegals_get(page = None,per_page = None,auditing_status = None,subco
             200 ,{"content-type": "chatset=utf8","x-page":datap.page,"x-total":datap.total}
 @auth.valid_login
 @p.check("subcon_illegal",["insert"])
-def subcon_illegals_post(body,jwt = None) -> str:
+def subcon_illegals_post(body,jwt = None):
     try:
         tzstr2datetime(body,['rectify_time','illegal_time'])
         if body.get('illegal_time') is None:
@@ -46,12 +46,12 @@ def subcon_illegals_post(body,jwt = None) -> str:
     return data.to_jsonex(), 201, {"content-type": "chatset=utf8"}
 @auth.valid_login
 @p.check("subcon_illegal",["view"])
-def subcon_illegals_id_get(id,jwt = None) -> str:
+def subcon_illegals_id_get(id,jwt = None):
     data = Subcon_illegal.query.filter_by(id=id).first_or_404()
     return data.to_jsonex(), 200, {"content-type": "chatset=utf8"}
 @auth.valid_login
 @p.check("subcon_illegal",["edit"])
-def subcon_illegals_id_put(id,body,jwt = None) -> str:
+def subcon_illegals_id_put(id,body,jwt = None):
     try:
         Subcon_illegal.query.filter(Subcon_illegal.id == id).update(body)
     except Exception as e:
@@ -61,7 +61,7 @@ def subcon_illegals_id_put(id,body,jwt = None) -> str:
     return data.to_jsonex(), 201, {"content-type": "chatset=utf8"}
 @auth.valid_login
 @p.check("subcon_illegal",["delete"])
-def subcon_illegals_id_delete(id,jwt = None) -> str:
+def subcon_illegals_id_delete(id,jwt = None):
     subcon_illegal = Subcon_illegal.query.filter(Subcon_illegal.id == id).first_or_404()
     try:
         for ill_pic  in subcon_illegal.illegal_pics:

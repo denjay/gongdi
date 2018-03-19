@@ -1,3 +1,6 @@
+'''
+权限模块
+'''
 from datetime import datetime
 from app import db
 from flask import current_app
@@ -6,10 +9,10 @@ from .seed_utils import add_seed
 def add_sys1(sys1id,sys1_name,sys1_caption=None):
     '''
     增加根权限系统
-    :param sys1id:
-    :param sys1_name:
-    :param sys1_caption:
-    :return:
+    :param sys1id: 第一层权限的id
+    :param sys1_name:第一层权限的名称
+    :param sys1_caption: 第一层权限的描述
+    :return:第一层权限的 subsystem物件
     '''
     # 大部分情况下不需要caption，避免覆盖其他地方的修改
     if sys1_caption is None:
@@ -27,9 +30,9 @@ def add_sys1(sys1id,sys1_name,sys1_caption=None):
 def add_sys2(sys1,sys2_name,sys2_caption):
     '''
     增加第二级权限
-    :param sys1:
-    :param sys2_name:
-    :param sys2_caption:
+    :param sys1:第一层权限物件
+    :param sys2_name: 第二层权限名
+    :param sys2_caption:第二层权限描述
     :return:
     '''
     sys2 = add_seed(db.session,
@@ -85,11 +88,11 @@ def add_sys3_and_op(sys1,sys2,sys3_name,sys3_caption,ops=None):
     sys3 = add_sys3(sys1,sys2,cls_name,sys3_caption)
     if 1 in ops:
         add_sys3_op(sys3,'view','浏览',1)
-    if 2 in ops:
+    elif 2 in ops:
         add_sys3_op(sys3,'insert','新增',2)
-    if 3 in ops:
+    elif 3 in ops:
         add_sys3_op(sys3,'edit','修改',3)
-    if 4 in ops:
+    elif 4 in ops:
         add_sys3_op(sys3,'delete','删除',4)
     return sys3
 
