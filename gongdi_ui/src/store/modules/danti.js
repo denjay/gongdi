@@ -1,14 +1,13 @@
 import axios from 'axios'
 
 const state = {
-    companyid: '',
-    datas: [],
+    dantis: [],
     companies:[]
 }
 
 const getters = {
     dantis:state=>{
-		return state.datas;
+		return state.dantis;
     },
     companies:state=>{
         return state.companies
@@ -20,11 +19,11 @@ const  mutations = {
         state.companyid = data
     },
     setDantis(state, data){
-        state.datas = data
+        state.dantis = data
     },
     removeDanti(state,data){
-        var index = state.datas.indexOf(data)
-        state.datas.splice(index,1)
+        var index = state.dantis.indexOf(data)
+        state.dantis.splice(index,1)
     },
     setCompanies(state,data){
         state.companies = data
@@ -40,8 +39,8 @@ const actions = {
             }
         })
     },
-    getDantis(context){
-        axios.get(`/kong/gongdi_mng/v1.0/company/${context.state.companyid}/dantis`)
+    getDantis(context,data){
+        axios.get(`/kong/gongdi_mng/v1.0/company/${data}/dantis`)
 		.then(function(response){
             context.commit('setDantis',response.data)
             console.log("actions",response);
@@ -53,7 +52,7 @@ const actions = {
         axios.post('/kong/gongdi_mng/v1.0/dantis',data)
 		.then(response => {
             if (response.status === 201) {
-                data = state.datas 
+                data = context.getters.dantis 
                 data.unshift(response.data)
                 context.commit('setDantis', data)
                 // alert('新增成功！')
@@ -66,21 +65,32 @@ const actions = {
 		})
     },
     putDantis(context,data){
+        console.table(data)
+
         delete data.comp_name
         delete data.dantiid
         axios.put(`/kong/gongdi_mng/v1.0/dantis/${data.id}`,data)
         .then(response => {
             if(response.status === 201){
-                var i = 0, len = context.getters.dantis.length
-                for(;i<len;i++){
-                    if(context.getters.dantis[i].id === data.id){
-                        var newDatas = context.getters.dantis
-                        newDatas[i] = response.data 
+                for(var item of context.getters.dantis){
+                    if(item.id === data.id){
+                        var index = context.getters.dantis.indexOf(item)
+                        var newDatas = context.getters.dantis.splice(index, 1, response.data)
+                        console.table(newDatas)
                         context.commit('setDantis',newDatas)
-                        // console.log(context.getters.dantis)
                         break
                     }
                 }
+                // var i = 0, len = context.getters.dantis.length
+                // for(;i<len;i++){
+                //     if(context.getters.dantis[i].id === data.id){
+                //         var newDatas = context.getters.dantis
+                //         newDatas[i] = response.data 
+                //         context.commit('setDantis',newDatas)
+                //         // console.log(context.getters.dantis)
+                //         break
+                //     }
+                // }
             }
         })
         .catch(error => {
@@ -88,7 +98,7 @@ const actions = {
         })
     },
     removeDantis(context,data){
-        axios.delete(`http://127.0.0.1:8889/gongdi_mng/v1.0/dantis/${data.id}`)
+        axios.delete(`/kong/gongdi_mng/v1.0/dantis/${data.id}`)
 			.then(function(response){
                 if(response.status === 204){
                     context.commit('removeDanti',data)

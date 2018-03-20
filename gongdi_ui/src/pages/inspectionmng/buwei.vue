@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="">
-      <div class="el-input">
+      <div class="select">
         <el-select v-model="companyid" filterable placeholder="请选择公司">
           <el-option
             v-for="company in companies"
@@ -10,69 +10,36 @@
             :value="company.id">
           </el-option>
         </el-select>
+        <el-select v-model="dantiid" filterable placeholder="请选择单体">
+          <el-option
+            v-for="danti in dantis"
+            :key="danti.id"
+            :label="danti.name"
+            :value="danti.id">
+          </el-option>
+        </el-select>
       </div>
-      <!-- <el-button @click="getDantis" type="primary" :disabled="!companyid">查询</el-button> -->
-      <el-button @click="insert" type="primary" :disabled="!companyid">新增</el-button>
+      <el-button @click="insert" type="primary" :disabled="!(companyid && dantiid)">新增部位</el-button>
     </div>
 
     <el-table
-      :data="dantis"
+      :data="buweis"
       border
       style="width: 100%">
       <el-table-column
         fixed
         prop="name"
-        label="名称"
+        label="部位名称"
         width="150">
       </el-table-column>
       <el-table-column
-        prop="framework_type"
-        label="单体结构类型"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        prop="build_type"
-        label="单体建筑类型"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        prop="dt_area"
-        label="单体面积"
-        width="100">
-      </el-table-column>
-      <el-table-column
-        prop="dt_plies_num"
-        label="单体层数"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        prop="eaves_height"
-        label="屋檐高度"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        prop="build_schedule"
-        label="施工进度"
-        width="120">
+        prop="danti_name"
+        label="所属单体">
+        width="200"
       </el-table-column>
       <el-table-column
         prop="description"
-        label="描述"
-        width="150">
-      </el-table-column>
-      <el-table-column
-        prop="dantiid"
-        label="单体id"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        prop="companyid"
-        label="公司id"
-        width="50">
-      </el-table-column>
-      <el-table-column
-        prop="comp_name"
-        label="公司名称">
+        label="描述">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -92,26 +59,8 @@
       :before-close="handleClose">
 
       <el-form label-position="right" label-width="100px" :model="insertData">
-        <el-form-item label="单体名称">
+        <el-form-item label="部位名称">
           <el-input v-model="insertData.name"></el-input>
-        </el-form-item>
-        <el-form-item label="单体结构类型">
-          <el-input v-model="insertData.framework_type"></el-input>
-        </el-form-item>
-        <el-form-item label="单体建筑类型">
-          <el-input v-model="insertData.build_type"></el-input>
-        </el-form-item>
-        <el-form-item label="单体面积">
-          <el-input v-model="insertData.dt_area"></el-input>
-        </el-form-item>
-        <el-form-item label="单体层数">
-          <el-input v-model="insertData.dt_plies_num"></el-input>
-        </el-form-item>
-        <el-form-item label="屋檐高度">
-          <el-input v-model="insertData.eaves_height"></el-input>
-        </el-form-item>
-        <el-form-item label="施工进度">
-          <el-input v-model="insertData.build_schedule"></el-input>
         </el-form-item>
         <el-form-item label="描述">
           <el-input v-model="insertData.description"></el-input>
@@ -137,16 +86,11 @@
     data() {
       return {
         companyid: '',
+        dantiid: '',
         dialogVisible: false,
         title: '',
         insertData:{
           name: '',
-          build_type: '',
-          framework_type: '',
-          dt_area: '',
-          dt_plies_num: '',
-          eaves_height: '',
-          build_schedule: '',
           description: ''
         }
       }
@@ -154,34 +98,28 @@
 
     methods: {
       insert(){
-        this.title = '新增单体'
+        this.title = '新增部位'
         this.dialogVisible = true
       },
       edit(data){
-        this.title = '编辑单体'
+        this.title = '编辑部位'
         var { ...data_copy } = data
         this.insertData = data_copy
         this.dialogVisible = true
       },
       submitData(){
         var {...insertData} = this.insertData
-        if(this.title === '新增单体'){
-          insertData['companyid'] = parseInt(this.companyid)
-          this.$store.dispatch('postDantis',insertData)
+        if(this.title === '新增部位'){
+          insertData['dantiid'] = parseInt(this.dantiid)
+          this.$store.dispatch('postBuwei',insertData)
         }
-        else if(this.title === '编辑单体'){
-          this.$store.dispatch('putDantis',insertData)
+        else if(this.title === '编辑部位'){
+          this.$store.dispatch('putBuweis',insertData)
         }
         // 重置form
         this.dialogVisible = false
         this.insertData = {
           name: '',
-          build_type: '',
-          framework_type: '',
-          dt_area: '',
-          dt_plies_num: '',
-          eaves_height: '',
-          build_schedule: '',
           description: ''
         }
       },
@@ -190,40 +128,57 @@
           confirmButtonText: '確定',
           cancelButtonText: '取消',
         }).then(() => {
-          this.$store.dispatch('removeDantis',data);
-        })
+          this.$store.dispatch('removeBuweis',data);
+        }).catch(() => {         
+        });
       },
       handleClose(done) {
         this.$confirm('确认关闭？')
-        .then(_ => {
-          done();
-        })
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
       }
     },
 
     computed: {
       ...mapGetters([
         'dantis',
-        'companies'
+        'companies',
+        'buweis'
 		  ])
     },
 
     watch:{
       companyid: function(){
+        this.dantiid = ''
+        this.$store.commit('setDantis',[])
         this.$store.dispatch('getDantis', this.companyid)
-      }
-    }    
+      },
+      dantiid: function(){
+        if(Boolean(this.dantiid)){
+          this.$store.dispatch('getBuweis', this.dantiid)
+        }
+      },
+    }     
   }
 </script>
 
-<style>
+<style scoped>
+  .el-select {
+    width: 49%;
+  }
   .el-dialog {
     width: 350px !important;
   }
-  .el-input {
-    width: 180px;
+  .select {
+    width: 350px;
     margin-right: 20px;
+    display: inline-block;
   }
+</style>
+
+<style>
   .el-table {
     margin-top: 5px;
   }

@@ -6,6 +6,7 @@ import illegalType from './modules/illegalType'
 import mypermissions from './modules/mypermissions'
 import danti from './modules/danti'
 import gongdi from './modules/gongdi'
+import buwei from './modules/buwei'
 
 Vue.use(Vuex)
 
@@ -20,6 +21,7 @@ export default new Vuex.Store({
 		illegalType,
 		mypermissions,
 		danti,
-		gongdi
+		gongdi,
+		buwei
     }
 })

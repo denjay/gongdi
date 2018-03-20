@@ -177,12 +177,12 @@
           }
         });
       },
-      getGongdis(){
-        this.$store.commit('setCompanyid', this.companyid)
-        this.$store.commit('setGongdis', [])
-        console.table(this.gongdis)
-        this.$store.dispatch('getGongdis')
-      },
+      // getGongdis(){
+      //   this.$store.commit('setCompanyid', this.companyid)
+      //   this.$store.commit('setGongdis', [])
+      //   console.table(this.gongdis)
+      //   this.$store.dispatch('getGongdis')
+      // },
       insert(){
         this.title = '新增工地'
         this.dialogVisible = true
@@ -243,8 +243,10 @@
     },
 
     watch:{
-      'companyid': 'getGongdis'
-    }
+      companyid: function(){
+        this.$store.dispatch('getGongdis', this.companyid)
+      }
+    } 
   }
 </script>
 

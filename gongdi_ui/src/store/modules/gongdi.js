@@ -1,43 +1,28 @@
 import axios from 'axios'
 
 const state = {
-    companyid: '',
-    datas: [],
+    gongdis: [],
 }
 
 const getters = {
     gongdis:state=>{
-		return state.datas;
+		return state.gongdis;
     }
 }
 
 const  mutations = {
-    setCompanyid(state, data){
-        state.companyid = data
-    },
     setGongdis(state, data){
-        state.datas = data
+        state.gongdis = data
     },
     removeGongdi(state,data){
-        var index = state.datas.indexOf(data)
-        state.datas.splice(index,1)
+        var index = state.gongdis.indexOf(data)
+        state.gongdis.splice(index,1)
     },
-    setCompanies(state,data){
-        state.companies = data
-    }
 }
 
 const actions = {
-    getCompanies(context){
-        axios.get('/kong/employeemng/v1.0/companys')
-        .then(response=>{
-            if(response.status === 200){
-                context.commit('setCompanies',response.data)
-            }
-        })
-    },
-    getGongdis(context){
-        axios.get(`/kong/gongdi_mng/v1.0/companys/${context.state.companyid}/gongdis`)
+    getGongdis(context,data){
+        axios.get(`/kong/gongdi_mng/v1.0/companys/${data}/gongdis`)
 		.then(response => {
             if(response.data.length === 0){
                 context.commit('setGongdis',[])
@@ -53,7 +38,7 @@ const actions = {
         axios.post('/kong/gongdi_mng/v1.0/gongdis',data)
 		.then(response => {
             if (response.status === 201) {
-                data = state.datas 
+                data = context.getters.gongdis
                 data.unshift(response.data)
                 context.commit('setGongdis', data)
             }
@@ -88,12 +73,9 @@ const actions = {
                 }
             }
         })
-        // .catch(error => {
-        //     alert('出错')
-        // })
     },
     removeGongdis(context,data){
-        axios.delete(`http://127.0.0.1:8889/gongdi_mng/v1.0/gongdis/${data.id}`)
+        axios.delete(`/kong/gongdi_mng/v1.0/gongdis/${data.id}`)
 			.then(function(response){
                 if(response.status === 204){
                     context.commit('removeGongdi',data)
