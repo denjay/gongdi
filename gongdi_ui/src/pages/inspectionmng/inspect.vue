@@ -1,32 +1,38 @@
 <template>
   <div>
     <div class="">
-      <div class="select">
-        <el-select v-model="companyid" filterable placeholder="请选择公司">
-          <el-option
-            v-for="company in companies"
-            :key="company.id"
-            :label="company.company_name"
-            :value="company.id">
-          </el-option>
-        </el-select>
-        <el-select v-model="dantiid" filterable placeholder="请选择单体">
-          <el-option
-            v-for="danti in dantis"
-            :key="danti.id"
-            :label="danti.name"
-            :value="danti.id">
-          </el-option>
-        </el-select>
-        <el-select v-model="buweiid" filterable placeholder="请选择部位">
-          <el-option
-            v-for="buwei in buweis"
-            :key="buwei.id"
-            :label="buwei.name"
-            :value="buwei.id">
-          </el-option>
-        </el-select>
-      </div>
+      <el-collapse v-model="activeNames" @change="handleChange">
+        <el-collapse-item title="一致性 Consistency" name="1">
+          <div class="select">
+            <span>选择部位：</span>
+            <el-select v-model="companyid" filterable placeholder="请选择公司">
+              <el-option
+                v-for="company in companies"
+                :key="company.id"
+                :label="company.company_name"
+                :value="company.id">
+              </el-option>
+            </el-select>
+            <el-select v-model="dantiid" filterable placeholder="请选择单体">
+              <el-option
+                v-for="danti in dantis"
+                :key="danti.id"
+                :label="danti.name"
+                :value="danti.id">
+              </el-option>
+            </el-select>
+            <el-select v-model="buweiid" filterable placeholder="请选择部位">
+              <el-option
+                v-for="buwei in buweis"
+                :key="buwei.id"
+                :label="buwei.name"
+                :value="buwei.id">
+              </el-option>
+            </el-select>
+            <el-date-picker v-model="insp_date" type="date" placeholder="选择日期"></el-date-picker>
+          </div>
+        </el-collapse-item>
+      </el-collapse>
       <el-button @click="insert" type="primary" :disabled="!(companyid && dantiid && buweiid)">新增巡检</el-button>
     </div>
 
@@ -96,6 +102,10 @@
         companyid: '',
         dantiid: '',
         buweiid: '',
+        insp_date: '',
+        insp_emp: '', 
+        insp_type: '',
+        insp_types: ["quality_inspects", "safety_inspects", "produce_inspects"],
         dialogVisible: false,
         title: '',
         insertData:{
@@ -172,6 +182,11 @@
           this.$store.dispatch('getBuweis', this.dantiid)
         }
       },
+      buweiid: function(){
+        if(Boolean(this.buweiid)){
+          this.$store.dispatch('getInspects', { buweiid, insp_date, insp_emp, insp_type })
+        }
+      },
     }     
   }
 </script>
@@ -179,6 +194,7 @@
 <style scoped>
   .el-select {
     width: 32%;
+    margin-bottom: 20px;
   }
   .el-dialog {
     width: 350px !important;
