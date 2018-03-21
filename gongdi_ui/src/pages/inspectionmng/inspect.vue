@@ -2,7 +2,7 @@
   <div>
     <div class="">
       <el-collapse v-model="activeNames" @change="handleChange">
-        <el-collapse-item title="一致性 Consistency" name="1">
+        <el-collapse-item title="可选筛选项" name="1">
           <div class="select">
             <span>选择部位：</span>
             <el-select v-model="companyid" filterable placeholder="请选择公司">
@@ -106,6 +106,7 @@
         insp_emp: '', 
         insp_type: '',
         insp_types: ["quality_inspects", "safety_inspects", "produce_inspects"],
+        activeNames: ['1'],
         dialogVisible: false,
         title: '',
         insertData:{
