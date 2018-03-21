@@ -18,12 +18,20 @@
             :value="danti.id">
           </el-option>
         </el-select>
+        <el-select v-model="buweiid" filterable placeholder="请选择部位">
+          <el-option
+            v-for="buwei in buweis"
+            :key="buwei.id"
+            :label="buwei.name"
+            :value="buwei.id">
+          </el-option>
+        </el-select>
       </div>
-      <el-button @click="insert" type="primary" :disabled="!(companyid && dantiid)">新增部位</el-button>
+      <el-button @click="insert" type="primary" :disabled="!(companyid && dantiid && buweiid)">新增巡检</el-button>
     </div>
 
     <el-table
-      :data="buweis"
+      :data="inspects"
       border
       style="width: 100%">
       <el-table-column
@@ -87,6 +95,7 @@
       return {
         companyid: '',
         dantiid: '',
+        buweiid: '',
         dialogVisible: false,
         title: '',
         insertData:{
@@ -145,7 +154,8 @@
       ...mapGetters([
         'dantis',
         'companies',
-        'buweis'
+        'buweis',
+        'inspect'
 		  ])
     },
 
@@ -156,6 +166,8 @@
         this.$store.dispatch('getDantis', this.companyid)
       },
       dantiid: function(){
+        this.buweiid = ''
+        this.$store.commit('setBuweis',[])
         if(Boolean(this.dantiid)){
           this.$store.dispatch('getBuweis', this.dantiid)
         }
@@ -166,13 +178,13 @@
 
 <style scoped>
   .el-select {
-    width: 49%;
+    width: 32%;
   }
   .el-dialog {
     width: 350px !important;
   }
   .select {
-    width: 350px;
+    width: 550px;
     margin-right: 20px;
     display: inline-block;
   }

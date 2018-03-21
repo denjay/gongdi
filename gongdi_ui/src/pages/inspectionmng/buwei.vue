@@ -156,6 +156,7 @@
         this.$store.dispatch('getDantis', this.companyid)
       },
       dantiid: function(){
+        this.$store.commit('setBuweis',[])        
         if(Boolean(this.dantiid)){
           this.$store.dispatch('getBuweis', this.dantiid)
         }
