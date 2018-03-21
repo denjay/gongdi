@@ -11,7 +11,6 @@
           </el-option>
         </el-select>
       </div>
-      <!-- <el-button @click="getGongdis" type="primary" :disabled="!companyid">查询</el-button> -->
       <el-button @click="insert" type="primary" :disabled="companyid && Boolean(gongdis.length)">新增</el-button>
     </div>
 
@@ -87,23 +86,21 @@
       width="30%"
       :before-close="handleClose">
 
-      <el-form label-position="right" label-width="100px" :model="insertData" :rules="rules" ref="ruleForm">
+      <el-form label-position="right" label-width="100px" :model="insertData">
         <el-form-item label="工地代码">
           <el-input v-model="insertData.code"></el-input>
         </el-form-item>
-        <el-form-item label="经度" prop="lon">
+        <el-form-item label="经度">
           <el-input v-model.number="insertData.lon"></el-input>
         </el-form-item>
-        <el-form-item label="纬度" prop="lat">
+        <el-form-item label="纬度">
           <el-input v-model.number="insertData.lat"></el-input>
         </el-form-item>
         <el-form-item label="开工时间">
           <el-date-picker type="date" placeholder="选择日期" v-model="insertData.starttime" style="width: 100%;"></el-date-picker>
-          <!-- <el-input v-model="insertData.starttime"></el-input> -->
         </el-form-item>
         <el-form-item label="竣工时间">
           <el-date-picker type="date" placeholder="选择日期" v-model="insertData.complete_time" style="width: 100%;"></el-date-picker>          
-          <!-- <el-input v-model="insertData.complete_time"></el-input> -->
         </el-form-item>
         <el-form-item label="建设单位">
           <el-input v-model="insertData.build_unit"></el-input>
@@ -124,7 +121,7 @@
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+        <el-button type="primary" @click="submitData">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -155,34 +152,10 @@
           construct_unit: '',
           description: ''
         },
-        rules: {
-          lon: [
-              { type:'float',trigger: 'blur', message: '经度必须是数字类型' }
-          ],
-          lat: [
-              { type:'float',trigger: 'blur', message: '纬度必须是数字类型' }
-          ]
-        }
       }
     },
 
     methods: {
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.submitData();
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
-      // getGongdis(){
-      //   this.$store.commit('setCompanyid', this.companyid)
-      //   this.$store.commit('setGongdis', [])
-      //   console.table(this.gongdis)
-      //   this.$store.dispatch('getGongdis')
-      // },
       insert(){
         this.title = '新增工地'
         this.dialogVisible = true
@@ -250,15 +223,22 @@
   }
 </script>
 
-<style>
-  .el-dialog {
-    width: 350px !important;
+<style scoped>
+  .el-date-editor {
+    width: 180px !important;
+  }
+  .el-table {
+    margin-top: 5px;
   }
   .el-input {
     width: 180px;
     margin-right: 20px;
   }
-  .el-table {
-    margin-top: 5px;
+</style>
+
+<style>
+  .el-dialog {
+    width: 350px !important;
   }
+
 </style>

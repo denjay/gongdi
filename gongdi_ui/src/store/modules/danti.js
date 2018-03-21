@@ -65,8 +65,6 @@ const actions = {
 		})
     },
     putDantis(context,data){
-        console.table(data)
-
         delete data.comp_name
         delete data.dantiid
         axios.put(`/kong/gongdi_mng/v1.0/dantis/${data.id}`,data)
@@ -75,22 +73,12 @@ const actions = {
                 for(var item of context.getters.dantis){
                     if(item.id === data.id){
                         var index = context.getters.dantis.indexOf(item)
-                        var newDatas = context.getters.dantis.splice(index, 1, response.data)
-                        console.table(newDatas)
+                        var [...newDatas] = context.getters.dantis
+                        newDatas.splice(index, 1, response.data)
                         context.commit('setDantis',newDatas)
                         break
                     }
                 }
-                // var i = 0, len = context.getters.dantis.length
-                // for(;i<len;i++){
-                //     if(context.getters.dantis[i].id === data.id){
-                //         var newDatas = context.getters.dantis
-                //         newDatas[i] = response.data 
-                //         context.commit('setDantis',newDatas)
-                //         // console.log(context.getters.dantis)
-                //         break
-                //     }
-                // }
             }
         })
         .catch(error => {
