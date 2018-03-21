@@ -52,12 +52,12 @@ const actions = {
     putGongdis(context,data){
         delete data.comp_name
         delete data.gongdiid
-        if(!data.lon){
-            data.lon = null
-        }
-        if(!data.lat){
-            data.lat = null
-        }
+        // if(!data.lon){
+        //     data.lon = null
+        // }
+        // if(!data.lat){
+        //     data.lat = null
+        // }
         if (data.starttime === null){
             data.starttime = ""
         }

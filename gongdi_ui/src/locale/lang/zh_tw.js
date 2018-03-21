@@ -7,4 +7,5 @@ chg= {
 	danti: '单体',
 	gongdi:'工地',
 	buwei:'部位',
+	inspect:'巡检',
 }

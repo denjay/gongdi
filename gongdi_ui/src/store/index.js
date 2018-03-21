@@ -7,6 +7,7 @@ import mypermissions from './modules/mypermissions'
 import danti from './modules/danti'
 import gongdi from './modules/gongdi'
 import buwei from './modules/buwei'
+import inspect from './modules/inspect'
 
 Vue.use(Vuex)
 
@@ -22,6 +23,7 @@ export default new Vuex.Store({
 		mypermissions,
 		danti,
 		gongdi,
-		buwei
+		buwei,
+		inspect
     }
 })
