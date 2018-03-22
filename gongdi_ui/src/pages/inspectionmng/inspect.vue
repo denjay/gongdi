@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="">
-      <el-collapse v-model="activeNames" @change="handleChange">
+      <el-collapse v-model="activeNames">
         <el-collapse-item title="可选筛选项" name="1">
           <div class="select">
-            <span>选择部位：</span>
-            <el-select v-model="companyid" filterable placeholder="请选择公司">
+            <span>请选择部位：</span>
+            <el-select v-model="companyid" filterable clearable placeholder="请选择公司">
               <el-option
                 v-for="company in companies"
                 :key="company.id"
@@ -13,7 +13,7 @@
                 :value="company.id">
               </el-option>
             </el-select>
-            <el-select v-model="dantiid" filterable placeholder="请选择单体">
+            <el-select v-model="dantiid" filterable clearable placeholder="请选择单体">
               <el-option
                 v-for="danti in dantis"
                 :key="danti.id"
@@ -21,7 +21,7 @@
                 :value="danti.id">
               </el-option>
             </el-select>
-            <el-select v-model="buweiid" filterable placeholder="请选择部位">
+            <el-select v-model="buweiid" filterable clearable placeholder="请选择部位">
               <el-option
                 v-for="buwei in buweis"
                 :key="buwei.id"
@@ -29,31 +29,51 @@
                 :value="buwei.id">
               </el-option>
             </el-select>
-            <el-date-picker v-model="insp_date" type="date" placeholder="选择日期"></el-date-picker>
+            <br>
+            <span>请选择日期：</span>
+            <el-date-picker v-model="insp_date" value-format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>
+            <br>
+            <span>巡检人姓名：</span>
+            <el-input
+              placeholder="请输入巡检人姓名"
+              v-model="insp_emp"
+              clearable>
+            </el-input>
+            
           </div>
         </el-collapse-item>
       </el-collapse>
+      <el-button @click="getInspects" type="primary">查询</el-button>
       <el-button @click="insert" type="primary" :disabled="!(companyid && dantiid && buweiid)">新增巡检</el-button>
     </div>
 
     <el-table
-      :data="inspects"
+      :data="safety_inspects"
       border
       style="width: 100%">
       <el-table-column
         fixed
-        prop="name"
-        label="部位名称"
+        prop="insp_date"
+        label="巡检日期"
         width="150">
       </el-table-column>
       <el-table-column
-        prop="danti_name"
-        label="所属单体">
+        prop="insp_emp"
+        label="巡检人">
+        width="200"
+      </el-table-column>
+      <el-table-column
+        prop="buwei_name"
+        label="部位名称">
         width="200"
       </el-table-column>
       <el-table-column
         prop="description"
         label="描述">
+      </el-table-column>
+      <el-table-column
+        prop="is_qualified"
+        label="是否合格">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -101,10 +121,10 @@
       return {
         companyid: '',
         dantiid: '',
-        buweiid: '',
-        insp_date: '',
-        insp_emp: '', 
-        insp_type: '',
+        buweiid: null,
+        insp_date: null,
+        insp_emp: null, 
+        insp_type: null,
         insp_types: ["quality_inspects", "safety_inspects", "produce_inspects"],
         activeNames: ['1'],
         dialogVisible: false,
@@ -117,6 +137,10 @@
     },
 
     methods: {
+      getInspects(){
+          this.$store.dispatch('getInspects', 
+          { "buweiid":this.buweiid, "insp_date":this.insp_date, "insp_emp":this.insp_emp })        
+      },
       insert(){
         this.title = '新增部位'
         this.dialogVisible = true
@@ -166,7 +190,9 @@
         'dantis',
         'companies',
         'buweis',
-        'inspect'
+        'quality_inspects',
+        'safety_inspects',
+        'produce_inspects',
 		  ])
     },
 
@@ -174,7 +200,10 @@
       companyid: function(){
         this.dantiid = ''
         this.$store.commit('setDantis',[])
-        this.$store.dispatch('getDantis', this.companyid)
+        debugger
+        if(Boolean(this.companyid)){
+          this.$store.dispatch('getDantis', this.companyid)
+        }
       },
       dantiid: function(){
         this.buweiid = ''
@@ -183,32 +212,36 @@
           this.$store.dispatch('getBuweis', this.dantiid)
         }
       },
-      buweiid: function(){
-        if(Boolean(this.buweiid)){
-          this.$store.dispatch('getInspects', { buweiid, insp_date, insp_emp, insp_type })
-        }
-      },
     }     
   }
 </script>
 
 <style scoped>
   .el-select {
-    width: 32%;
+    width: 200px;
     margin-bottom: 20px;
   }
   .el-dialog {
     width: 350px !important;
   }
   .select {
-    width: 550px;
+    width: 700px;
     margin-right: 20px;
     display: inline-block;
+  }
+  .el-input {
+    width: 200px;
+    margin-bottom: 20px;
   }
 </style>
 
 <style>
   .el-table {
     margin-top: 5px;
+  }
+  .el-collapse-item__header {
+    width: 120px;
+    font-size: 16px;
+    color: #409eff;
   }
 </style>

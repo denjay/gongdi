@@ -20,21 +20,21 @@ const getters = {
 
 const  mutations = {
     setQualityInspects(state, data){
-        state.QualityInspects = data
+        state.quality_inspects = data
     },
     removeQualityInspects(state,data){
         var index = state.QualityInspects.indexOf(data)
         state.QualityInspects.splice(index,1)
     },
     setSafetyInspects(state, data){
-        state.SafetyInspects = data
+        state.safety_inspects = data
     },
     removeSafetyInspects(state,data){
         var index = state.SafetyInspects.indexOf(data)
         state.SafetyInspects.splice(index,1)
     },
     setProduceInspects(state, data){
-        state.ProduceInspects = data
+        state.produce_inspects = data
     },
     removeProduceInspects(state,data){
         var index = state.ProduceInspects.indexOf(data)
@@ -44,12 +44,26 @@ const  mutations = {
 
 const actions = {
     getInspects(context,data){
-        axios.get(`/kong/gongdi_mng/v1.0/dantis/${data}/Inspects`)
-        .then(response=>{
-            if(response.status === 200){
-                context.commit('setInspects',response.data)
+        var insp_methods = {
+            "quality_inspects":"setQualityInspects", 
+            "safety_inspects":"setSafetyInspects", 
+            "produce_inspects":"setProduceInspects"
             }
-        })
+        var path = ''
+        for(var insp_type in insp_methods){
+            path = insp_type + '?'
+            for(var key in data){
+                if(Boolean(data[key])){
+                    path =  `${path}&${key}=${data[key]}`
+                }
+            }
+            axios.get(`/kong/gongdi_mng/v1.0/${path}`,{'insp_type':insp_type})
+            .then(response=>{
+                if(response.status === 200){
+                    context.commit(insp_methods[response.config.insp_type],response.data)
+                }
+            })
+        }
     },
     // postBuwei(context,data){
     //     axios.post('/kong/gongdi_mng/v1.0/buweis',data)
