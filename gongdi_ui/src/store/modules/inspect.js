@@ -43,7 +43,7 @@ const  mutations = {
 }
 
 const actions = {
-    getInspects(context,data){
+    getInspects({commit},data){
         var insp_methods = {
             "quality_inspects":"setQualityInspects", 
             "safety_inspects":"setSafetyInspects", 
@@ -60,7 +60,7 @@ const actions = {
             axios.get(`/kong/gongdi_mng/v1.0/${path}`,{'insp_type':insp_type})
             .then(response=>{
                 if(response.status === 200){
-                    context.commit(insp_methods[response.config.insp_type],response.data)
+                    commit(insp_methods[response.config.insp_type],response.data)
                 }
             })
         }
