@@ -39,7 +39,6 @@
               v-model="insp_emp"
               clearable>
             </el-input>
-            
           </div>
         </el-collapse-item>
       </el-collapse>
@@ -47,44 +46,128 @@
       <el-button @click="insert" type="primary" :disabled="!(companyid && dantiid && buweiid)">新增巡检</el-button>
     </div>
 
-    <el-table
-      :data="safety_inspects"
-      border
-      style="width: 100%">
-      <el-table-column
-        fixed
-        prop="insp_date"
-        label="巡检日期"
-        width="150">
-      </el-table-column>
-      <el-table-column
-        prop="insp_emp"
-        label="巡检人">
-        width="200"
-      </el-table-column>
-      <el-table-column
-        prop="buwei_name"
-        label="部位名称">
-        width="200"
-      </el-table-column>
-      <el-table-column
-        prop="description"
-        label="描述">
-      </el-table-column>
-      <el-table-column
-        prop="is_qualified"
-        label="是否合格">
-      </el-table-column>
-      <el-table-column
-        fixed="right"
-        label="操作"
-        width="100">
-        <template slot-scope="scope">
-          <el-button @click="remove(scope.row)" type="text" size="mini" icon="el-icon-delete"></el-button>
-          <el-button @click="edit(scope.row)" type="text" size="mini" icon="el-icon-edit"></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <el-collapse v-model="activeNames">
+      <el-collapse-item title="质量巡检" name="2">
+        <el-table
+          :data="quality_inspects"
+          border
+          style="width: 100%">
+          <el-table-column
+            fixed
+            prop="insp_date"
+            label="巡检日期"
+            width="150">
+          </el-table-column>
+          <el-table-column
+            prop="insp_emp"
+            label="巡检人">
+            width="200"
+          </el-table-column>
+          <el-table-column
+            prop="buwei_name"
+            label="部位名称">
+            width="200"
+          </el-table-column>
+          <el-table-column
+            prop="description"
+            label="描述">
+          </el-table-column>
+          <el-table-column
+            prop="is_qualified"
+            label="是否合格">
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            label="操作"
+            width="100">
+            <template slot-scope="scope">
+              <el-button @click="remove(scope.row)" type="text" size="mini" icon="el-icon-delete"></el-button>
+              <el-button @click="edit(scope.row)" type="text" size="mini" icon="el-icon-edit"></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-collapse-item>
+      <el-collapse-item title="安全巡检" name="3">
+        <el-table
+          :data="safety_inspects"
+          border
+          style="width: 100%">
+          <el-table-column
+            fixed
+            prop="insp_date"
+            label="巡检日期"
+            width="150">
+          </el-table-column>
+          <el-table-column
+            prop="insp_emp"
+            label="巡检人">
+            width="200"
+          </el-table-column>
+          <el-table-column
+            prop="buwei_name"
+            label="部位名称">
+            width="200"
+          </el-table-column>
+          <el-table-column
+            prop="description"
+            label="描述">
+          </el-table-column>
+          <el-table-column
+            prop="is_qualified"
+            label="是否合格">
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            label="操作"
+            width="100">
+            <template slot-scope="scope">
+              <el-button @click="remove(scope.row)" type="text" size="mini" icon="el-icon-delete"></el-button>
+              <el-button @click="edit(scope.row)" type="text" size="mini" icon="el-icon-edit"></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-collapse-item>
+      <el-collapse-item title="产品巡检" name="4">
+        <el-table
+          :data="produce_inspects"
+          border
+          style="width: 100%">
+          <el-table-column
+            fixed
+            prop="insp_date"
+            label="巡检日期"
+            width="150">
+          </el-table-column>
+          <el-table-column
+            prop="insp_emp"
+            label="巡检人">
+            width="200"
+          </el-table-column>
+          <el-table-column
+            prop="buwei_name"
+            label="部位名称">
+            width="200"
+          </el-table-column>
+          <el-table-column
+            prop="description"
+            label="描述">
+          </el-table-column>
+          <el-table-column
+            prop="is_qualified"
+            label="是否合格">
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            label="操作"
+            width="100">
+            <template slot-scope="scope">
+              <el-button @click="remove(scope.row)" type="text" size="mini" icon="el-icon-delete"></el-button>
+              <el-button @click="edit(scope.row)" type="text" size="mini" icon="el-icon-edit"></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-collapse-item>
+    </el-collapse>
 
     <el-dialog
       :title="title"

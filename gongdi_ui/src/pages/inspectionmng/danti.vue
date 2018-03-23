@@ -11,7 +11,6 @@
           </el-option>
         </el-select>
       </div>
-      <!-- <el-button @click="getDantis" type="primary" :disabled="!companyid">查询</el-button> -->
       <el-button @click="insert" type="primary" :disabled="!companyid">新增</el-button>
     </div>
 
@@ -24,6 +23,10 @@
         prop="name"
         label="名称"
         width="150">
+      </el-table-column>
+      <el-table-column
+        prop="comp_name"
+        label="所属公司">
       </el-table-column>
       <el-table-column
         prop="framework_type"
@@ -64,15 +67,6 @@
         prop="dantiid"
         label="单体id"
         width="120">
-      </el-table-column>
-      <el-table-column
-        prop="companyid"
-        label="公司id"
-        width="50">
-      </el-table-column>
-      <el-table-column
-        prop="comp_name"
-        label="公司名称">
       </el-table-column>
       <el-table-column
         fixed="right"

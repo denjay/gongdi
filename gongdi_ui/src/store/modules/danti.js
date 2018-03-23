@@ -14,7 +14,7 @@ const getters = {
     }
 }
 
-const  mutations = {
+const mutations = {
     setCompanyid(state, data){
         state.companyid = data
     },
@@ -31,30 +31,30 @@ const  mutations = {
 }
 
 const actions = {
-    getCompanies(context){
+    getCompanies({commit}){
         axios.get('/kong/employeemng/v1.0/companys')
         .then(response=>{
             if(response.status === 200){
-                context.commit('setCompanies',response.data)
+                commit('setCompanies',response.data)
             }
         })
     },
-    getDantis(context,data){
+    getDantis({commit},data){
         axios.get(`/kong/gongdi_mng/v1.0/company/${data}/dantis`)
 		.then(function(response){
-            context.commit('setDantis',response.data)
+            commit('setDantis',response.data)
             console.log("actions",response);
 		}).catch(function(error){
 			console.log("actions");
 		})
     },
-    postDantis(context,data){
+    postDantis({commit, getters},data){
         axios.post('/kong/gongdi_mng/v1.0/dantis',data)
 		.then(response => {
             if (response.status === 201) {
-                data = context.getters.dantis 
+                data = getters.dantis 
                 data.unshift(response.data)
-                context.commit('setDantis', data)
+                commit('setDantis', data)
                 // alert('新增成功！')
             }
             else {
@@ -64,18 +64,18 @@ const actions = {
 			alert('请求失败')
 		})
     },
-    putDantis(context,data){
+    putDantis({commit,getters},data){
         delete data.comp_name
         delete data.dantiid
         axios.put(`/kong/gongdi_mng/v1.0/dantis/${data.id}`,data)
         .then(response => {
             if(response.status === 201){
-                for(var item of context.getters.dantis){
+                for(var item of getters.dantis){
                     if(item.id === data.id){
-                        var index = context.getters.dantis.indexOf(item)
-                        var [...newDatas] = context.getters.dantis
+                        var index = getters.dantis.indexOf(item)
+                        var [...newDatas] = getters.dantis
                         newDatas.splice(index, 1, response.data)
-                        context.commit('setDantis',newDatas)
+                        commit('setDantis',newDatas)
                         break
                     }
                 }
@@ -85,11 +85,11 @@ const actions = {
             alert('出错')
         })
     },
-    removeDantis(context,data){
+    removeDantis({commit},data){
         axios.delete(`/kong/gongdi_mng/v1.0/dantis/${data.id}`)
 			.then(function(response){
                 if(response.status === 204){
-                    context.commit('removeDanti',data)
+                    commit('removeDanti',data)
                 }
 			}).catch(function(error){
 			})

@@ -21,26 +21,26 @@ const  mutations = {
 }
 
 const actions = {
-    getGongdis(context,data){
+    getGongdis({commit},data){
         axios.get(`/kong/gongdi_mng/v1.0/companys/${data}/gongdis`)
 		.then(response => {
             if(response.data.length === 0){
-                context.commit('setGongdis',[])
+                commit('setGongdis',[])
             }
             else {
-                context.commit('setGongdis',[response.data])
+                commit('setGongdis',[response.data])
             }
 		}).catch(function(error){
 			console.log("actions");
 		})
     },
-    postGongdis(context,data){
+    postGongdis({commit,getters},data){
         axios.post('/kong/gongdi_mng/v1.0/gongdis',data)
 		.then(response => {
             if (response.status === 201) {
-                data = context.getters.gongdis
+                data = getters.gongdis
                 data.unshift(response.data)
-                context.commit('setGongdis', data)
+                commit('setGongdis', data)
             }
             else {
                 alert('新增失败')
@@ -49,15 +49,9 @@ const actions = {
 			alert('请求失败')
 		})
     },
-    putGongdis(context,data){
+    putGongdis({commit,getters},data){
         delete data.comp_name
         delete data.gongdiid
-        // if(!data.lon){
-        //     data.lon = null
-        // }
-        // if(!data.lat){
-        //     data.lat = null
-        // }
         if (data.starttime === null){
             data.starttime = ""
         }
@@ -67,23 +61,23 @@ const actions = {
         axios.put(`/kong/gongdi_mng/v1.0/gongdis/${data.id}`,data)
         .then(response => {
             if(response.status === 201){
-                for(var item of context.getters.gongdis){
+                for(var item of getters.gongdis){
                     if(item.id === data.id){
-                        var index = context.getters.gongdis.indexOf(item)
-                        var [...newDatas] = context.getters.gongdis
+                        var index = getters.gongdis.indexOf(item)
+                        var [...newDatas] = getters.gongdis
                         newDatas.splice(index, 1, response.data)
-                        context.commit('setGongdis',newDatas)
+                        commit('setGongdis',newDatas)
                         break
                     }
                 }
             }
         })
     },
-    removeGongdis(context,data){
+    removeGongdis({commit},data){
         axios.delete(`/kong/gongdi_mng/v1.0/gongdis/${data.id}`)
 			.then(function(response){
                 if(response.status === 204){
-                    context.commit('removeGongdi',data)
+                    commit('removeGongdi',data)
                 }
 			}).catch(function(error){
 			})

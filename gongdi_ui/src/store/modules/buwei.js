@@ -21,21 +21,21 @@ const  mutations = {
 }
 
 const actions = {
-    getBuweis(context,data){
+    getBuweis({commit},data){
         axios.get(`/kong/gongdi_mng/v1.0/dantis/${data}/buweis`)
         .then(response=>{
             if(response.status === 200){
-                context.commit('setBuweis',response.data)
+                commit('setBuweis',response.data)
             }
         })
     },
-    postBuwei(context,data){
+    postBuwei({commit,getters},data){
         axios.post('/kong/gongdi_mng/v1.0/buweis',data)
 		.then(response => {
             if (response.status === 201) {
-                data = context.getters.buweis 
+                data = getters.buweis 
                 data.unshift(response.data)
-                context.commit('setBuweis', data)
+                commit('setBuweis', data)
             }
             else {
                 alert('新增失败')
@@ -44,19 +44,19 @@ const actions = {
 			alert('请求失败')
 		})
     },
-    putBuweis(context,data){
+    putBuweis({commit,getters},data){
         console.table(data)
         delete data.danti_name
         delete data.dantiid
         axios.put(`/kong/gongdi_mng/v1.0/buweis/${data.id}`,data)
         .then(response => {
             if(response.status === 201){
-                for(var item of context.getters.buweis){
+                for(var item of getters.buweis){
                     if(item.id === data.id){
-                        var index = context.getters.buweis.indexOf(item)
-                        var [...newDatas] = context.getters.buweis
+                        var index = getters.buweis.indexOf(item)
+                        var [...newDatas] = getters.buweis
                         newDatas.splice(index, 1, response.data)
-                        context.commit('setBuweis',newDatas)
+                        commit('setBuweis',newDatas)
                         break
                     }
                 }
@@ -66,11 +66,11 @@ const actions = {
             alert('出错')
         })
     },
-    removeBuweis(context,data){
+    removeBuweis({commit},data){
         axios.delete(`/kong/gongdi_mng/v1.0/buweis/${data.id}`)
 			.then(function(response){
                 if(response.status === 204){
-                    context.commit('removeBuweis',data)
+                    commit('removeBuweis',data)
                 }
 			}).catch(function(error){
 			})
