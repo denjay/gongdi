@@ -111,7 +111,7 @@
         var {...insertData} = this.insertData
         if(this.title === '新增部位'){
           insertData['dantiid'] = parseInt(this.dantiid)
-          this.$store.dispatch('postBuwei',insertData)
+          this.$store.dispatch('postBuweis',insertData)
         }
         else if(this.title === '编辑部位'){
           this.$store.dispatch('putBuweis',insertData)

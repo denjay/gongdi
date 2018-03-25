@@ -65,52 +65,51 @@ const actions = {
             })
         }
     },
-    // postBuwei(context,data){
-    //     axios.post('/kong/gongdi_mng/v1.0/buweis',data)
-	// 	.then(response => {
-    //         if (response.status === 201) {
-    //             data = context.getters.buweis 
-    //             data.unshift(response.data)
-    //             context.commit('setBuweis', data)
-    //         }
-    //         else {
-    //             alert('新增失败')
-    //         }
-	// 	}).catch(function(error){
-	// 		alert('请求失败')
-	// 	})
-    // },
-    // putBuweis(context,data){
-    //     console.table(data)
-    //     delete data.danti_name
-    //     delete data.dantiid
-    //     axios.put(`/kong/gongdi_mng/v1.0/buweis/${data.id}`,data)
-    //     .then(response => {
-    //         if(response.status === 201){
-    //             for(var item of context.getters.buweis){
-    //                 if(item.id === data.id){
-    //                     var index = context.getters.buweis.indexOf(item)
-    //                     var [...newDatas] = context.getters.buweis
-    //                     newDatas.splice(index, 1, response.data)
-    //                     context.commit('setBuweis',newDatas)
-    //                     break
-    //                 }
-    //             }
-    //         }
-    //     })
-    //     .catch(error => {
-    //         alert('出错')
-    //     })
-    // },
-    // removeBuweis(context,data){
-    //     axios.delete(`/kong/gongdi_mng/v1.0/buweis/${data.id}`)
-	// 		.then(function(response){
-    //             if(response.status === 204){
-    //                 context.commit('removeBuweis',data)
-    //             }
-	// 		}).catch(function(error){
-	// 		})
-    // }
+    postInspects({commit,getters,dispatch},data){
+        var insp_type = data.type
+        delete data.type
+        axios.post(`/kong/gongdi_mng/v1.0/${insp_type}s`,data,{insp_type})
+		.then(response => {            
+            if (response.status === 201) {
+                var newData = {buweiid:data.buweiid,insp_date:data.insp_date,insp_emp:data.insp_emp}
+                dispatch('getInspects',newData)
+            }
+            else {
+                alert('新增失败')
+            }
+		}).catch(function(error){
+			alert('请求失败')
+		})
+    },
+    putInspects({commit,getters},data){
+        var insp_type = data.type
+        var id = data.id
+        delete data.type
+        delete data.id
+        axios.put(`/kong/gongdi_mng/v1.0/${insp_type}/${id}`,data)
+        .then(response => {
+            if(response.status === 201){
+                var newData = {buweiid:data.buweiid,insp_date:data.insp_date,insp_emp:data.insp_emp}
+                dispatch('getInspects',newData)
+            }
+        })
+        .catch(error => {
+            alert('出错')
+        })
+    },
+    removeInspects({commit},data){
+        var insp_type = data.type
+        var id = data.id
+        delete data.type
+        delete data.id
+        axios.delete(`/kong/gongdi_mng/v1.0/${insp_type}/${id}`)
+			.then(function(response){
+                if(response.status === 204){
+                    // commit('removeBuweis',data)
+                }
+			}).catch(function(error){
+			})
+    }
 }
 
 export default {

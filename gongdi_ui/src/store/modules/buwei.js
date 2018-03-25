@@ -29,7 +29,7 @@ const actions = {
             }
         })
     },
-    postBuwei({commit,getters},data){
+    postBuweis({commit,getters},data){
         axios.post('/kong/gongdi_mng/v1.0/buweis',data)
 		.then(response => {
             if (response.status === 201) {
