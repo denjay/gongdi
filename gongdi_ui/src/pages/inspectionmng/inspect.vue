@@ -219,6 +219,7 @@
       },
       edit(data){
         this.insp_id = data.id
+        this.type = data.type
         this.title = '编辑巡检'
         this.insp_date = data.insp_date
         this.insp_emp = data.insp_emp
@@ -228,7 +229,7 @@
       },
       submitData(){
         var data = {
-          type:this.type,  //有问题，type不是个体的值
+          type:this.type,
           buweiid:this.buweiid,
           insp_date:this.insp_date,
           insp_emp:this.insp_emp,
@@ -243,12 +244,6 @@
           this.$store.dispatch('putInspects',data)
         }
         this.dialogVisible = false
-        // 重置form
-        // this.insp_date = null
-        // this.insp_emp = null
-        // this.type = null        
-        // this.is_qualified = null
-        // this.description = ''
       },
       remove(data) {
         this.$confirm('此操作將永久刪除該資料, 是否繼續?', '提示', {
