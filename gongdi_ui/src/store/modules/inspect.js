@@ -114,7 +114,8 @@ const actions = {
         axios.delete(`/kong/gongdi_mng/v1.0/${insp_type}s/${id}`)
 			.then(function(response){
                 if(response.status === 204){
-                    var commit_method = "remove_" + insp_type + "s"
+                    var commit_method = `remove_${insp_type}s`
+                    // 将下划线式转为驼峰式
                     commit_method = commit_method.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})
                     delete data_copy.buweiid
                     delete data_copy.id

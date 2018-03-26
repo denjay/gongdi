@@ -97,10 +97,10 @@
           <el-input v-model.number="insertData.lat"></el-input>
         </el-form-item>
         <el-form-item label="开工时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="insertData.starttime" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date" placeholder="选择日期" v-model="insertData.starttime" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label="竣工时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="insertData.complete_time" style="width: 100%;"></el-date-picker>          
+          <el-date-picker type="date" placeholder="选择日期" v-model="insertData.complete_time" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>          
         </el-form-item>
         <el-form-item label="建设单位">
           <el-input v-model="insertData.build_unit"></el-input>

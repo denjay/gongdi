@@ -35,6 +35,12 @@ const actions = {
 		})
     },
     postGongdis({commit,getters},data){
+        if(! data.lon){
+            data.lon = 0
+        }
+        if(! data.lat){
+            data.lat = 0
+        }
         axios.post('/kong/gongdi_mng/v1.0/gongdis',data)
 		.then(response => {
             if (response.status === 201) {
@@ -42,11 +48,8 @@ const actions = {
                 data.unshift(response.data)
                 commit('setGongdis', data)
             }
-            else {
-                alert('新增失败')
-            }
 		}).catch(function(error){
-			alert('请求失败')
+			// alert('请求失败')
 		})
     },
     putGongdis({commit,getters},data){
@@ -57,6 +60,12 @@ const actions = {
         }
         if (data.complete_time === null){
             data.complete_time = ""
+        }
+        if(! data.lon){
+            data.lon = 0
+        }
+        if(! data.lat){
+            data.lat = 0
         }
         axios.put(`/kong/gongdi_mng/v1.0/gongdis/${data.id}`,data)
         .then(response => {
