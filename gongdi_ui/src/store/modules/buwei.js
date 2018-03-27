@@ -1,4 +1,5 @@
 import axios from 'axios'
+import danti from './danti'
 
 const state = {
     buweis:[],
@@ -45,7 +46,6 @@ const actions = {
 		})
     },
     putBuweis({commit,getters},data){
-        console.table(data)
         delete data.danti_name
         delete data.dantiid
         axios.put(`/kong/gongdi_mng/v1.0/buweis/${data.id}`,data)
@@ -78,8 +78,10 @@ const actions = {
 }
 
 export default {
+    namespaced: true,    
     state,
     getters,
     mutations,
-    actions
+    actions,
+    modules:{danti:danti}
 }

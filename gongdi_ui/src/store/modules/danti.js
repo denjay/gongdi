@@ -1,8 +1,7 @@
 import axios from 'axios'
 
-const state = {
-    dantis: [],
-    companies:[]
+const state = ()=>{
+    return {dantis: [],companies:[]}
 }
 
 const getters = {

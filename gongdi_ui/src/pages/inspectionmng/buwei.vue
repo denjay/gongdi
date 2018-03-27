@@ -80,7 +80,7 @@
   import {mapGetters} from 'vuex'
   export default {
     mounted(){
-      this.$store.dispatch('getCompanies')
+      this.$store.dispatch('buwei/getCompanies')
     },
 
     data() {
@@ -111,10 +111,10 @@
         var {...insertData} = this.insertData
         if(this.title === '新增部位'){
           insertData['dantiid'] = parseInt(this.dantiid)
-          this.$store.dispatch('postBuweis',insertData)
+          this.$store.dispatch('buwei/postBuweis',insertData)
         }
         else if(this.title === '编辑部位'){
-          this.$store.dispatch('putBuweis',insertData)
+          this.$store.dispatch('buwei/putBuweis',insertData)
         }
         // 重置form
         this.dialogVisible = false
@@ -128,7 +128,7 @@
           confirmButtonText: '確定',
           cancelButtonText: '取消',
         }).then(() => {
-          this.$store.dispatch('removeBuweis',data);
+          this.$store.dispatch('buwei/removeBuweis',data);
         }).catch(() => {         
         });
       },
@@ -142,23 +142,24 @@
     },
 
     computed: {
-      ...mapGetters([
-        'dantis',
-        'companies',
-        'buweis'
-		  ])
+      ...mapGetters('buwei',{
+        'dantis':'dantis',
+        'companies':'companies',
+        'buweis':'buweis',
+        }
+      )
     },
 
     watch:{
       companyid: function(){
         this.dantiid = ''
-        this.$store.commit('setDantis',[])
-        this.$store.dispatch('getDantis', this.companyid)
+        this.$store.commit('buwei/setDantis',[])
+        this.$store.dispatch('buwei/getDantis', this.companyid)
       },
       dantiid: function(){
-        this.$store.commit('setBuweis',[])        
+        this.$store.commit('buwei/setBuweis',[])        
         if(Boolean(this.dantiid)){
-          this.$store.dispatch('getBuweis', this.dantiid)
+          this.$store.dispatch('buwei/getBuweis', this.dantiid)
         }
       },
     }     
