@@ -1,4 +1,5 @@
 import axios from 'axios'
+import buwei from './buwei'
 
 const state = {
     quality_inspects:[],
@@ -30,9 +31,6 @@ const  mutations = {
         state.safety_inspects = data
     },
     removeSafetyInspects(state,data){
-        debugger
-        console.log(state.safety_inspects)
-        console.log(data)
         var index = state.safety_inspects.indexOf(data)
         state.safety_inspects.splice(index,1)
     },
@@ -94,7 +92,7 @@ const actions = {
         var id = data.id
         delete data.type
         delete data.id
-        axios.put(`/kong/gongdi_mng/v1.0/${insp_type}/${id}`,data)
+        axios.put(`/kong/gongdi_mng/v1.0/${insp_type}s/${id}`,data)
         .then(response => {
             if(response.status === 201){
                 var newData = {buweiid:data.buweiid,insp_date:data.insp_date,insp_emp:data.insp_emp}
@@ -127,8 +125,10 @@ const actions = {
 }
 
 export default {
+    namespaced: true,
     state,
     getters,
     mutations,
-    actions
+    actions,
+    modules:{buwei}
 }

@@ -1,8 +1,8 @@
 import axios from 'axios'
 import danti from './danti'
 
-const state = {
-    buweis:[],
+const state = ()=>{
+    return {buweis:[]}
 }
 
 const getters = {
@@ -83,5 +83,5 @@ export default {
     getters,
     mutations,
     actions,
-    modules:{danti:danti}
+    modules:{danti}
 }

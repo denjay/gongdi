@@ -183,7 +183,7 @@
   import {mapGetters} from 'vuex'
   export default {
     mounted(){
-      this.$store.dispatch('getCompanies')
+      this.$store.dispatch('inspect/buwei/getCompanies')
     },
 
     data() {
@@ -210,7 +210,7 @@
         return row.is_qualified ? '合格' : '不合格';
       },
       getInspects(){
-          this.$store.dispatch('getInspects', 
+          this.$store.dispatch('inspect/getInspects', 
           { "buweiid":this.buweiid, "insp_date":this.insp_date, "insp_emp":this.insp_emp })        
       },
       insert(){
@@ -237,11 +237,11 @@
           is_qualified:this.is_qualified,
         }
         if(this.title === '新增巡检'){
-          this.$store.dispatch('postInspects',data)
+          this.$store.dispatch('inspect/postInspects',data)
         }
         else if(this.title === '编辑巡检'){
-          data[id] = this.insp_id
-          this.$store.dispatch('putInspects',data)
+          data["id"] = this.insp_id
+          this.$store.dispatch('inspect/putInspects',data)
         }
         this.dialogVisible = false
       },
@@ -250,7 +250,7 @@
           confirmButtonText: '確定',
           cancelButtonText: '取消',
         }).then(() => {
-          this.$store.dispatch('removeInspects',data);
+          this.$store.dispatch('inspect/removeInspects',data);
         }).catch(() => {         
         });
       },
@@ -264,14 +264,17 @@
     },
 
     computed: {
-      ...mapGetters([
-        'dantis',
-        'companies',
-        'buweis',
-        'quality_inspects',
-        'safety_inspects',
-        'produce_inspects',
-		  ]),
+      ...mapGetters('inspect/buwei',{
+        'dantis':'dantis',
+        'companies':'companies',
+        'buweis':'buweis',
+        }
+      ),
+      ...mapGetters('inspect',{
+        'quality_inspects':'quality_inspects',
+        'safety_inspects':'safety_inspects',
+        'produce_inspects':'produce_inspects',
+		  }),
       insp_table(){
         return [
           {title:"质量巡检", name:"2", data:this.quality_inspects},
@@ -284,16 +287,16 @@
     watch:{
       companyid: function(){
         this.dantiid = ''
-        this.$store.commit('setDantis',[])
+        this.$store.commit('inspect/buwei/setDantis',[])
         if(Boolean(this.companyid)){
-          this.$store.dispatch('getDantis', this.companyid)
+          this.$store.dispatch('inspect/buwei/getDantis', this.companyid)
         }
       },
       dantiid: function(){
         this.buweiid = ''
-        this.$store.commit('setBuweis',[])
+        this.$store.commit('inspect/buwei/setBuweis',[])
         if(Boolean(this.dantiid)){
-          this.$store.dispatch('getBuweis', this.dantiid)
+          this.$store.dispatch('inspect/buwei/getBuweis', this.dantiid)
         }
       },
     }     
