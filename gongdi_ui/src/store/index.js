@@ -8,7 +8,7 @@ import danti from './modules/danti'
 import gongdi from './modules/gongdi'
 import buwei from './modules/buwei'
 import inspect from './modules/inspect'
-import guifan from './modules/guifan'
+import doc from './modules/doc'
 
 Vue.use(Vuex)
 
@@ -26,6 +26,6 @@ export default new Vuex.Store({
 		gongdi,
 		buwei,
 		inspect,
-		guifan
+		doc
     }
 })

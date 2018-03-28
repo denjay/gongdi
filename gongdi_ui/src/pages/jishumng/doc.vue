@@ -39,7 +39,7 @@
           </div>
         </el-collapse-item>
       </el-collapse>
-      <el-button @click="getGuifans" type="primary">查询</el-button>
+      <el-button @click="getDocs" type="primary">查询</el-button>
       <el-button @click="insert" type="primary">新增规范</el-button>
     </div>
 
@@ -152,7 +152,7 @@
   import {mapGetters} from 'vuex'
   export default {
     mounted(){
-      this.$store.dispatch('guifan/buwei/getCompanies')
+      this.$store.dispatch('doc/buwei/getCompanies')
     },
 
     data() {
@@ -160,7 +160,9 @@
         companyid: '',
         dantiid: '',
         buweiid: null,
-        guifan_id: null,
+        doc_type: null,
+        doc_types:{"规范管理":"guifan","图纸管理":"tuzhi","图集管理":"tuji"},
+        doc_id: null,
         name: null, 
         code: null,
         description: '',
@@ -171,8 +173,8 @@
     },
 
     methods: {
-      getGuifans(){
-        this.$store.dispatch('guifan/getGuifans', { "buwei":this.buwei_name, "doc_name":this.name })        
+      getDocs(){
+        this.$store.dispatch('doc/getDocs', { "buwei":this.buwei_name, "doc_name":this.name })        
       },
       insert(){
         this.title = '新增规范'
@@ -183,7 +185,7 @@
       },
       edit(data){
         this.title = '编辑规范'
-        this.guifan_id = data.id
+        this.doc_id = data.id
         this.name = data.name
         this.code = data.code
         this.description = data.description
@@ -197,12 +199,12 @@
           description:this.description,
         }
         if(this.title === '新增规范'){
-          this.$store.dispatch('guifan/postGuifans',data)
+          this.$store.dispatch('doc/postDocs',data)
         }
         else if(this.title === '编辑规范'){
-          data["id"] = this.guifan_id
+          data["id"] = this.doc_id
           delete data.buweiid          
-          this.$store.dispatch('guifan/putGuifans',data)
+          this.$store.dispatch('doc/putDocs',data)
         }
         this.dialogVisible = false
       },
@@ -211,7 +213,7 @@
           confirmButtonText: '確定',
           cancelButtonText: '取消',
         }).then(() => {
-          this.$store.dispatch('guifan/removeGuifans',data);
+          this.$store.dispatch('doc/removeDocs',data);
         }).catch(() => {         
         });
       },
@@ -230,30 +232,32 @@
           return this.buweis.filter(item => item.id === this.buweiid)[0]["name"]
         }
       },
-      ...mapGetters('guifan/buwei',{
+      ...mapGetters('doc/buwei',{
         'dantis':'dantis',
         'companies':'companies',
         'buweis':'buweis',
         }
       ),
-      ...mapGetters('guifan',{
+      ...mapGetters('doc',{
         'guifans':'guifans',
+        'tuzhis':'tuzhis',
+        'tujis':'tujis',
 		  }),
     },
 
     watch:{
       companyid: function(){
         this.dantiid = ''
-        this.$store.commit('guifan/buwei/setDantis',[])
+        this.$store.commit('doc/buwei/setDantis',[])
         if(Boolean(this.companyid)){
-          this.$store.dispatch('guifan/buwei/getDantis', this.companyid)
+          this.$store.dispatch('doc/buwei/getDantis', this.companyid)
         }
       },
       dantiid: function(){
         this.buweiid = null
-        this.$store.commit('guifan/buwei/setBuweis',[])
+        this.$store.commit('doc/buwei/setBuweis',[])
         if(Boolean(this.dantiid)){
-          this.$store.dispatch('guifan/buwei/getBuweis', this.dantiid)
+          this.$store.dispatch('doc/buwei/getBuweis', this.dantiid)
         }
       },
     }     
