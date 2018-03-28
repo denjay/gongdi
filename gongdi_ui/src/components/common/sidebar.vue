@@ -6,12 +6,19 @@
 				<el-menu-item  index="/pages/illegalmng/illegal_category"><i class="fa fa-users"></i>违规类别</el-menu-item>
 				<el-menu-item  index="/pages/illegalmng/illegal_type"><i class="fa fa-users"></i>违规类型</el-menu-item>
 			</el-submenu>  
-			<el-submenu index="accident1">
+			<el-submenu index="inspection">
 				<template slot="title"><i class="el-icon-view"></i>巡检管理</template>	
 				<el-menu-item  index="/pages/inspectionmng/danti"><i class="fa fa-building"></i>单体管理</el-menu-item>
 				<el-menu-item  index="/pages/inspectionmng/gongdi"><i class="fa fa-cubes"></i>工地管理</el-menu-item>
 				<el-menu-item  index="/pages/inspectionmng/buwei"><i class="fa fa-cube"></i>部位管理</el-menu-item>
 				<el-menu-item  index="/pages/inspectionmng/inspect"><i class="fa fa-check"></i>巡检管理</el-menu-item>
+			</el-submenu> 
+			<el-submenu index="jishu">
+				<template slot="title"><i class="el-icon-view"></i>技术管理</template>	
+				<el-menu-item  index="/pages/jishumng/guifan"><i class="fa fa-building"></i>规范管理</el-menu-item>
+				<el-menu-item  index="/pages/jishumng/tuzhi"><i class="fa fa-cubes"></i>图纸管理</el-menu-item>
+				<el-menu-item  index="/pages/jishumng/tuji"><i class="fa fa-cube"></i>图集管理</el-menu-item>
+				<el-menu-item  index="/pages/jishumng/jiaodi"><i class="fa fa-check"></i>交底管理</el-menu-item>
 			</el-submenu> 
 			<el-submenu index="base">
 				<template slot="title"><i class="el-icon-setting"></i>權限管理</template>
