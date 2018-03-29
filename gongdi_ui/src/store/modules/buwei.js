@@ -34,12 +34,9 @@ const actions = {
         axios.post('/kong/gongdi_mng/v1.0/buweis',data)
 		.then(response => {
             if (response.status === 201) {
-                data = getters.buweis 
-                data.unshift(response.data)
-                commit('setBuweis', data)
-            }
-            else {
-                alert('新增失败')
+                var buweis = getters.buweis 
+                buweis.unshift(response.data)
+                commit('setBuweis', buweis)
             }
 		}).catch(function(error){
 			alert('请求失败')

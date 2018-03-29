@@ -1,17 +1,19 @@
 import axios from 'axios'
 import buwei from './buwei'
 
+const doc_map = {"guifang":"Guifangs","tuzhi":"Tuzhis","tuji":"Tujis"}
+
 const state = ()=>{
     return {
-        guifans:[],
+        guifangs:[],
         tuzhis:[],
         tujis:[],
     }
 }
 
 const getters = {
-    guifans:state=>{
-        return state.guifans
+    guifangs:state=>{
+        return state.guifangs
     },
     tuzhis:state=>{
         return state.tuzhis
@@ -22,12 +24,12 @@ const getters = {
 }
 
 const  mutations = {
-    setGuifans(state, data){
-        state.guifans = data
+    setGuifangs(state, data){
+        state.guifangs = data
     },
-    removeGuifans(state,data){
-        var index = state.guifans.indexOf(data)
-        state.guifans.splice(index,1)
+    removeGuifangs(state,data){
+        var index = state.guifangs.indexOf(data)
+        state.guifangs.splice(index,1)
     },
     setTuzhis(state, data){
         state.tuzhis = data
@@ -53,56 +55,65 @@ const actions = {
                 query_args += `&${key}=${data[key]}`
             }
         }
-        var doc_map = {"guifang":"Guifans","tuzhi":"Tuzhis","tuji":"Tujis"}
         for(var doc_type in doc_map){
             axios.get(`/kong/gongdi_mng/v1.0/${doc_type}_docs?${query_args}`,{doc_type})
             .then(response=>{
                 if(response.status === 200){
-                    commit(`set${doc_map[response.config.doc_type]}`,response.data)
+                    // 增加doc_type字段
+                    var [...data] = response.data
+                    for(var doc of data){
+                        doc["doc_type"] = response.config.doc_type
+                    }
+                    commit(`set${doc_map[response.config.doc_type]}`,data)
                 }
             })
 
         }
     },
     postDocs({commit,getters},data){
-        axios.post('/kong/gongdi_mng/v1.0/guifang_docs',data)
+        var doc_type = data.doc_type
+        delete data.doc_type
+        axios.post(`/kong/gongdi_mng/v1.0/${doc_type}_docs`,data)
 		.then(response => {
             if (response.status === 201) {
-                data = getters.guifans 
-                data.unshift(response.data)
-                commit('setGuifans', data)
-            }
-            else {
-                alert('新增失败')
+                var [...docs] = getters[`${doc_type}s`] 
+                docs.unshift(response.data)
+                commit(`set${doc_map[doc_type]}`, docs)
             }
 		}).catch(function(error){
 			alert('请求失败')
 		})
     },
     putDocs({commit,getters},data){
-        axios.put(`/kong/gongdi_mng/v1.0/guifang_docs/${data.id}`,data)
+        var doc_type = data.doc_type
+        delete data.doc_type
+        axios.put(`/kong/gongdi_mng/v1.0/${doc_type}_docs/${data.id}`,data)
         .then(response => {
             if(response.status === 201){
-                for(var item of getters.guifans){
+                console.log('doc',doc_type,getters[`${doc_type}s`])
+                for(var item of getters[`${doc_type}s`]){
                     if(item.id === data.id){
-                        var index = getters.guifans.indexOf(item)
-                        var [...newDatas] = getters.guifans
-                        newDatas.splice(index, 1, response.data)
-                        commit('setGuifans',newDatas)
+                        var index = getters[`${doc_type}s`].indexOf(item)
+                        debugger
+                        var [...docs] = getters[`${doc_type}s`]
+                        var {...doc} = response.data
+                        doc["doc_type"] = doc_type
+                        docs.splice(index, 1, doc)
+                        commit(`set${doc_map[doc_type]}`,docs)
                         break
                     }
                 }
             }
         })
-        .catch(error => {
-            alert('出错')
-        })
+        // .catch(error => {
+        //     alert('出错')
+        // })
     },
     removeDocs({commit},data){
-        axios.delete(`/kong/gongdi_mng/v1.0/guifang_docs/${data.id}`)
+        axios.delete(`/kong/gongdi_mng/v1.0/${data.doc_type}_docs/${data.id}`)
 			.then(function(response){
                 if(response.status === 204){
-                    commit('removeGuifans',data)
+                    commit(`remove${doc_map[data.doc_type]}`,data)
                 }
 			}).catch(function(error){
 			})

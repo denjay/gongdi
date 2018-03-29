@@ -80,9 +80,6 @@ const actions = {
                 var newData = {buweiid:data.buweiid,insp_date:data.insp_date,insp_emp:data.insp_emp}
                 dispatch('getInspects',newData)
             }
-            else {
-                alert('新增失败')
-            }
 		}).catch(function(error){
 			alert('请求失败')
 		})

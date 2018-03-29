@@ -14,8 +14,8 @@
 				<el-menu-item  index="/pages/inspectionmng/inspect"><i class="fa fa-check"></i>巡检管理</el-menu-item>
 			</el-submenu> 
 			<el-submenu index="jishu">
-				<template slot="title"><i class="el-icon-view"></i>技术管理</template>	
-				<el-menu-item  index="/pages/jishumng/doc"><i class="fa fa-building"></i>文档管理</el-menu-item>
+				<template slot="title"><i class="el-icon-document"></i>技术管理</template>	
+				<el-menu-item  index="/pages/jishumng/doc"><i class="fa fa-folder"></i>文档管理</el-menu-item>
 				<el-menu-item  index="/pages/jishumng/jiaodi"><i class="fa fa-check"></i>交底管理</el-menu-item>
 			</el-submenu> 
 			<el-submenu index="base">

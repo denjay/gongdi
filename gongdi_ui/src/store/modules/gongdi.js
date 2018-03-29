@@ -44,12 +44,12 @@ const actions = {
         axios.post('/kong/gongdi_mng/v1.0/gongdis',data)
 		.then(response => {
             if (response.status === 201) {
-                data = getters.gongdis
-                data.unshift(response.data)
-                commit('setGongdis', data)
+                var gongdis = getters.gongdis
+                gongdis.unshift(response.data)
+                commit('setGongdis', gongdis)
             }
 		}).catch(function(error){
-			// alert('请求失败')
+			alert('请求失败')
 		})
     },
     putGongdis({commit,getters},data){

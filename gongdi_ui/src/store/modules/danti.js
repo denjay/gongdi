@@ -51,13 +51,9 @@ const actions = {
         axios.post('/kong/gongdi_mng/v1.0/dantis',data)
 		.then(response => {
             if (response.status === 201) {
-                data = getters.dantis 
-                data.unshift(response.data)
-                commit('setDantis', data)
-                // alert('新增成功！')
-            }
-            else {
-                alert('新增失败')
+                var dantis = getters.dantis 
+                dantis.unshift(response.data)
+                commit('setDantis', dantis)
             }
 		}).catch(function(error){
 			alert('请求失败')

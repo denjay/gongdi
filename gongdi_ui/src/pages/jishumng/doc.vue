@@ -43,40 +43,44 @@
       <el-button @click="insert" type="primary">新增规范</el-button>
     </div>
 
-    <el-table
-      :data="guifans"
-      border
-      style="width: 100%">
-      <el-table-column
-        fixed
-        prop="code"
-        label="编号"
-        width="150">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="文档名">
-        width="200"
-      </el-table-column>
-      <el-table-column
-        prop="buwei_name"
-        label="所属部位">
-        width="200"
-      </el-table-column>
-      <el-table-column
-        prop="description"
-        label="描述">
-      </el-table-column>
-      <el-table-column
-        fixed="right"
-        label="操作"
-        width="100">
-        <template slot-scope="scope">
-          <el-button @click="remove(scope.row)" type="text" size="mini" icon="el-icon-delete"></el-button>
-          <el-button @click="edit(scope.row)" type="text" size="mini" icon="el-icon-edit"></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <el-collapse v-model="activeNames">
+      <el-collapse-item  v-for="item in doc_table" :key="item.index" :title="item.title" :name="item.name">
+        <el-table
+          :data="item.data"
+          border
+          style="width: 100%">
+          <el-table-column
+            fixed
+            prop="code"
+            label="编号"
+            width="150">
+          </el-table-column>
+          <el-table-column
+            prop="name"
+            label="文档名">
+            width="200"
+          </el-table-column>
+          <el-table-column
+            prop="buwei_name"
+            label="所属部位">
+            width="200"
+          </el-table-column>
+          <el-table-column
+            prop="description"
+            label="描述">
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            label="操作"
+            width="100">
+            <template slot-scope="scope">
+              <el-button @click="remove(scope.row)" type="text" size="mini" icon="el-icon-delete"></el-button>
+              <el-button @click="edit(scope.row)" type="text" size="mini" icon="el-icon-edit"></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-collapse-item>
+    </el-collapse>
 
     <el-dialog
       :title="title"
@@ -112,6 +116,16 @@
                 :key="buwei.id"
                 :label="buwei.name"
                 :value="buwei.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="文档类型">
+            <el-select v-model="doc_type" filterable clearable placeholder="请选择文档类型">
+              <el-option
+                v-for="(val,key,index) in doc_types"
+                :key="index"
+                :label="key"
+                :value="val">
               </el-option>
             </el-select>
           </el-form-item>
@@ -161,7 +175,7 @@
         dantiid: '',
         buweiid: null,
         doc_type: null,
-        doc_types:{"规范管理":"guifan","图纸管理":"tuzhi","图集管理":"tuji"},
+        doc_types:{"规范管理":"guifang","图纸管理":"tuzhi","图集管理":"tuji"},
         doc_id: null,
         name: null, 
         code: null,
@@ -177,14 +191,18 @@
         this.$store.dispatch('doc/getDocs', { "buwei":this.buwei_name, "doc_name":this.name })        
       },
       insert(){
+        // 新增时先清空表单数据
         this.title = '新增规范'
         this.dialogVisible = true
+        this.doc_type = ''
         this.name = ''
         this.code = ''
         this.description = ''
       },
       edit(data){
+        // 点编辑时，将对应行数据写入表单
         this.title = '编辑规范'
+        this.doc_type = data.doc_type
         this.doc_id = data.id
         this.name = data.name
         this.code = data.code
@@ -192,7 +210,9 @@
         this.dialogVisible = true
       },
       submitData(){
+        // 获取表单需要的数据，创建或更新数据
         var data = {
+          doc_type:this.doc_type,
           code:this.code,
           name:this.name,
           buweiid:this.buweiid,
@@ -202,6 +222,7 @@
           this.$store.dispatch('doc/postDocs',data)
         }
         else if(this.title === '编辑规范'){
+          console.log(data)
           data["id"] = this.doc_id
           delete data.buweiid          
           this.$store.dispatch('doc/putDocs',data)
@@ -232,6 +253,13 @@
           return this.buweis.filter(item => item.id === this.buweiid)[0]["name"]
         }
       },
+      doc_table(){
+        return [
+          {title:"规范管理", name:"2", data:this.guifangs},
+          {title:"图纸管理", name:"3", data:this.tuzhis},
+          {title:"图集管理", name:"4", data:this.tujis},
+        ]
+      },
       ...mapGetters('doc/buwei',{
         'dantis':'dantis',
         'companies':'companies',
@@ -239,7 +267,7 @@
         }
       ),
       ...mapGetters('doc',{
-        'guifans':'guifans',
+        'guifangs':'guifangs',
         'tuzhis':'tuzhis',
         'tujis':'tujis',
 		  }),
