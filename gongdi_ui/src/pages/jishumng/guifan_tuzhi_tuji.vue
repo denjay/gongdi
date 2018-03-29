@@ -166,7 +166,7 @@
   import {mapGetters} from 'vuex'
   export default {
     mounted(){
-      this.$store.dispatch('doc/buwei/getCompanies')
+      this.$store.dispatch('guifan_tuzhi_tuji/buwei/getCompanies')
     },
 
     data() {
@@ -188,7 +188,7 @@
 
     methods: {
       getDocs(){
-        this.$store.dispatch('doc/getDocs', { "buwei":this.buwei_name, "doc_name":this.name })        
+        this.$store.dispatch('guifan_tuzhi_tuji/getDocs', { "buwei":this.buwei_name, "doc_name":this.name })        
       },
       insert(){
         // 新增时先清空表单数据
@@ -219,13 +219,13 @@
           description:this.description,
         }
         if(this.title === '新增规范'){
-          this.$store.dispatch('doc/postDocs',data)
+          this.$store.dispatch('guifan_tuzhi_tuji/postDocs',data)
         }
         else if(this.title === '编辑规范'){
           console.log(data)
           data["id"] = this.doc_id
           delete data.buweiid          
-          this.$store.dispatch('doc/putDocs',data)
+          this.$store.dispatch('guifan_tuzhi_tuji/putDocs',data)
         }
         this.dialogVisible = false
       },
@@ -234,7 +234,7 @@
           confirmButtonText: '確定',
           cancelButtonText: '取消',
         }).then(() => {
-          this.$store.dispatch('doc/removeDocs',data);
+          this.$store.dispatch('guifan_tuzhi_tuji/removeDocs',data);
         }).catch(() => {         
         });
       },
@@ -260,13 +260,13 @@
           {title:"图集管理", name:"4", data:this.tujis},
         ]
       },
-      ...mapGetters('doc/buwei',{
+      ...mapGetters('guifan_tuzhi_tuji/buwei',{
         'dantis':'dantis',
         'companies':'companies',
         'buweis':'buweis',
         }
       ),
-      ...mapGetters('doc',{
+      ...mapGetters('guifan_tuzhi_tuji',{
         'guifangs':'guifangs',
         'tuzhis':'tuzhis',
         'tujis':'tujis',
@@ -276,16 +276,16 @@
     watch:{
       companyid: function(){
         this.dantiid = ''
-        this.$store.commit('doc/buwei/setDantis',[])
+        this.$store.commit('guifan_tuzhi_tuji/buwei/setDantis',[])
         if(Boolean(this.companyid)){
-          this.$store.dispatch('doc/buwei/getDantis', this.companyid)
+          this.$store.dispatch('guifan_tuzhi_tuji/buwei/getDantis', this.companyid)
         }
       },
       dantiid: function(){
         this.buweiid = null
-        this.$store.commit('doc/buwei/setBuweis',[])
+        this.$store.commit('guifan_tuzhi_tuji/buwei/setBuweis',[])
         if(Boolean(this.dantiid)){
-          this.$store.dispatch('doc/buwei/getBuweis', this.dantiid)
+          this.$store.dispatch('guifan_tuzhi_tuji/buwei/getBuweis', this.dantiid)
         }
       },
     }     

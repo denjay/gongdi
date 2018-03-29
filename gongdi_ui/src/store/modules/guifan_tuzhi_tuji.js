@@ -94,7 +94,6 @@ const actions = {
                 for(var item of getters[`${doc_type}s`]){
                     if(item.id === data.id){
                         var index = getters[`${doc_type}s`].indexOf(item)
-                        debugger
                         var [...docs] = getters[`${doc_type}s`]
                         var {...doc} = response.data
                         doc["doc_type"] = doc_type

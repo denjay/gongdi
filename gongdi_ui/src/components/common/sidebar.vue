@@ -15,7 +15,7 @@
 			</el-submenu> 
 			<el-submenu index="jishu">
 				<template slot="title"><i class="el-icon-document"></i>技术管理</template>	
-				<el-menu-item  index="/pages/jishumng/doc"><i class="fa fa-folder"></i>文档管理</el-menu-item>
+				<el-menu-item  index="/pages/jishumng/guifan_tuzhi_tuji"><i class="fa fa-folder"></i>规范、图纸、图集管理</el-menu-item>
 				<el-menu-item  index="/pages/jishumng/jiaodi"><i class="fa fa-check"></i>交底管理</el-menu-item>
 			</el-submenu> 
 			<el-submenu index="base">

@@ -8,8 +8,6 @@ chg= {
 	gongdi:'工地',
 	buwei:'部位',
 	inspect:'巡检',
-	guifan:'规范',
-	tuzhi:'图纸',
-	tuji:'图集',
+	guifan_tuzhi_tuji:'规范、图纸、图集',
 	jiaodi:'交底'
 }
