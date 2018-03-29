@@ -104,9 +104,9 @@ const actions = {
                 }
             }
         })
-        // .catch(error => {
-        //     alert('出错')
-        // })
+        .catch(error => {
+            alert('出错')
+        })
     },
     removeDocs({commit},data){
         axios.delete(`/kong/gongdi_mng/v1.0/${data.doc_type}_docs/${data.id}`)

@@ -29,58 +29,96 @@
                 :value="buwei.id">
               </el-option>
             </el-select>
-            <br>
+            <!-- <br>
             <span>文档名：</span>
             <el-input
               placeholder="请输入文档名"
               v-model="name"
               clearable>
+            </el-input> -->
+            <br>            
+            <span>施工单位：</span>
+            <el-input
+              placeholder="请输入施工单位"
+              v-model="shigong_danwei"
+              clearable>
+            </el-input>
+            <br>            
+            <span>交底人：</span>
+            <el-input
+              placeholder="请输入交底人"
+              v-model="jiaodi_ren"
+              clearable>
+            </el-input>
+            <br>            
+            <span>被交底人：</span>
+            <el-input
+              placeholder="请输入被交底人"
+              v-model="bei_jiaodi_ren"
+              clearable>
             </el-input>
           </div>
         </el-collapse-item>
       </el-collapse>
-      <el-button @click="getDocs" type="primary">查询</el-button>
-      <el-button @click="insert" type="primary">新增规范</el-button>
+      <el-button @click="getJiaodis" type="primary">查询</el-button>
+      <el-button @click="insert" type="primary">新增交底</el-button>
     </div>
 
-    <el-collapse v-model="activeNames">
-      <el-collapse-item  v-for="item in doc_table" :key="item.index" :title="item.title" :name="item.name">
-        <el-table
-          :data="item.data"
-          border
-          style="width: 100%">
-          <el-table-column
-            fixed
-            prop="code"
-            label="编号"
-            width="150">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="文档名">
-            width="200"
-          </el-table-column>
-          <el-table-column
-            prop="buwei_name"
-            label="所属部位">
-            width="200"
-          </el-table-column>
-          <el-table-column
-            prop="description"
-            label="描述">
-          </el-table-column>
-          <el-table-column
-            fixed="right"
-            label="操作"
-            width="100">
-            <template slot-scope="scope">
-              <el-button @click="remove(scope.row)" type="text" size="mini" icon="el-icon-delete"></el-button>
-              <el-button @click="edit(scope.row)" type="text" size="mini" icon="el-icon-edit"></el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-collapse-item>
-    </el-collapse>
+    <el-table
+      :data="jiaodis"
+      border
+      style="width: 100%">
+      <el-table-column
+        fixed
+        prop="code"
+        label="编号"
+        width="150">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        width="200"
+        label="交底名">
+      </el-table-column>
+      <el-table-column
+        prop="buwei_name"
+        width="200"
+        label="所属部位">
+      </el-table-column>
+      <el-table-column
+        prop="jiaodi_time"
+        label="交底时间"
+        width="200"
+        :formatter="formatter">
+      </el-table-column>
+      <el-table-column
+        prop="shigong_danwei"
+        width="200"
+        label="施工单位">
+      </el-table-column>
+      <el-table-column
+        prop="jiaodi_ren"
+        width="200"
+        label="交底人">
+      </el-table-column>
+      <el-table-column
+        prop="bei_jiaodi_ren"
+        width="200"
+        label="被交底人">
+      </el-table-column>
+      <el-table-column
+        prop="description"
+        label="描述">
+      </el-table-column>
+      <el-table-column
+        fixed="right"
+        label="操作"
+        width="100">
+        <template slot-scope="scope">
+          <el-button @click="remove(scope.row)" type="text" size="mini" icon="el-icon-delete"></el-button>
+          <el-button @click="edit(scope.row)" type="text" size="mini" icon="el-icon-edit"></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
 
     <el-dialog
       :title="title"
@@ -88,7 +126,7 @@
       width="30%"
       :before-close="handleClose">
       <el-form label-position="right" label-width="100px">
-        <template v-if="title === '新增规范'">
+        <template v-if="title === '新增交底'">
           <el-form-item label="公司名称">
             <el-select v-model="companyid" filterable clearable placeholder="请选择公司">
               <el-option
@@ -119,16 +157,6 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="文档类型">
-            <el-select v-model="doc_type" filterable clearable placeholder="请选择文档类型">
-              <el-option
-                v-for="(val,key,index) in doc_types"
-                :key="index"
-                :label="key"
-                :value="val">
-              </el-option>
-            </el-select>
-          </el-form-item>
         </template>
         <el-form-item label="编号">
           <el-input
@@ -137,10 +165,34 @@
             clearable>
           </el-input>
         </el-form-item>
-        <el-form-item label="文档名称">
+        <el-form-item label="交底时间">
+          <el-date-picker v-model="jiaodi_time" type="date" placeholder="选择日期"></el-date-picker>          
+        </el-form-item>
+        <!-- <el-form-item label="文档名称">
           <el-input
             placeholder="请输入文档名称"
             v-model="name"
+            clearable>
+          </el-input>
+        </el-form-item> -->
+        <el-form-item label="施工单位">
+          <el-input
+            placeholder="请输入施工单位"
+            v-model="shigong_danwei"
+            clearable>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="交底人">
+          <el-input
+            placeholder="请输入交底人"
+            v-model="jiaodi_ren"
+            clearable>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="被交底人">
+          <el-input
+            placeholder="请输入被交底人"
+            v-model="bei_jiaodi_ren"
             clearable>
           </el-input>
         </el-form-item>
@@ -166,7 +218,7 @@
   import {mapGetters} from 'vuex'
   export default {
     mounted(){
-      this.$store.dispatch('guifan_tuzhi_tuji/buwei/getCompanies')
+      this.$store.dispatch('jiaodi/buwei/getCompanies')
     },
 
     data() {
@@ -174,12 +226,14 @@
         companyid: '',
         dantiid: '',
         buweiid: null,
-        doc_type: null,
-        doc_types:{"规范管理":"guifang","图纸管理":"tuzhi","图集管理":"tuji"},
-        doc_id: null,
-        name: null, 
+        jiaodi_id: null,
+        // name: null, 
         code: null,
         description: '',
+        shigong_danwei: '',
+        jiaodi_ren: '',
+        bei_jiaodi_ren: '',
+        jiaodi_time: '',
         activeNames: ['1'],
         dialogVisible: false,
         title: '',
@@ -187,45 +241,49 @@
     },
 
     methods: {
-      getDocs(){
-        this.$store.dispatch('guifan_tuzhi_tuji/getDocs', { "buwei":this.buwei_name, "doc_name":this.name })        
+      // 用于格式化时间显示的值
+      formatter(row, column) {
+        var date = new Date(row.jiaodi_time)
+        return date.toLocaleDateString();
+      },
+      getJiaodis(){
+        this.$store.dispatch('jiaodi/getJiaodis', {
+          "buwei":this.buwei_name,
+          // "doc_name":this.name,
+          "shigong_unit":this.shigong_danwei,
+          "jiaodi_ren":this.jiaodi_ren,
+          "bei_jiaodi_ren":this.bei_jiaodi_ren
+          })        
       },
       insert(){
-        // 新增时先清空表单数据
-        this.title = '新增规范'
+        this.title = '新增交底'
         this.dialogVisible = true
-        this.doc_type = ''
         this.name = ''
         this.code = ''
         this.description = ''
       },
       edit(data){
-        // 点编辑时，将对应行数据写入表单
-        this.title = '编辑规范'
-        this.doc_type = data.doc_type
-        this.doc_id = data.id
+        this.title = '编辑交底'
+        this.jiaodi_id = data.id
         this.name = data.name
         this.code = data.code
         this.description = data.description
         this.dialogVisible = true
       },
       submitData(){
-        // 获取表单需要的数据，创建或更新数据
         var data = {
-          doc_type:this.doc_type,
           code:this.code,
           name:this.name,
           buweiid:this.buweiid,
           description:this.description,
         }
-        if(this.title === '新增规范'){
-          this.$store.dispatch('guifan_tuzhi_tuji/postDocs',data)
+        if(this.title === '新增交底'){
+          this.$store.dispatch('jiaodi/postJiaodis',data)
         }
-        else if(this.title === '编辑规范'){
-          console.log(data)
-          data["id"] = this.doc_id
+        else if(this.title === '编辑交底'){
+          data["id"] = this.jiaodi_id
           delete data.buweiid          
-          this.$store.dispatch('guifan_tuzhi_tuji/putDocs',data)
+          this.$store.dispatch('jiaodi/putJiaodis',data)
         }
         this.dialogVisible = false
       },
@@ -234,7 +292,7 @@
           confirmButtonText: '確定',
           cancelButtonText: '取消',
         }).then(() => {
-          this.$store.dispatch('guifan_tuzhi_tuji/removeDocs',data);
+          this.$store.dispatch('jiaodi/removeJiaodis',data);
         }).catch(() => {         
         });
       },
@@ -253,39 +311,30 @@
           return this.buweis.filter(item => item.id === this.buweiid)[0]["name"]
         }
       },
-      doc_table(){
-        return [
-          {title:"规范管理", name:"2", data:this.guifangs},
-          {title:"图纸管理", name:"3", data:this.tuzhis},
-          {title:"图集管理", name:"4", data:this.tujis},
-        ]
-      },
-      ...mapGetters('guifan_tuzhi_tuji/buwei',{
+      ...mapGetters('jiaodi/buwei',{
         'dantis':'dantis',
         'companies':'companies',
         'buweis':'buweis',
         }
       ),
-      ...mapGetters('guifan_tuzhi_tuji',{
-        'guifangs':'guifangs',
-        'tuzhis':'tuzhis',
-        'tujis':'tujis',
+      ...mapGetters('jiaodi',{
+        'jiaodis':'jiaodis',
 		  }),
     },
 
     watch:{
       companyid: function(){
         this.dantiid = ''
-        this.$store.commit('guifan_tuzhi_tuji/buwei/setDantis',[])
+        this.$store.commit('jiaodi/buwei/setDantis',[])
         if(Boolean(this.companyid)){
-          this.$store.dispatch('guifan_tuzhi_tuji/buwei/getDantis', this.companyid)
+          this.$store.dispatch('jiaodi/buwei/getDantis', this.companyid)
         }
       },
       dantiid: function(){
         this.buweiid = null
-        this.$store.commit('guifan_tuzhi_tuji/buwei/setBuweis',[])
+        this.$store.commit('jiaodi/buwei/setBuweis',[])
         if(Boolean(this.dantiid)){
-          this.$store.dispatch('guifan_tuzhi_tuji/buwei/getBuweis', this.dantiid)
+          this.$store.dispatch('jiaodi/buwei/getBuweis', this.dantiid)
         }
       },
     }     

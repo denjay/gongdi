@@ -60,13 +60,13 @@
           </el-table-column>
           <el-table-column
             prop="insp_emp"
-            label="巡检人">
             width="200"
+            label="巡检人">
           </el-table-column>
           <el-table-column
             prop="buwei_name"
-            label="部位名称">
             width="200"
+            label="部位名称">
           </el-table-column>
           <el-table-column
             prop="is_qualified"
