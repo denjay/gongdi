@@ -29,13 +29,6 @@
                 :value="buwei.id">
               </el-option>
             </el-select>
-            <!-- <br>
-            <span>文档名：</span>
-            <el-input
-              placeholder="请输入文档名"
-              v-model="name"
-              clearable>
-            </el-input> -->
             <br>            
             <span>施工单位：</span>
             <el-input

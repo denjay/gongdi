@@ -9,5 +9,6 @@ chg= {
 	buwei:'部位',
 	inspect:'巡检',
 	guifan_tuzhi_tuji:'规范、图纸、图集',
-	jiaodi:'交底'
+	jiaodi:'交底',
+	doc_files:'文档附件'
 }

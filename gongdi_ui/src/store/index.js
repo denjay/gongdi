@@ -10,6 +10,7 @@ import buwei from './modules/buwei'
 import inspect from './modules/inspect'
 import guifan_tuzhi_tuji from './modules/guifan_tuzhi_tuji'
 import jiaodi from './modules/jiaodi'
+import doc_files from './modules/doc_files'
 
 Vue.use(Vuex)
 
@@ -28,6 +29,7 @@ export default new Vuex.Store({
 		buwei,
 		inspect,
 		guifan_tuzhi_tuji,
-		jiaodi
+		jiaodi,
+		doc_files
     }
 })
