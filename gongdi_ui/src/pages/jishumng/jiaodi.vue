@@ -72,22 +72,22 @@
         fixed
         prop="code"
         label="编号"
-        width="150">
+        width="100">
       </el-table-column>
       <el-table-column
         prop="name"
-        width="200"
+        width="150"
         label="交底名">
       </el-table-column>
       <el-table-column
         prop="buwei_name"
-        width="200"
+        width="150"
         label="所属部位">
       </el-table-column>
       <el-table-column
         prop="jiaodi_time"
         label="交底时间"
-        width="200"
+        width="100"
         :formatter="formatter">
       </el-table-column>
       <el-table-column
@@ -97,12 +97,12 @@
       </el-table-column>
       <el-table-column
         prop="jiaodi_ren"
-        width="200"
+        width="100"
         label="交底人">
       </el-table-column>
       <el-table-column
         prop="bei_jiaodi_ren"
-        width="200"
+        width="100"
         label="被交底人">
       </el-table-column>
       <el-table-column
@@ -164,17 +164,17 @@
             v-model="code"
             clearable>
           </el-input>
+        </el-form-item>        
+        <el-form-item label="交底名称">
+          <el-input
+            placeholder="请输入交底名称"
+            v-model="name"
+            clearable>
+          </el-input>
         </el-form-item>
         <el-form-item label="交底时间">
           <el-date-picker v-model="jiaodi_time" type="date" placeholder="选择日期"></el-date-picker>          
         </el-form-item>
-        <!-- <el-form-item label="文档名称">
-          <el-input
-            placeholder="请输入文档名称"
-            v-model="name"
-            clearable>
-          </el-input>
-        </el-form-item> -->
         <el-form-item label="施工单位">
           <el-input
             placeholder="请输入施工单位"
@@ -227,7 +227,7 @@
         dantiid: '',
         buweiid: null,
         jiaodi_id: null,
-        // name: null, 
+        name: null, 
         code: null,
         description: '',
         shigong_danwei: '',
@@ -243,8 +243,10 @@
     methods: {
       // 用于格式化时间显示的值
       formatter(row, column) {
-        var date = new Date(row.jiaodi_time)
-        return date.toLocaleDateString();
+        if(Boolean(row.jiaodi_time)){
+          var date = new Date(row.jiaodi_time)
+          return date.toLocaleDateString();
+        }
       },
       getJiaodis(){
         this.$store.dispatch('jiaodi/getJiaodis', {
@@ -256,26 +258,48 @@
           })        
       },
       insert(){
+        // 新增时先清空表单数据        
         this.title = '新增交底'
         this.dialogVisible = true
+        this.jiaodi_time = ''
+        this.shigong_danwei = ''
+        this.jiaodi_ren = ''
+        this.bei_jiaodi_ren = ''
         this.name = ''
         this.code = ''
         this.description = ''
       },
       edit(data){
+        // 点编辑时，将对应行数据写入表单        
         this.title = '编辑交底'
         this.jiaodi_id = data.id
         this.name = data.name
         this.code = data.code
+        this.jiaodi_time = data.jiaodi_time
+        this.shigong_danwei = data.shigong_danwei
+        this.jiaodi_ren = data.jiaodi_ren
+        this.bei_jiaodi_ren = data.bei_jiaodi_ren
         this.description = data.description
         this.dialogVisible = true
       },
       submitData(){
+        // 组织表单需要的数据，创建或更新数据        
         var data = {
           code:this.code,
           name:this.name,
           buweiid:this.buweiid,
+          jiaodi_time:this.jiaodi_time,
+          shigong_danwei:this.shigong_danwei,
+          jiaodi_ren:this.jiaodi_ren,
+          bei_jiaodi_ren:this.bei_jiaodi_ren,
           description:this.description,
+        }
+        if(!Boolean(data.jiaodi_time)){
+          delete data.jiaodi_time
+        }
+        else{
+          // 解决时间格式不对的问题
+          data.jiaodi_time = new Date(data.jiaodi_time)
         }
         if(this.title === '新增交底'){
           this.$store.dispatch('jiaodi/postJiaodis',data)

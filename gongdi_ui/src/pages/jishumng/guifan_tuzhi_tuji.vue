@@ -40,7 +40,7 @@
         </el-collapse-item>
       </el-collapse>
       <el-button @click="getDocs" type="primary">查询</el-button>
-      <el-button @click="insert" type="primary">新增规范</el-button>
+      <el-button @click="insert" type="primary">新增</el-button>
     </div>
 
     <el-collapse v-model="activeNames">
@@ -53,17 +53,17 @@
             fixed
             prop="code"
             label="编号"
-            width="150">
+            width="100">
           </el-table-column>
           <el-table-column
             prop="name"
-            label="文档名">
-            width="200"
+            label="文档名"
+            width="150">
           </el-table-column>
           <el-table-column
             prop="buwei_name"
-            label="所属部位">
-            width="200"
+            label="所属部位"
+            width="150">
           </el-table-column>
           <el-table-column
             prop="description"
@@ -88,7 +88,7 @@
       width="30%"
       :before-close="handleClose">
       <el-form label-position="right" label-width="100px">
-        <template v-if="title === '新增规范'">
+        <template v-if="title === '新增文档'">
           <el-form-item label="公司名称">
             <el-select v-model="companyid" filterable clearable placeholder="请选择公司">
               <el-option
@@ -192,7 +192,7 @@
       },
       insert(){
         // 新增时先清空表单数据
-        this.title = '新增规范'
+        this.title = '新增文档'
         this.dialogVisible = true
         this.doc_type = ''
         this.name = ''
@@ -201,7 +201,7 @@
       },
       edit(data){
         // 点编辑时，将对应行数据写入表单
-        this.title = '编辑规范'
+        this.title = '编辑文档'
         this.doc_type = data.doc_type
         this.doc_id = data.id
         this.name = data.name
@@ -210,7 +210,7 @@
         this.dialogVisible = true
       },
       submitData(){
-        // 获取表单需要的数据，创建或更新数据
+        // 组织表单需要的数据，创建或更新数据
         var data = {
           doc_type:this.doc_type,
           code:this.code,
@@ -218,10 +218,10 @@
           buweiid:this.buweiid,
           description:this.description,
         }
-        if(this.title === '新增规范'){
+        if(this.title === '新增文档'){
           this.$store.dispatch('guifan_tuzhi_tuji/postDocs',data)
         }
-        else if(this.title === '编辑规范'){
+        else if(this.title === '编辑文档'){
           console.log(data)
           data["id"] = this.doc_id
           delete data.buweiid          
