@@ -81,10 +81,10 @@
           <el-table-column
             fixed="right"
             label="操作"
-            width="100">
+            width="130">
             <template slot-scope="scope">
-              <el-button @click="remove(scope.row)" type="text" size="mini" icon="el-icon-delete"></el-button>
-              <el-button @click="edit(scope.row)" type="text" size="mini" icon="el-icon-edit"></el-button>
+              <el-button @click="remove(scope.row)" size="mini" icon="el-icon-delete"></el-button>
+              <el-button @click="edit(scope.row)" size="mini" icon="el-icon-edit"></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -251,15 +251,13 @@
           cancelButtonText: '取消',
         }).then(() => {
           this.$store.dispatch('inspect/removeInspects',data);
-        }).catch(() => {         
-        });
+        })
       },
       handleClose(done) {
         this.$confirm('确认关闭？')
           .then(_ => {
             done();
           })
-          .catch(_ => {});
       }
     },
 

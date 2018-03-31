@@ -79,11 +79,12 @@
       <el-table-column
         fixed="right"
         label="操作"
-        width="100">
+        width="130">
         <template slot-scope="scope">
-          <el-button @click="remove(scope.row)" type="text" size="mini" icon="el-icon-delete"></el-button>
-          <el-button @click="edit(scope.row)" type="text" size="mini" icon="el-icon-edit"></el-button>
-          <a :href="`/kong/gongdi_mng/v1.0/doc_files/${data.id}`"></a>
+          <el-button @click="remove(scope.row)" size="mini" icon="el-icon-delete"></el-button>
+          <a :href="`/kong/gongdi_mng/v1.0/doc_files/${scope.row.id}`">
+            <el-button size="mini" icon="el-icon-download"></el-button>
+          </a>
         </template>
       </el-table-column>
     </el-table>
@@ -125,26 +126,47 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="文档类型">
+            <el-select v-model="doc_type" filterable clearable placeholder="请选择文档类型">
+              <el-option
+                v-for="(val,key,index) in doc_types"
+                :key="index"
+                :label="key"
+                :value="val">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="选择文档">
+            <el-select v-model="docsid" filterable clearable placeholder="请选择文档">
+              <el-option
+                v-for="val in docs[doc_type]"
+                :key="val.index"
+                :label="val.name"
+                :value="val.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
         </template>
         <el-form-item label="文件">
           <el-upload
             class="upload-demo"
+            ref="upload"
             action="/kong/gongdi_mng/v1.0/doc_files"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :before-remove="beforeRemove"
             multiple
-            :limit="3"
-            :on-exceed="handleExceed"
+            name="doc"
+            :data={docsid:docsid}
+            :before-remove="beforeRemove"
+            :on-success="handleAvatarSuccess"
+            :auto-upload="false"
             :file-list="fileList">
-            <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            <el-button size="small" type="primary" :disabled="!docsid">选择文件</el-button>
           </el-upload>
         </el-form-item>        
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitData">确 定</el-button>
+        <el-button type="primary" @click="submitUpload" :disabled="!Boolean(docsid)">上 传</el-button>
       </span>
     </el-dialog>
 
@@ -169,7 +191,6 @@
         docsid: null,
         file_name: '',
         file_size: null,
-        // file_id: null,
         fileList:[],
         dialogVisible: false,
         title: '',
@@ -180,50 +201,14 @@
       getDocFiles(){
         this.$store.dispatch('doc_files/getDocFiles', this.docsid)        
       },
-      download(data){
-        axios.get(`/kong/gongdi_mng/v1.0/doc_files/${data.id}`)
-        // .then(response=>{
-        //     if(response.status === 200){
-        //         commit('setDocFiles',response.data)
-        //     }
-        // })
-      },
       insert(){
         // 新增时先清空表单数据        
         this.title = '新增文档附件'
-        this.dialogVisible = true
-        this.docsid = ''
-        this.name = ''
-        this.description = ''
-      },
-      edit(data){
-        // 点编辑时，将对应行数据写入表单        
-        this.title = '编辑文档附件'
-        this.docsid = data.id
-        this.name = data.name
+        this.fileList = []
         this.dialogVisible = true
       },
-      submitData(){
-        // 组织表单需要的数据，创建或更新数据        
-        var data = {
-          name:this.name,
-          docsid:this.docsid,
-        }
-        if(!Boolean(data.jiaodi_time)){
-          delete data.jiaodi_time
-        }
-        else{
-          // 解决时间格式不对的问题
-          data.jiaodi_time = new Date(data.jiaodi_time)
-        }
-        if(this.title === '新增文档附件'){
-          this.$store.dispatch('doc_files/postJiaodis',data)
-        }
-        else if(this.title === '编辑文档附件'){
-          data["id"] = this.docsid
-          delete data.buweiid          
-          this.$store.dispatch('doc_files/putJiaodis',data)
-        }
+      submitUpload() {
+        this.$refs.upload.submit()
         this.dialogVisible = false
       },
       remove(data) {
@@ -231,30 +216,26 @@
           confirmButtonText: '確定',
           cancelButtonText: '取消',
         }).then(() => {
-          this.$store.dispatch('doc_files/removeJiaodis',data);
-        }).catch(() => {         
-        });
+          this.$store.dispatch('doc_files/removeDocFiles',data);
+        })
       },
       handleClose(done) {
         this.$confirm('确认关闭？')
           .then(_ => {
             done();
           })
-          .catch(_ => {});
       },
       // upload相关
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePreview(file) {
-        console.log(file);
-      },
-      handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-      },
       beforeRemove(file, fileList) {
         return this.$confirm(`确定移除 ${ file.name }？`);
-      }
+      },
+      handleAvatarSuccess(file) {
+        this.getDocFiles()
+        this.$message({
+          message: '文件上传成功',
+          type: 'success'
+        });
+      },      
     },
 
     computed: {
@@ -309,6 +290,9 @@
 </script>
 
 <style scoped>
+  .el-button+.el-button {
+    margin-left: 0px;
+  }
   .select span {
     display:inline-block;
     width: 70px;
