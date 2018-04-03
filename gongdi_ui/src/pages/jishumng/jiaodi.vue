@@ -361,21 +361,20 @@
     display:inline-block;
     width: 70px;
   }
-  .el-select {
+  .select .el-select {
     width: 200px;
     margin-bottom: 20px;
-  }
+  } 
   .select {
     width: 700px;
     margin-right: 20px;
     display: inline-block;
   }
-  .el-input {
-    width: 200px;
+  .select .el-input {
     margin-bottom: 20px;
   }
-  .el-form-item {
-    margin-bottom: 0px;
+  .el-input {
+    width: 200px;
   }
   .el-textarea {
     width: 200px;

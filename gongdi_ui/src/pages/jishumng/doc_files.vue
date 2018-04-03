@@ -298,7 +298,7 @@
     width: 70px;
     font-size: 13px;
   }
-  .el-select {
+  .select .el-select {
     width: 200px;
     margin-bottom: 20px;
   }
@@ -309,10 +309,6 @@
   }
   .el-input {
     width: 200px;
-    margin-bottom: 20px;
-  }
-  .el-form-item {
-    margin-bottom: 0px;
   }
   .el-textarea {
     width: 200px;

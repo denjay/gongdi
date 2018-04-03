@@ -5,7 +5,7 @@
         <el-collapse-item title="可选筛选项" name="1">
           <div class="select">
             <span>请选择部位：</span>
-            <el-select v-model="companyid" filterable clearable placeholder="请选择公司">
+            <el-select v-model="insertData.companyid" filterable clearable placeholder="请选择公司">
               <el-option
                 v-for="company in companies"
                 :key="company.id"
@@ -13,7 +13,7 @@
                 :value="company.id">
               </el-option>
             </el-select>
-            <el-select v-model="dantiid" filterable clearable placeholder="请选择单体">
+            <el-select v-model="insertData.dantiid" filterable clearable placeholder="请选择单体">
               <el-option
                 v-for="danti in dantis"
                 :key="danti.id"
@@ -21,7 +21,7 @@
                 :value="danti.id">
               </el-option>
             </el-select>
-            <el-select v-model="buweiid" filterable clearable placeholder="请选择部位">
+            <el-select v-model="insertData.buweiid" filterable clearable placeholder="请选择部位">
               <el-option
                 v-for="buwei in buweis"
                 :key="buwei.id"
@@ -31,12 +31,12 @@
             </el-select>
             <br>
             <span>请选择日期：</span>
-            <el-date-picker v-model="insp_date" value-format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>
+            <el-date-picker v-model="insertData.insp_date" value-format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>
             <br>
             <span>巡检人姓名：</span>
             <el-input
               placeholder="请输入巡检人姓名"
-              v-model="insp_emp"
+              v-model="insertData.insp_emp"
               clearable>
             </el-input>
           </div>
@@ -66,7 +66,7 @@
           <el-table-column
             prop="buwei_name"
             width="200"
-            label="部位名称">
+            label="所属部位">
           </el-table-column>
           <el-table-column
             prop="is_qualified"
@@ -96,10 +96,10 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <el-form label-position="right" label-width="100px">
+      <el-form label-position="right" label-width="100px" :model="insertData" :rules="rules" ref="ruleForm">
         <template v-if="title === '新增巡检'">
-          <el-form-item label="公司名称">
-            <el-select v-model="companyid" filterable clearable placeholder="请选择公司">
+          <el-form-item label="公司名称" prop="companyid">
+            <el-select v-model="insertData.companyid" filterable clearable placeholder="请选择公司">
               <el-option
                 v-for="company in companies"
                 :key="company.id"
@@ -108,8 +108,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所属单体">
-            <el-select v-model="dantiid" filterable clearable placeholder="请选择单体">
+          <el-form-item label="所属单体" prop="dantiid">
+            <el-select v-model="insertData.dantiid" filterable clearable placeholder="请选择单体">
               <el-option
                 v-for="danti in dantis"
                 :key="danti.id"
@@ -118,8 +118,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所属部位">
-            <el-select v-model="buweiid" filterable clearable placeholder="请选择部位">
+          <el-form-item label="所属部位" prop="buweiid">
+            <el-select v-model="insertData.buweiid" filterable clearable placeholder="请选择部位">
               <el-option
                 v-for="buwei in buweis"
                 :key="buwei.id"
@@ -128,8 +128,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="巡检类型">
-            <el-select v-model="type" filterable clearable placeholder="请选择巡检类型">
+          <el-form-item label="巡检类型" prop="type">
+            <el-select v-model="insertData.type" filterable clearable placeholder="请选择巡检类型">
               <el-option
                 v-for="(val, key, index)  in insp_types"
                 :key="index"
@@ -139,18 +139,18 @@
             </el-select>
           </el-form-item>
         </template>
-        <el-form-item label="巡检日期">
-          <el-date-picker v-model="insp_date" value-format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>          
+        <el-form-item label="巡检日期" prop="insp_date">
+          <el-date-picker v-model="insertData.insp_date" value-format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>          
         </el-form-item>
-        <el-form-item label="巡检人">
+        <el-form-item label="巡检人" prop="insp_emp">
           <el-input
             placeholder="请输入巡检人姓名"
-            v-model="insp_emp"
+            v-model="insertData.insp_emp"
             clearable>
           </el-input>
         </el-form-item>
-        <el-form-item label="是否合格">
-          <el-select v-model="is_qualified" filterable clearable placeholder="请选择是否合格">
+        <el-form-item label="是否合格" prop="is_qualified">
+          <el-select v-model="insertData.is_qualified" filterable clearable placeholder="请选择是否合格">
             <el-option
               label="是"
               :value=true>
@@ -166,13 +166,13 @@
             type="textarea"
             :rows="2"
             placeholder="请输入内容"
-            v-model="description">
+            v-model="insertData.description">
           </el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitData">确 定</el-button>
+        <el-button @click="resetForm('ruleForm')">取 消</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -188,19 +188,44 @@
 
     data() {
       return {
-        companyid: '',
-        dantiid: '',
-        buweiid: null,
+        rules: {
+          companyid: [
+            { required: true, message: '请选择所属公司', trigger: 'change' },
+          ],
+          dantiid: [
+            { required: true, message: '请选择所属单体', trigger: 'change' },
+          ],
+          buweiid: [
+            { required: true, message: '请选择所属部位', trigger: 'change' },
+          ],
+          type: [
+            { required: true, message: '请选择巡检类型', trigger: 'change' },
+          ],
+          insp_date: [
+            { required: true, message: '请选择巡检日期', trigger: 'blur' },
+          ],
+          insp_emp: [
+            { required: true, message: '请输入巡检人', trigger: 'change' },
+          ],
+          is_qualified: [
+            { required: true, message: '请选择是否合格', trigger: 'change' },
+          ],
+        },
+        insertData:{
+          companyid: "",
+          dantiid: "",
+          buweiid: null,
+          type: "",    
+          insp_date: "",
+          insp_emp: "", 
+          is_qualified: "",
+          description: "",
+        },
         insp_id: null,
-        insp_date: null,
-        insp_emp: null, 
-        type: null,        
-        is_qualified: null,
-        description: '',
         insp_types: {质量巡检:'quality_inspect',安全巡检:'safety_inspect',产品巡检:'produce_inspect'},             
-        activeNames: ['1'],
+        activeNames: ['1','2','3','4'],
         dialogVisible: false,
-        title: '',
+        title: "",
       }
     },
 
@@ -211,30 +236,48 @@
       },
       getInspects(){
           this.$store.dispatch('inspect/getInspects', 
-          { "buweiid":this.buweiid, "insp_date":this.insp_date, "insp_emp":this.insp_emp })        
+          { "buweiid":this.insertData.buweiid, "insp_date":this.insertData.insp_date, "insp_emp":this.insertData.insp_emp })        
       },
       insert(){
+        // 新增时先清空表单数据        
         this.title = '新增巡检'
         this.dialogVisible = true
       },
       edit(data){
+        // 点编辑时，将对应行数据写入表单        
         this.insp_id = data.id
-        this.type = data.type
         this.title = '编辑巡检'
-        this.insp_date = data.insp_date
-        this.insp_emp = data.insp_emp
-        this.is_qualified = data.is_qualified
-        this.description = data.description
+        this.insertData.buweiid = data.buweiid
+        this.insertData.type = data.type
+        this.insertData.insp_date = data.insp_date
+        this.insertData.insp_emp = data.insp_emp
+        this.insertData.is_qualified = data.is_qualified
+        this.insertData.description = data.description
         this.dialogVisible = true
       },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+        this.dialogVisible = false
+      },
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.submitData();
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
       submitData(){
+        // 组织表单需要的数据，创建或更新数据        
         var data = {
-          type:this.type,
-          buweiid:this.buweiid,
-          insp_date:this.insp_date,
-          insp_emp:this.insp_emp,
-          description:this.description,
-          is_qualified:this.is_qualified,
+          type:this.insertData.type,
+          buweiid:this.insertData.buweiid,
+          insp_date:this.insertData.insp_date,
+          insp_emp:this.insertData.insp_emp,
+          is_qualified:this.insertData.is_qualified,
+          description:this.insertData.description,
         }
         if(this.title === '新增巡检'){
           this.$store.dispatch('inspect/postInspects',data)
@@ -283,18 +326,18 @@
     },
 
     watch:{
-      companyid: function(){
-        this.dantiid = ''
+      "insertData.companyid": function(){
+        this.insertData.dantiid = ''
         this.$store.commit('inspect/buwei/setDantis',[])
-        if(Boolean(this.companyid)){
-          this.$store.dispatch('inspect/buwei/getDantis', this.companyid)
+        if(Boolean(this.insertData.companyid)){
+          this.$store.dispatch('inspect/buwei/getDantis', this.insertData.companyid)
         }
       },
-      dantiid: function(){
-        this.buweiid = ''
+      "insertData.dantiid": function(){
+        this.insertData.buweiid = ''
         this.$store.commit('inspect/buwei/setBuweis',[])
-        if(Boolean(this.dantiid)){
-          this.$store.dispatch('inspect/buwei/getBuweis', this.dantiid)
+        if(Boolean(this.insertData.dantiid)){
+          this.$store.dispatch('inspect/buwei/getBuweis', this.insertData.dantiid)
         }
       },
     }     
@@ -302,21 +345,20 @@
 </script>
 
 <style scoped>
-  .el-select {
+  .select .el-select {
     width: 200px;
     margin-bottom: 20px;
-  }
+  } 
   .select {
     width: 700px;
     margin-right: 20px;
     display: inline-block;
   }
-  .el-input {
-    width: 200px;
+  .select .el-input {
     margin-bottom: 20px;
   }
-  .el-form-item {
-    margin-bottom: 0px;
+  .el-input {
+    width: 200px;
   }
   .el-textarea {
     width: 200px;

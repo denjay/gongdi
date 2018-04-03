@@ -58,8 +58,8 @@
       width="30%"
       :before-close="handleClose">
 
-      <el-form label-position="right" label-width="100px" :model="insertData">
-        <el-form-item label="部位名称">
+      <el-form label-position="right" label-width="100px" :model="insertData" :rules="rules" ref="ruleForm">
+        <el-form-item label="部位名称" prop="name">
           <el-input v-model="insertData.name"></el-input>
         </el-form-item>
         <el-form-item label="描述">
@@ -68,8 +68,8 @@
       </el-form>
 
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitData">确 定</el-button>
+        <el-button @click="resetForm('ruleForm')">取 消</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -85,6 +85,11 @@
 
     data() {
       return {
+        rules: {
+          name: [
+            { required: true, message: '请输部位名称', trigger: 'blur' },
+          ]
+        },
         companyid: '',
         dantiid: '',
         dialogVisible: false,
@@ -106,6 +111,20 @@
         var { ...data_copy } = data
         this.insertData = data_copy
         this.dialogVisible = true
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+        this.dialogVisible = false
+      },
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.submitData();
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       },
       submitData(){
         var {...insertData} = this.insertData

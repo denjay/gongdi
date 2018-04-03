@@ -84,7 +84,7 @@ const actions = {
 			alert('请求失败')
 		})
     },
-    putInspects({commit,getters},data){
+    putInspects({commit,getters,dispatch},data){
         var insp_type = data.type
         var id = data.id
         delete data.type

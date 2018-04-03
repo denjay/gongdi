@@ -11,7 +11,7 @@
           </el-option>
         </el-select>
       </div>
-      <el-button @click="insert" type="primary" :disabled="companyid && Boolean(gongdis.length)">新增</el-button>
+      <el-button @click="insert" type="primary" :disabled="companyid && Boolean(gongdis.length)">新增工地</el-button>
     </div>
 
     <el-table
@@ -86,8 +86,8 @@
       width="30%"
       :before-close="handleClose">
 
-      <el-form label-position="right" label-width="100px" :model="insertData">
-        <el-form-item label="工地代码">
+      <el-form label-position="right" label-width="100px" :model="insertData" :rules="rules" ref="ruleForm">
+        <el-form-item label="工地代码" prop="code">
           <el-input v-model="insertData.code"></el-input>
         </el-form-item>
         <el-form-item label="经度">
@@ -120,8 +120,8 @@
       </el-form>
 
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitData">确 定</el-button>
+        <el-button @click="resetForm('ruleForm')">取 消</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -137,6 +137,11 @@
 
     data() {
       return {
+        rules: {
+          code: [
+            { required: true, message: '请输入工地代码', trigger: 'blur' },
+          ]
+        },
         companyid: '',
         dialogVisible: false,
         title: '',
@@ -165,6 +170,20 @@
         var { ...data_copy } = data
         this.insertData = data_copy
         this.dialogVisible = true
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+        this.dialogVisible = false
+      },
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.submitData();
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       },
       submitData(){
         var {...insertData} = this.insertData

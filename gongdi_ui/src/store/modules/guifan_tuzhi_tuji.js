@@ -67,7 +67,6 @@ const actions = {
                     commit(`set${doc_map[response.config.doc_type]}`,data)
                 }
             })
-
         }
     },
     postDocs({commit,getters},data){
@@ -77,7 +76,9 @@ const actions = {
 		.then(response => {
             if (response.status === 201) {
                 var [...docs] = getters[`${doc_type}s`] 
-                docs.unshift(response.data)
+                var {...respData} = response.data
+                respData["doc_type"] = doc_type
+                docs.unshift(respData)
                 commit(`set${doc_map[doc_type]}`, docs)
             }
 		}).catch(function(error){

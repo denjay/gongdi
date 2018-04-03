@@ -17,7 +17,7 @@
 				<template slot="title"><i class="el-icon-document"></i>技术管理</template>	
 				<el-menu-item  index="/pages/jishumng/guifan_tuzhi_tuji"><i class="fa fa-folder"></i>规范、图纸、图集管理</el-menu-item>
 				<el-menu-item  index="/pages/jishumng/jiaodi"><i class="fa fa-handshake-o"></i>交底管理</el-menu-item>
-				<el-menu-item  index="/pages/jishumng/doc_files"><i class="fa fa-handshake-o"></i>文档附件管理</el-menu-item>
+				<el-menu-item  index="/pages/jishumng/doc_files"><i class="fa fa-file"></i>文档附件管理</el-menu-item>
 			</el-submenu> 
 			<el-submenu index="base">
 				<template slot="title"><i class="el-icon-setting"></i>權限管理</template>
