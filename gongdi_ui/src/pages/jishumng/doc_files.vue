@@ -1,59 +1,63 @@
 <template>
   <div>
     <div class="">
-      <div class="select">
-        <span>选择公司：</span>
-        <el-select v-model="companyid" filterable clearable placeholder="请选择公司">
-          <el-option
-            v-for="company in companies"
-            :key="company.id"
-            :label="company.company_name"
-            :value="company.id">
-          </el-option>
-        </el-select>
-        <br>
-        <span>选择单体：</span>        
-        <el-select v-model="dantiid" filterable clearable placeholder="请选择单体">
-          <el-option
-            v-for="danti in dantis"
-            :key="danti.id"
-            :label="danti.name"
-            :value="danti.id">
-          </el-option>
-        </el-select>
-        <br>
-        <span>选择部位：</span>
-        <el-select v-model="buweiid" filterable clearable placeholder="请选择部位">
-          <el-option
-            v-for="buwei in buweis"
-            :key="buwei.id"
-            :label="buwei.name"
-            :value="buwei.id">
-          </el-option>
-        </el-select>
-        <br>
-        <span>文档类型：</span>
-        <el-select v-model="doc_type" filterable clearable placeholder="请选择文档类型">
-          <el-option
-            v-for="(val,key,index) in doc_types"
-            :key="index"
-            :label="key"
-            :value="val">
-          </el-option>
-        </el-select>
-        <br>
-        <span>选择文档：</span>
-        <el-select v-model="docsid" filterable clearable placeholder="请选择文档">
-          <el-option
-            v-for="val in docs[doc_type]"
-            :key="val.index"
-            :label="val.name"
-            :value="val.id">
-          </el-option>
-        </el-select>
-      </div>
+      <el-collapse v-model="activeNames">
+        <el-collapse-item title="筛选项" name="1">
+          <div class="select">
+            <span>选择公司：</span>
+            <el-select v-model="insertData.companyid" filterable clearable placeholder="请选择公司">
+              <el-option
+                v-for="company in companies"
+                :key="company.id"
+                :label="company.company_name"
+                :value="company.id">
+              </el-option>
+            </el-select>
+            <br>
+            <span>选择单体：</span>        
+            <el-select v-model="insertData.dantiid" filterable clearable placeholder="请选择单体">
+              <el-option
+                v-for="danti in dantis"
+                :key="danti.id"
+                :label="danti.name"
+                :value="danti.id">
+              </el-option>
+            </el-select>
+            <br>
+            <span>选择部位：</span>
+            <el-select v-model="insertData.buweiid" filterable clearable placeholder="请选择部位">
+              <el-option
+                v-for="buwei in buweis"
+                :key="buwei.id"
+                :label="buwei.name"
+                :value="buwei.id">
+              </el-option>
+            </el-select>
+            <br>
+            <span>文档类型：</span>
+            <el-select v-model="insertData.doc_type" filterable clearable placeholder="请选择文档类型">
+              <el-option
+                v-for="(val,key,index) in doc_types"
+                :key="index"
+                :label="key"
+                :value="val">
+              </el-option>
+            </el-select>
+            <br>
+            <span>选择文档：</span>
+            <el-select v-model="insertData.docsid" filterable clearable placeholder="请选择文档">
+              <el-option
+                v-for="val in docs[insertData.doc_type]"
+                :key="val.index"
+                :label="val.name"
+                :value="val.id">
+              </el-option>
+            </el-select>
+          </div>
+        </el-collapse-item>
+      </el-collapse>
       <br>
-      <el-button @click="getDocFiles" :disabled="!docsid" type="primary">查询文档附件</el-button>
+      <el-button @click="getDocFiles" type="primary" :disabled="!insertData.docsid">查询文档附件</el-button>
       <el-button @click="insert" type="primary">新增文档附件</el-button>
     </div>
 
@@ -94,10 +98,10 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <el-form label-position="right" label-width="100px">
+      <el-form label-position="right" label-width="100px" :model="insertData" :rules="rules" ref="ruleForm">
         <template v-if="title === '新增文档附件'">
-          <el-form-item label="公司名称">
-            <el-select v-model="companyid" filterable clearable placeholder="请选择公司">
+          <el-form-item label="公司名称" prop="companyid">
+            <el-select v-model="insertData.companyid" filterable clearable placeholder="请选择公司">
               <el-option
                 v-for="company in companies"
                 :key="company.id"
@@ -106,8 +110,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所属单体">
-            <el-select v-model="dantiid" filterable clearable placeholder="请选择单体">
+          <el-form-item label="所属单体" prop="dantiid">
+            <el-select v-model="insertData.dantiid" filterable clearable placeholder="请选择单体">
               <el-option
                 v-for="danti in dantis"
                 :key="danti.id"
@@ -116,8 +120,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所属部位">
-            <el-select v-model="buweiid" filterable clearable placeholder="请选择部位">
+          <el-form-item label="所属部位" prop="buweiid">
+            <el-select v-model="insertData.buweiid" filterable clearable placeholder="请选择部位">
               <el-option
                 v-for="buwei in buweis"
                 :key="buwei.id"
@@ -126,8 +130,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="文档类型">
-            <el-select v-model="doc_type" filterable clearable placeholder="请选择文档类型">
+          <el-form-item label="文档类型" prop="doc_type">
+            <el-select v-model="insertData.doc_type" filterable clearable placeholder="请选择文档类型">
               <el-option
                 v-for="(val,key,index) in doc_types"
                 :key="index"
@@ -136,18 +140,18 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="选择文档">
-            <el-select v-model="docsid" filterable clearable placeholder="请选择文档">
+          <el-form-item label="选择文档" prop="docsid">
+            <el-select v-model="insertData.docsid" filterable clearable placeholder="请选择文档">
               <el-option
-                v-for="val in docs[doc_type]"
+                v-for="val in docs[insertData.doc_type]"
                 :key="val.index"
                 :label="val.name"
                 :value="val.id">
               </el-option>
             </el-select>
           </el-form-item>
-
         </template>
+
         <el-form-item label="文件">
           <el-upload
             class="upload-demo"
@@ -155,18 +159,19 @@
             action="/kong/gongdi_mng/v1.0/doc_files"
             multiple
             name="doc"
-            :data={docsid:docsid}
+            :data={docsid:insertData.docsid}
             :before-remove="beforeRemove"
+            :on-change="handleChange"            
             :on-success="handleAvatarSuccess"
             :auto-upload="false"
             :file-list="fileList">
-            <el-button size="small" type="primary" :disabled="!docsid">选择文件</el-button>
+            <el-button size="small" type="primary">选择文件</el-button>
           </el-upload>
         </el-form-item>        
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitUpload" :disabled="!Boolean(docsid)">上 传</el-button>
+        <el-button @click="resetForm('ruleForm')">取 消</el-button>
+        <el-button type="primary" :disabled="!insertData.fileList.length" @click="submitForm('ruleForm')">上 传</el-button>
       </span>
     </el-dialog>
 
@@ -183,15 +188,36 @@
 
     data() {
       return {
-        companyid: '',
-        dantiid: '',
-        buweiid: null,
-        doc_type: '',
+        rules: {
+          companyid: [
+            { required: true, message: '请选择所属公司', trigger: 'change' },
+          ],
+          dantiid: [
+            { required: true, message: '请选择所属单体', trigger: 'change' },
+          ],
+          buweiid: [
+            { required: true, message: '请选择所属部位', trigger: 'change' },
+          ],
+          doc_type: [
+            { required: true, message: '请选择文档类型', trigger: 'change' },
+          ],
+          docsid: [
+            { required: true, message: '请选择文档', trigger: 'change' },
+          ]
+        },
+        insertData:{
+          companyid: '',
+          dantiid: '',
+          buweiid: null,
+          doc_type: '',
+          docsid: "",
+          fileList:[],          
+        },
+        fileList:[],
         doc_types: {"规范":"guifang_doc","图纸":"tuzhi_doc","图集":"tuji_doc","交底":"jiaodi_doc"},
-        docsid: null,
         file_name: '',
         file_size: null,
-        fileList:[],
+        activeNames: ['1'],
         dialogVisible: false,
         title: '',
       }
@@ -199,13 +225,27 @@
 
     methods: {
       getDocFiles(){
-        this.$store.dispatch('doc_files/getDocFiles', this.docsid)        
+        this.$store.dispatch('doc_files/getDocFiles', this.insertData.docsid)        
       },
       insert(){
         // 新增时先清空表单数据        
         this.title = '新增文档附件'
         this.fileList = []
         this.dialogVisible = true
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+        this.dialogVisible = false
+      },
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.submitUpload();
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       },
       submitUpload() {
         this.$refs.upload.submit()
@@ -235,13 +275,16 @@
           message: '文件上传成功',
           type: 'success'
         });
-      },      
+      },     
+      handleChange(file, fileList) {
+        this.insertData.fileList = fileList;
+      } 
     },
 
     computed: {
       buwei_name(){
-        if(Boolean(this.buweiid)){
-          return this.buweis.filter(item => item.id === this.buweiid)[0]["name"]
+        if(Boolean(this.insertData.buweiid)){
+          return this.buweis.filter(item => item.id === this.insertData.buweiid)[0]["name"]
         }
       },
       ...mapGetters('doc_files/buwei',{
@@ -257,32 +300,32 @@
     },
 
     watch:{
-      companyid: function(){
-        this.dantiid = ''
+      "insertData.companyid": function(){
+        this.insertData.dantiid = ''
         this.$store.commit('doc_files/buwei/setDantis',[])
-        if(Boolean(this.companyid)){
-          this.$store.dispatch('doc_files/buwei/getDantis', this.companyid)
+        if(Boolean(this.insertData.companyid)){
+          this.$store.dispatch('doc_files/buwei/getDantis', this.insertData.companyid)
         }
       },
-      dantiid: function(){
-        this.buweiid = null
+      "insertData.dantiid": function(){
+        this.insertData.buweiid = null
         this.$store.commit('doc_files/buwei/setBuweis',[])
-        if(Boolean(this.dantiid)){
-          this.$store.dispatch('doc_files/buwei/getBuweis', this.dantiid)
+        if(Boolean(this.insertData.dantiid)){
+          this.$store.dispatch('doc_files/buwei/getBuweis', this.insertData.dantiid)
         }
       },
-      buweiid: function(){
-        this.docsid = null
+      "insertData.buweiid": function(){
+        this.insertData.docsid = null
         this.$store.commit('doc_files/setDocs',[])
-        if(Boolean(this.buweiid)){
-          this.$store.dispatch('doc_files/getDocs', this.buweiid)
+        if(Boolean(this.insertData.buweiid)){
+          this.$store.dispatch('doc_files/getDocs', this.insertData.buweiid)
         }
       },
-      doc_type: function(){
-        this.docsid = null
+      "insertData.doc_type": function(){
+        this.insertData.docsid = null
         this.$store.commit('doc_files/setDocs',[])
-        if(Boolean(this.buweiid)){
-          this.$store.dispatch('doc_files/getDocs', this.buweiid)
+        if(Boolean(this.insertData.buweiid)){
+          this.$store.dispatch('doc_files/getDocs', this.insertData.buweiid)
         }
       },
     }     
@@ -321,5 +364,10 @@
   }
   .el-table {
     margin-top: 5px;
+  }
+  .el-collapse-item__header {
+    width: 120px;
+    font-size: 16px;
+    color: #409eff;
   }
 </style>

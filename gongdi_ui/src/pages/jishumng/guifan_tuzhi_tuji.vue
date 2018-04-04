@@ -223,7 +223,6 @@
       },
       edit(data){
         // 点编辑时，将对应行数据写入表单
-        console.log(data)
         this.title = '编辑文档'
         this.insertData.doc_type = data.doc_type
         this.doc_id = data.id

@@ -5,7 +5,7 @@
         <el-collapse-item title="可选筛选项" name="1">
           <div class="select">
             <span>选择部位：</span>
-            <el-select v-model="companyid" filterable clearable placeholder="请选择公司">
+            <el-select v-model="insertData.companyid" filterable clearable placeholder="请选择公司">
               <el-option
                 v-for="company in companies"
                 :key="company.id"
@@ -13,7 +13,7 @@
                 :value="company.id">
               </el-option>
             </el-select>
-            <el-select v-model="dantiid" filterable clearable placeholder="请选择单体">
+            <el-select v-model="insertData.dantiid" filterable clearable placeholder="请选择单体">
               <el-option
                 v-for="danti in dantis"
                 :key="danti.id"
@@ -21,7 +21,7 @@
                 :value="danti.id">
               </el-option>
             </el-select>
-            <el-select v-model="buweiid" filterable clearable placeholder="请选择部位">
+            <el-select v-model="insertData.buweiid" filterable clearable placeholder="请选择部位">
               <el-option
                 v-for="buwei in buweis"
                 :key="buwei.id"
@@ -33,21 +33,21 @@
             <span>施工单位：</span>
             <el-input
               placeholder="请输入施工单位"
-              v-model="shigong_danwei"
+              v-model="insertData.shigong_danwei"
               clearable>
             </el-input>
             <br>            
             <span>交底人：</span>
             <el-input
               placeholder="请输入交底人"
-              v-model="jiaodi_ren"
+              v-model="insertData.jiaodi_ren"
               clearable>
             </el-input>
             <br>            
             <span>被交底人：</span>
             <el-input
               placeholder="请输入被交底人"
-              v-model="bei_jiaodi_ren"
+              v-model="insertData.bei_jiaodi_ren"
               clearable>
             </el-input>
           </div>
@@ -118,10 +118,10 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <el-form label-position="right" label-width="100px">
+      <el-form label-position="right" label-width="100px" :model="insertData" :rules="rules" ref="ruleForm">
         <template v-if="title === '新增交底'">
-          <el-form-item label="公司名称">
-            <el-select v-model="companyid" filterable clearable placeholder="请选择公司">
+          <el-form-item label="公司名称" prop="companyid">
+            <el-select v-model="insertData.companyid" filterable clearable placeholder="请选择公司">
               <el-option
                 v-for="company in companies"
                 :key="company.id"
@@ -130,8 +130,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所属单体">
-            <el-select v-model="dantiid" filterable clearable placeholder="请选择单体">
+          <el-form-item label="所属单体" prop="dantiid">
+            <el-select v-model="insertData.dantiid" filterable clearable placeholder="请选择单体">
               <el-option
                 v-for="danti in dantis"
                 :key="danti.id"
@@ -140,8 +140,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所属部位">
-            <el-select v-model="buweiid" filterable clearable placeholder="请选择部位">
+          <el-form-item label="所属部位" prop="buweiid">
+            <el-select v-model="insertData.buweiid" filterable clearable placeholder="请选择部位">
               <el-option
                 v-for="buwei in buweis"
                 :key="buwei.id"
@@ -151,41 +151,41 @@
             </el-select>
           </el-form-item>
         </template>
-        <el-form-item label="编号">
+        <el-form-item label="编号" prop="code">
           <el-input
             placeholder="请输入文档编号"
-            v-model="code"
+            v-model="insertData.code"
             clearable>
           </el-input>
         </el-form-item>        
-        <el-form-item label="交底名称">
+        <el-form-item label="交底名称" prop="name">
           <el-input
             placeholder="请输入交底名称"
-            v-model="name"
+            v-model="insertData.name"
             clearable>
           </el-input>
         </el-form-item>
-        <el-form-item label="交底时间">
-          <el-date-picker v-model="jiaodi_time" type="date" placeholder="选择日期"></el-date-picker>          
+        <el-form-item label="交底时间" prop="jiaodi_time">
+          <el-date-picker v-model="insertData.jiaodi_time" type="date" placeholder="选择日期"></el-date-picker>          
         </el-form-item>
-        <el-form-item label="施工单位">
+        <el-form-item label="施工单位" prop="shigong_danwei">
           <el-input
             placeholder="请输入施工单位"
-            v-model="shigong_danwei"
+            v-model="insertData.shigong_danwei"
             clearable>
           </el-input>
         </el-form-item>
-        <el-form-item label="交底人">
+        <el-form-item label="交底人" prop="jiaodi_ren">
           <el-input
             placeholder="请输入交底人"
-            v-model="jiaodi_ren"
+            v-model="insertData.jiaodi_ren"
             clearable>
           </el-input>
         </el-form-item>
-        <el-form-item label="被交底人">
+        <el-form-item label="被交底人" prop="bei_jiaodi_ren">
           <el-input
             placeholder="请输入被交底人"
-            v-model="bei_jiaodi_ren"
+            v-model="insertData.bei_jiaodi_ren"
             clearable>
           </el-input>
         </el-form-item>
@@ -194,13 +194,13 @@
             type="textarea"
             :rows="2"
             placeholder="请输入内容"
-            v-model="description">
+            v-model="insertData.description">
           </el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitData">确 定</el-button>
+        <el-button @click="resetForm('ruleForm')">取 消</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -216,17 +216,45 @@
 
     data() {
       return {
-        companyid: '',
-        dantiid: '',
-        buweiid: null,
+        rules: {
+          companyid: [
+            { required: true, message: '请选择所属公司', trigger: 'change' },
+          ],
+          dantiid: [
+            { required: true, message: '请选择所属单体', trigger: 'change' },
+          ],
+          buweiid: [
+            { required: true, message: '请选择所属部位', trigger: 'change' },
+          ],
+          code: [
+            { required: true, message: '请输入文件编码', trigger: 'blur' },
+          ],
+          name: [
+            { required: true, message: '请输入文档名', trigger: 'blur' },
+          ],
+          shigong_danwei: [
+            { required: true, message: '请输施工单位', trigger: 'blur' },
+          ],
+          jiaodi_ren: [
+            { required: true, message: '请输入交底人', trigger: 'blur' },
+          ],
+          bei_jiaodi_ren: [
+            { required: true, message: '请输入被交底人', trigger: 'blur' },
+          ]
+        },
+        insertData:{
+          companyid: '',
+          dantiid: '',
+          buweiid: null,
+          code: null,
+          name: null, 
+          jiaodi_time: '',
+          shigong_danwei: '',
+          jiaodi_ren: '',
+          bei_jiaodi_ren: '',
+          description: ''
+        },
         jiaodi_id: null,
-        name: null, 
-        code: null,
-        description: '',
-        shigong_danwei: '',
-        jiaodi_ren: '',
-        bei_jiaodi_ren: '',
-        jiaodi_time: '',
         activeNames: ['1'],
         dialogVisible: false,
         title: '',
@@ -243,49 +271,63 @@
       },
       getJiaodis(){
         this.$store.dispatch('jiaodi/getJiaodis', {
-          "buwei":this.buwei_name,
+          "buwei":this.insertData.buwei_name,
           // "doc_name":this.name,
-          "shigong_unit":this.shigong_danwei,
-          "jiaodi_ren":this.jiaodi_ren,
-          "bei_jiaodi_ren":this.bei_jiaodi_ren
+          "shigong_unit":this.insertData.shigong_danwei,
+          "jiaodi_ren":this.insertData.jiaodi_ren,
+          "bei_jiaodi_ren":this.insertData.bei_jiaodi_ren
           })        
       },
       insert(){
         // 新增时先清空表单数据        
         this.title = '新增交底'
         this.dialogVisible = true
-        this.jiaodi_time = ''
-        this.shigong_danwei = ''
-        this.jiaodi_ren = ''
-        this.bei_jiaodi_ren = ''
-        this.name = ''
-        this.code = ''
-        this.description = ''
+        this.insertData.jiaodi_time = ''
+        this.insertData.shigong_danwei = ''
+        this.insertData.jiaodi_ren = ''
+        this.insertData.bei_jiaodi_ren = ''
+        this.insertData.name = ''
+        this.insertData.code = ''
+        this.insertData.description = ''
       },
       edit(data){
         // 点编辑时，将对应行数据写入表单        
         this.title = '编辑交底'
         this.jiaodi_id = data.id
-        this.name = data.name
-        this.code = data.code
-        this.jiaodi_time = data.jiaodi_time
-        this.shigong_danwei = data.shigong_danwei
-        this.jiaodi_ren = data.jiaodi_ren
-        this.bei_jiaodi_ren = data.bei_jiaodi_ren
-        this.description = data.description
+        this.insertData.name = data.name
+        this.insertData.code = data.code
+        this.insertData.jiaodi_time = data.jiaodi_time
+        this.insertData.shigong_danwei = data.shigong_danwei
+        this.insertData.jiaodi_ren = data.jiaodi_ren
+        this.insertData.bei_jiaodi_ren = data.bei_jiaodi_ren
+        this.insertData.description = data.description
         this.dialogVisible = true
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+        this.dialogVisible = false
+      },
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.submitData();
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       },
       submitData(){
         // 组织表单需要的数据，创建或更新数据        
         var data = {
-          code:this.code,
-          name:this.name,
-          buweiid:this.buweiid,
-          jiaodi_time:this.jiaodi_time,
-          shigong_danwei:this.shigong_danwei,
-          jiaodi_ren:this.jiaodi_ren,
-          bei_jiaodi_ren:this.bei_jiaodi_ren,
-          description:this.description,
+          code:this.insertData.code,
+          name:this.insertData.name,
+          buweiid:this.insertData.buweiid,
+          jiaodi_time:this.insertData.jiaodi_time,
+          shigong_danwei:this.insertData.shigong_danwei,
+          jiaodi_ren:this.insertData.jiaodi_ren,
+          bei_jiaodi_ren:this.insertData.bei_jiaodi_ren,
+          description:this.insertData.description,
         }
         if(!Boolean(data.jiaodi_time)){
           delete data.jiaodi_time
@@ -322,8 +364,8 @@
 
     computed: {
       buwei_name(){
-        if(Boolean(this.buweiid)){
-          return this.buweis.filter(item => item.id === this.buweiid)[0]["name"]
+        if(Boolean(this.insertData.buweiid)){
+          return this.insertData.buweis.filter(item => item.id === this.insertData.buweiid)[0]["name"]
         }
       },
       ...mapGetters('jiaodi/buwei',{
@@ -338,18 +380,18 @@
     },
 
     watch:{
-      companyid: function(){
-        this.dantiid = ''
+      "insertData.companyid": function(){
+        this.insertData.dantiid = ''
         this.$store.commit('jiaodi/buwei/setDantis',[])
-        if(Boolean(this.companyid)){
-          this.$store.dispatch('jiaodi/buwei/getDantis', this.companyid)
+        if(Boolean(this.insertData.companyid)){
+          this.$store.dispatch('jiaodi/buwei/getDantis', this.insertData.companyid)
         }
       },
-      dantiid: function(){
-        this.buweiid = null
+      "insertData.dantiid": function(){
+        this.insertData.buweiid = null
         this.$store.commit('jiaodi/buwei/setBuweis',[])
-        if(Boolean(this.dantiid)){
-          this.$store.dispatch('jiaodi/buwei/getBuweis', this.dantiid)
+        if(Boolean(this.insertData.dantiid)){
+          this.$store.dispatch('jiaodi/buwei/getBuweis', this.insertData.dantiid)
         }
       },
     }     

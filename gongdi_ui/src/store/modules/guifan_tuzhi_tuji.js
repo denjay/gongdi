@@ -66,6 +66,8 @@ const actions = {
                     }
                     commit(`set${doc_map[response.config.doc_type]}`,data)
                 }
+            }).catch(function(error){
+                alert('getDocs失败')
             })
         }
     },
@@ -82,7 +84,7 @@ const actions = {
                 commit(`set${doc_map[doc_type]}`, docs)
             }
 		}).catch(function(error){
-			alert('请求失败')
+			alert('postDocs失败')
 		})
     },
     putDocs({commit,getters},data){
@@ -91,7 +93,6 @@ const actions = {
         axios.put(`/kong/gongdi_mng/v1.0/${doc_type}_docs/${data.id}`,data)
         .then(response => {
             if(response.status === 201){
-                console.log('doc',doc_type,getters[`${doc_type}s`])
                 for(var item of getters[`${doc_type}s`]){
                     if(item.id === data.id){
                         var index = getters[`${doc_type}s`].indexOf(item)
@@ -106,7 +107,7 @@ const actions = {
             }
         })
         .catch(error => {
-            alert('出错')
+            alert('putDocs出错')
         })
     },
     removeDocs({commit},data){
@@ -116,6 +117,7 @@ const actions = {
                     commit(`remove${doc_map[data.doc_type]}`,data)
                 }
 			}).catch(function(error){
+                alert('removeDocs出错')
 			})
     }
 }

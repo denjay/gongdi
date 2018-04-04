@@ -34,7 +34,9 @@ const actions = {
             if(response.status === 200){
                 commit('setJiaodis',response.data)
             }
-        })
+        }).catch(function(error){
+			alert('getJiaodis失败')
+		})
     },
     postJiaodis({commit,getters},data){
         axios.post('/kong/gongdi_mng/v1.0/jiaodi_docs',data)
@@ -45,7 +47,7 @@ const actions = {
                 commit('setJiaodis', jiaodi)
             }
 		}).catch(function(error){
-			alert('请求失败')
+			alert('postJiaodis失败')
 		})
     },
     putJiaodis({commit,getters},data){
@@ -62,9 +64,8 @@ const actions = {
                     }
                 }
             }
-        })
-        .catch(error => {
-            alert('出错')
+        }).catch(error => {
+            alert('putJiaodis出错')
         })
     },
     removeJiaodis({commit},data){
@@ -74,6 +75,7 @@ const actions = {
                     commit('removeJiaodis',data)
                 }
 			}).catch(function(error){
+                alert('removeJiaodis出错')
 			})
     }
 }
