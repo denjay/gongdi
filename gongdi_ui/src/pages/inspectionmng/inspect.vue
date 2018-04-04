@@ -42,7 +42,7 @@
           </div>
         </el-collapse-item>
       </el-collapse>
-      <el-button @click="getInspects" type="primary">查询</el-button>
+      <el-button @click="getInspects(20,1)" type="primary">查询</el-button>
       <el-button @click="insert" type="primary">新增巡检</el-button>
     </div>
 
@@ -88,6 +88,11 @@
             </template>
           </el-table-column>
         </el-table>
+        <!-- <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="1000">
+        </el-pagination> -->
       </el-collapse-item>
     </el-collapse>
 
@@ -222,7 +227,7 @@
           description: "",
         },
         insp_id: null,
-        insp_types: {质量巡检:'quality_inspect',安全巡检:'safety_inspect',产品巡检:'produce_inspect'},             
+        insp_types: {质量巡检:'quality',安全巡检:'safety',产品巡检:'produce'},             
         activeNames: ['1','2','3','4'],
         dialogVisible: false,
         title: "",
@@ -234,9 +239,9 @@
       formatter(row, column) {
         return row.is_qualified ? '合格' : '不合格';
       },
-      getInspects(){
+      getInspects(per_page, page){
           this.$store.dispatch('inspect/getInspects', 
-          { "buweiid":this.insertData.buweiid, "insp_date":this.insertData.insp_date, "insp_emp":this.insertData.insp_emp })        
+          { "buweiid":this.insertData.buweiid, "insp_date":this.insertData.insp_date, "insp_emp":this.insertData.insp_emp, "per_page":per_page, "page":page })        
       },
       insert(){
         // 新增时先清空表单数据        
