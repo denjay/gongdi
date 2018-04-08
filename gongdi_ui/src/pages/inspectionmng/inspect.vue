@@ -42,7 +42,7 @@
           </div>
         </el-collapse-item>
       </el-collapse>
-      <el-button @click="getInspects(20,1)" type="primary">查询</el-button>
+      <el-button @click="getInspects(1)" type="primary">查询</el-button>
       <el-button @click="insert" type="primary">新增巡检</el-button>
     </div>
 
@@ -88,11 +88,15 @@
             </template>
           </el-table-column>
         </el-table>
-        <!-- <el-pagination
+
+        <el-pagination
           background
           layout="prev, pager, next"
-          :total="1000">
-        </el-pagination> -->
+          @current-change="(value) => handleCurrentChange(value, item.type)"
+          :page-size="page_size"
+          :total="Number(item.total_pages)">
+        </el-pagination>
+
       </el-collapse-item>
     </el-collapse>
 
@@ -226,7 +230,11 @@
           is_qualified: "",
           description: "",
         },
+        page_size: 15,
         insp_id: null,
+        quality_cur_page:1,
+        safety_cur_page:1,
+        produce_cur_page:1,
         insp_types: {质量巡检:'quality',安全巡检:'safety',产品巡检:'produce'},             
         activeNames: ['1','2','3','4'],
         dialogVisible: false,
@@ -235,13 +243,17 @@
     },
 
     methods: {
+      handleCurrentChange(val,type) {
+        this.getInspects(val,[type])
+        this[`${type}_cur_page`] = val
+      },
       // 用于格式化is_qualified的值
       formatter(row, column) {
         return row.is_qualified ? '合格' : '不合格';
       },
-      getInspects(per_page, page){
+      getInspects(page, insp_types=["quality", "safety", "produce"]){
           this.$store.dispatch('inspect/getInspects', 
-          { "buweiid":this.insertData.buweiid, "insp_date":this.insertData.insp_date, "insp_emp":this.insertData.insp_emp, "per_page":per_page, "page":page })        
+          { "insp_types":insp_types, "buweiid":this.insertData.buweiid, "insp_date":this.insertData.insp_date, "insp_emp":this.insertData.insp_emp, "per_page":this.page_size, "page":page })        
       },
       insert(){
         // 新增时先清空表单数据        
@@ -298,7 +310,9 @@
           confirmButtonText: '確定',
           cancelButtonText: '取消',
         }).then(() => {
+          var insp_type = data["type"]
           this.$store.dispatch('inspect/removeInspects',data);
+          this.getInspects(this[`${insp_type}_cur_page`],[insp_type])
         })
       },
       handleClose(done) {
@@ -320,12 +334,15 @@
         'quality_inspects':'quality_inspects',
         'safety_inspects':'safety_inspects',
         'produce_inspects':'produce_inspects',
+        'quality_total_pages':'quality_total_pages',
+        'safety_total_pages':'safety_total_pages',
+        'produce_total_pages':'produce_total_pages',
 		  }),
       insp_table(){
         return [
-          {title:"质量巡检", name:"2", data:this.quality_inspects},
-          {title:"安全巡检", name:"3", data:this.safety_inspects},
-          {title:"产品巡检", name:"4", data:this.produce_inspects},
+          {title:"质量巡检", name:"2", type:"quality", total_pages:this.quality_total_pages, data:this.quality_inspects},
+          {title:"安全巡检", name:"3", type:"safety", total_pages:this.safety_total_pages, data:this.safety_inspects},
+          {title:"产品巡检", name:"4", type:"produce", total_pages:this.produce_total_pages, data:this.produce_inspects},
         ]
       },
     },

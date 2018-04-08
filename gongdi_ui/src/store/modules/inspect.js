@@ -1,12 +1,13 @@
 import axios from 'axios'
 import buwei from './buwei'
 
-const insp_methods = ["quality", "safety", "produce"]
-
 const state = {
     quality_inspects:[],
     safety_inspects:[],
     produce_inspects:[],
+    quality_total_pages:null,
+    safety_total_pages:null,
+    produce_total_pages:null,
 }
 
 const getters = {
@@ -18,6 +19,15 @@ const getters = {
     },
     produce_inspects:state=>{
         return state.produce_inspects
+    },
+    quality_total_pages:state=>{
+        return state.quality_total_pages
+    },
+    safety_total_pages:state=>{
+        return state.safety_total_pages
+    },
+    produce_total_pages:state=>{
+        return state.produce_total_pages
     }
 }
 
@@ -43,13 +53,23 @@ const  mutations = {
         var index = state.produce_inspects.indexOf(data)
         state.produce_inspects.splice(index,1)
     },
+    setQualityTotalPages(state, data){
+        state.quality_total_pages = data
+    },
+    setSafetyTotalPages(state, data){
+        state.safety_total_pages = data
+    },
+    setProduceTotalPages(state, data){
+        state.produce_total_pages = data
+    },
 }
 
 const actions = {
     getInspects({commit},data){
-        var path = ''
-        for(var insp_type of insp_methods){
-            path = insp_type + '_inspects?'
+        var insp_types = data.insp_types
+        delete data.insp_types
+        for(var insp_type of insp_types){
+            var path = insp_type + '_inspects?'
             for(var key in data){
                 if(Boolean(data[key])){
                     path = `${path}&${key}=${data[key]}`
@@ -63,8 +83,12 @@ const actions = {
                     for(item of newData){
                         item["type"] = response.config.insp_type
                     }
-                    var commit_method = `set_${response.config.insp_type}_Inspects`.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})
+                    var commit_method = `set_${response.config.insp_type}_inspects`.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})
                     commit(commit_method,newData)
+                    // 获取数据条数
+                    var total = response.headers["x-total"]       
+                    commit_method = `set_${response.config.insp_type}_total_pages`.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})
+                    commit(commit_method,total)
                 }
             }).catch(function(error){
                 alert('getInspects失败')
@@ -77,7 +101,7 @@ const actions = {
         axios.post(`/kong/gongdi_mng/v1.0/${insp_type}_inspects`,data)
 		.then(response => {            
             if (response.status === 201) {
-                var newData = {buweiid:data.buweiid,insp_date:data.insp_date,insp_emp:data.insp_emp}
+                var newData = {insp_type:[insp_type],buweiid:data.buweiid,insp_date:data.insp_date,insp_emp:data.insp_emp}
                 dispatch('getInspects',newData)
             }
 		}).catch(function(error){
@@ -92,7 +116,7 @@ const actions = {
         axios.put(`/kong/gongdi_mng/v1.0/${insp_type}_inspects/${id}`,data)
         .then(response => {
             if(response.status === 201){
-                var newData = {buweiid:data.buweiid,insp_date:data.insp_date,insp_emp:data.insp_emp}
+                var newData = {insp_type:[insp_type],buweiid:data.buweiid,insp_date:data.insp_date,insp_emp:data.insp_emp}
                 dispatch('getInspects',newData)
             }
         })
@@ -100,11 +124,9 @@ const actions = {
             alert('putInspects出错')
         })
     },
-    removeInspects({commit},data){
+    removeInspects({commit,getters},data){
         var insp_type = data.type
         var id = data.id
-        delete data.type
-        delete data.id
         axios.delete(`/kong/gongdi_mng/v1.0/${insp_type}_inspects/${id}`)
         .then(function(response){
             if(response.status === 204){
