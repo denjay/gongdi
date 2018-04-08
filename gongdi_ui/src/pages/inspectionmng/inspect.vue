@@ -333,7 +333,9 @@
     watch:{
       "insertData.companyid": function(){
         this.insertData.dantiid = ''
+        this.insertData.buweiid = ''
         this.$store.commit('inspect/buwei/setDantis',[])
+        this.$store.commit('inspect/buwei/setBuweis',[])
         if(Boolean(this.insertData.companyid)){
           this.$store.dispatch('inspect/buwei/getDantis', this.insertData.companyid)
         }

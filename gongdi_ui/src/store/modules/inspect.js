@@ -101,7 +101,6 @@ const actions = {
         })
     },
     removeInspects({commit},data){
-        var {...data_copy} = data
         var insp_type = data.type
         var id = data.id
         delete data.type
@@ -112,10 +111,7 @@ const actions = {
                 var commit_method = `remove_${insp_type}_inspects`
                 // 将下划线式转为驼峰式
                 commit_method = commit_method.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})
-                delete data_copy.buweiid
-                delete data_copy.id
-                console.log("data_copy",data_copy)
-                commit(commit_method,data_copy)
+                commit(commit_method,data)
             }
         }).catch(function(error){
             alert('removeInspects出错')
