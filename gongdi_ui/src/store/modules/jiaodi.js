@@ -2,12 +2,15 @@ import axios from 'axios'
 import buwei from './buwei'
 
 const state = ()=>{
-    return {jiaodis:[]}
+    return {jiaodis:[],total_datas:null}
 }
 
 const getters = {
     jiaodis:state=>{
         return state.jiaodis
+    },
+    total_datas:state=>{
+        return state.total_datas
     }
 }
 
@@ -18,6 +21,9 @@ const  mutations = {
     removeJiaodis(state,data){
         var index = state.jiaodis.indexOf(data)
         state.jiaodis.splice(index,1)
+    },
+    setTotalDatas(state, data){
+        state.total_datas = data
     },
 }
 
@@ -33,6 +39,9 @@ const actions = {
         .then(response=>{
             if(response.status === 200){
                 commit('setJiaodis',response.data)
+                // 获取数据条数
+                var total = response.headers["x-total"]       
+                commit("setTotalDatas",total)
             }
         }).catch(function(error){
 			alert('getJiaodis失败')
@@ -70,13 +79,14 @@ const actions = {
     },
     removeJiaodis({commit},data){
         axios.delete(`/kong/gongdi_mng/v1.0/jiaodi_docs/${data.id}`)
-			.then(function(response){
-                if(response.status === 204){
-                    commit('removeJiaodis',data)
-                }
-			}).catch(function(error){
-                alert('removeJiaodis出错')
-			})
+        // .then(function(response){
+        //     if(response.status === 204){
+        //         commit('removeJiaodis',data)
+        //     }
+        // })
+        .catch(function(error){
+            alert('removeJiaodis出错')
+        })
     }
 }
 

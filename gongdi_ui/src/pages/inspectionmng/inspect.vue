@@ -94,7 +94,7 @@
           layout="prev, pager, next"
           @current-change="(value) => handleCurrentChange(value, item.type)"
           :page-size="page_size"
-          :total="Number(item.total_pages)">
+          :total="Number(item.total_datas)">
         </el-pagination>
 
       </el-collapse-item>
@@ -230,7 +230,7 @@
           is_qualified: "",
           description: "",
         },
-        page_size: 15,
+        page_size: 5,
         insp_id: null,
         quality_cur_page:1,
         safety_cur_page:1,
@@ -334,15 +334,15 @@
         'quality_inspects':'quality_inspects',
         'safety_inspects':'safety_inspects',
         'produce_inspects':'produce_inspects',
-        'quality_total_pages':'quality_total_pages',
-        'safety_total_pages':'safety_total_pages',
-        'produce_total_pages':'produce_total_pages',
+        'quality_total_datas':'quality_total_datas',
+        'safety_total_datas':'safety_total_datas',
+        'produce_total_datas':'produce_total_datas',
 		  }),
       insp_table(){
         return [
-          {title:"质量巡检", name:"2", type:"quality", total_pages:this.quality_total_pages, data:this.quality_inspects},
-          {title:"安全巡检", name:"3", type:"safety", total_pages:this.safety_total_pages, data:this.safety_inspects},
-          {title:"产品巡检", name:"4", type:"produce", total_pages:this.produce_total_pages, data:this.produce_inspects},
+          {title:"质量巡检", name:"2", type:"quality", total_datas:this.quality_total_datas, data:this.quality_inspects},
+          {title:"安全巡检", name:"3", type:"safety", total_datas:this.safety_total_datas, data:this.safety_inspects},
+          {title:"产品巡检", name:"4", type:"produce", total_datas:this.produce_total_datas, data:this.produce_inspects},
         ]
       },
     },

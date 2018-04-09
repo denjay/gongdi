@@ -85,9 +85,8 @@
           layout="prev, pager, next"
           @current-change="(value) => handleCurrentChange(value, item.doc_type)"
           :page-size="page_size"
-          :total="Number(item.total_pages)">
+          :page-count="item.total_pages">
         </el-pagination>
-
       </el-collapse-item>
     </el-collapse>
 
@@ -287,8 +286,12 @@
           confirmButtonText: '確定',
           cancelButtonText: '取消',
         }).then(() => {
+          // 删除一条数据之后的页数
+          var total_pages =  Math.ceil((this[`${data.doc_type}_total_datas`]-1) / this.page_size)
           this.$store.dispatch('guifan_tuzhi_tuji/removeDocs',data);
-          this.getDocs(this[`${data.doc_type}_cur_page`],[data.doc_type])
+          // 解决删除一条数据后，当前页大于总页数的问题
+          var page = this[`${data.doc_type}_cur_page`] > total_pages ? total_pages : this[`${data.doc_type}_cur_page`];
+          this.getDocs(page,[data.doc_type])
         })
       },
       handleClose(done) {
@@ -300,6 +303,16 @@
     },
 
     computed: {
+      guifang_total_pages(){
+        return Math.ceil(this.guifang_total_datas / this.page_size)
+      },
+      tuzhi_total_pages(){
+        return Math.ceil(this.tuzhi_total_datas / this.page_size)
+      },
+      tuji_total_pages(){
+        return Math.ceil(this.tuji_total_datas / this.page_size)
+      },
+      // 根据buwiid取得部位名
       buwei_name(){
         if(Boolean(this.insertData.buweiid)){
           return this.buweis.filter(item => item.id === this.insertData.buweiid)[0]["name"]
@@ -307,9 +320,9 @@
       },
       doc_table(){
         return [
-          {title:"规范管理", name:"2", doc_type:"guifang", total_pages:this.guifang_total_pages, data:this.guifangs},
-          {title:"图纸管理", name:"3", doc_type:"tuzhi", total_pages:this.tuzhi_total_pages, data:this.tuzhis},
-          {title:"图集管理", name:"4", doc_type:"tuji", total_pages:this.tuji_total_pages, data:this.tujis},
+          {title:"规范管理", name:"2", doc_type:"guifang", total_pages:this.guifang_total_pages, total_datas:this.guifang_total_datas, data:this.guifangs},
+          {title:"图纸管理", name:"3", doc_type:"tuzhi", total_pages:this.tuzhi_total_pages, total_datas:this.tuzhi_total_datas, data:this.tuzhis},
+          {title:"图集管理", name:"4", doc_type:"tuji", total_pages:this.tuji_total_pages, total_datas:this.tuji_total_datas, data:this.tujis},
         ]
       },
       ...mapGetters('guifan_tuzhi_tuji/buwei',{
@@ -322,9 +335,9 @@
         'guifangs':'guifangs',
         'tuzhis':'tuzhis',
         'tujis':'tujis',
-        'guifang_total_pages':'guifang_total_pages',
-        'tuzhi_total_pages':'tuzhi_total_pages',
-        'tuji_total_pages':'tuji_total_pages',
+        'guifang_total_datas':'guifang_total_datas',
+        'tuzhi_total_datas':'tuzhi_total_datas',
+        'tuji_total_datas':'tuji_total_datas',
 		  }),
     },
 

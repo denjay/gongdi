@@ -8,9 +8,9 @@ const state = ()=>{
         guifangs:[],
         tuzhis:[],
         tujis:[],
-        guifang_total_pages:null,
-        tuzhi_total_pages:null,
-        tuji_total_pages:null
+        guifang_total_datas:null,
+        tuzhi_total_datas:null,
+        tuji_total_datas:null
     }
 }
 
@@ -24,14 +24,14 @@ const getters = {
     tujis:state=>{
         return state.tujis
     },
-    guifang_total_pages:state=>{
-        return state.guifang_total_pages
+    guifang_total_datas:state=>{
+        return state.guifang_total_datas
     },
-    tuzhi_total_pages:state=>{
-        return state.tuzhi_total_pages
+    tuzhi_total_datas:state=>{
+        return state.tuzhi_total_datas
     },
-    tuji_total_pages:state=>{
-        return state.tuji_total_pages
+    tuji_total_datas:state=>{
+        return state.tuji_total_datas
     },
 }
 
@@ -57,14 +57,14 @@ const  mutations = {
         var index = state.tujis.indexOf(data)
         state.tujis.splice(index,1)
     },
-    setGuifangTotalPages(state, data){
-        state.guifang_total_pages = data
+    setGuifangTotalDatas(state, data){
+        state.guifang_total_datas = data
     },
-    setTuzhiTotalPages(state, data){
-        state.tuzhi_total_pages = data
+    setTuzhiTotalDatas(state, data){
+        state.tuzhi_total_datas = data
     },
-    setTujiTotalPages(state, data){
-        state.tuji_total_pages = data
+    setTujiTotalDatas(state, data){
+        state.tuji_total_datas = data
     }
 }
 
@@ -92,7 +92,7 @@ const actions = {
                     commit(commit_method,data)
                     // 获取数据条数
                     var total = response.headers["x-total"]       
-                    commit_method = `set_${response.config.doc_type}_total_pages`.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})
+                    commit_method = `set_${response.config.doc_type}_total_datas`.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})
                     commit(commit_method,total)
                 }
             }).catch(function(error){
@@ -143,12 +143,12 @@ const actions = {
     },
     removeDocs({commit},data){
         axios.delete(`/kong/gongdi_mng/v1.0/${data.doc_type}_docs/${data.id}`)
-        .then(function(response){
-            if(response.status === 204){
-                var commit_method = `remove_${data.doc_type}s`.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})                                                            
-                commit(commit_method,data)
-            }
-        })
+        // .then(function(response){
+        //     if(response.status === 204){
+        //         var commit_method = `remove_${data.doc_type}s`.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})                                                            
+        //         commit(commit_method,data)
+        //     }
+        // })
         .catch(function(error){
             alert('removeDocs出错')
         })

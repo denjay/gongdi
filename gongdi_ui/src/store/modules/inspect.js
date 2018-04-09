@@ -5,9 +5,9 @@ const state = {
     quality_inspects:[],
     safety_inspects:[],
     produce_inspects:[],
-    quality_total_pages:null,
-    safety_total_pages:null,
-    produce_total_pages:null,
+    quality_total_datas:null,
+    safety_total_datas:null,
+    produce_total_datas:null,
 }
 
 const getters = {
@@ -20,14 +20,14 @@ const getters = {
     produce_inspects:state=>{
         return state.produce_inspects
     },
-    quality_total_pages:state=>{
-        return state.quality_total_pages
+    quality_total_datas:state=>{
+        return state.quality_total_datas
     },
-    safety_total_pages:state=>{
-        return state.safety_total_pages
+    safety_total_datas:state=>{
+        return state.safety_total_datas
     },
-    produce_total_pages:state=>{
-        return state.produce_total_pages
+    produce_total_datas:state=>{
+        return state.produce_total_datas
     }
 }
 
@@ -53,14 +53,14 @@ const  mutations = {
         var index = state.produce_inspects.indexOf(data)
         state.produce_inspects.splice(index,1)
     },
-    setQualityTotalPages(state, data){
-        state.quality_total_pages = data
+    setQualityTotalDatas(state, data){
+        state.quality_total_datas = data
     },
-    setSafetyTotalPages(state, data){
-        state.safety_total_pages = data
+    setSafetyTotalDatas(state, data){
+        state.safety_total_datas = data
     },
-    setProduceTotalPages(state, data){
-        state.produce_total_pages = data
+    setProduceTotalDatas(state, data){
+        state.produce_total_datas = data
     },
 }
 
@@ -87,7 +87,7 @@ const actions = {
                     commit(commit_method,newData)
                     // 获取数据条数
                     var total = response.headers["x-total"]       
-                    commit_method = `set_${response.config.insp_type}_total_pages`.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})
+                    commit_method = `set_${response.config.insp_type}_total_datas`.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})
                     commit(commit_method,total)
                 }
             }).catch(function(error){
@@ -101,7 +101,7 @@ const actions = {
         axios.post(`/kong/gongdi_mng/v1.0/${insp_type}_inspects`,data)
 		.then(response => {            
             if (response.status === 201) {
-                var newData = {insp_type:[insp_type],buweiid:data.buweiid,insp_date:data.insp_date,insp_emp:data.insp_emp}
+                var newData = {insp_types:[insp_type],buweiid:data.buweiid,insp_date:data.insp_date,insp_emp:data.insp_emp}
                 dispatch('getInspects',newData)
             }
 		}).catch(function(error){
@@ -116,26 +116,27 @@ const actions = {
         axios.put(`/kong/gongdi_mng/v1.0/${insp_type}_inspects/${id}`,data)
         .then(response => {
             if(response.status === 201){
-                var newData = {insp_type:[insp_type],buweiid:data.buweiid,insp_date:data.insp_date,insp_emp:data.insp_emp}
+                var newData = {insp_types:[insp_type],buweiid:data.buweiid,insp_date:data.insp_date,insp_emp:data.insp_emp}
                 dispatch('getInspects',newData)
             }
         })
-        .catch(error => {
-            alert('putInspects出错')
-        })
+        // .catch(error => {
+        //     alert('putInspects出错')
+        // })
     },
     removeInspects({commit,getters},data){
         var insp_type = data.type
         var id = data.id
         axios.delete(`/kong/gongdi_mng/v1.0/${insp_type}_inspects/${id}`)
-        .then(function(response){
-            if(response.status === 204){
-                var commit_method = `remove_${insp_type}_inspects`
-                // 将下划线式转为驼峰式
-                commit_method = commit_method.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})
-                commit(commit_method,data)
-            }
-        }).catch(function(error){
+        // .then(function(response){
+        //     if(response.status === 204){
+        //         var commit_method = `remove_${insp_type}_inspects`
+        //         // 将下划线式转为驼峰式
+        //         commit_method = commit_method.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})
+        //         commit(commit_method,data)
+        //     }
+        // })
+        .catch(function(error){
             alert('removeInspects出错')
         })
     }

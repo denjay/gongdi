@@ -53,7 +53,7 @@
           </div>
         </el-collapse-item>
       </el-collapse>
-      <el-button @click="getJiaodis" type="primary">查询</el-button>
+      <el-button @click="getJiaodis(1)" type="primary">查询</el-button>
       <el-button @click="insert" type="primary">新增交底</el-button>
     </div>
 
@@ -113,6 +113,14 @@
       </el-table-column>
     </el-table>
 
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :current-page.sync="cur_page"
+      @current-change="handleCurrentChange"
+      :page-size="page_size"
+      :page-count="total_pages">
+    </el-pagination>
     <el-dialog
       :title="title"
       :visible.sync="dialogVisible"
@@ -254,6 +262,8 @@
           bei_jiaodi_ren: '',
           description: ''
         },
+        page_size:5,
+        cur_page:1,
         jiaodi_id: null,
         activeNames: ['1'],
         dialogVisible: false,
@@ -262,6 +272,10 @@
     },
 
     methods: {
+      handleCurrentChange(val) {
+        this.getJiaodis(val)
+        // this.cur_page = val
+      },
       // 用于格式化时间显示的值
       formatter(row, column) {
         if(Boolean(row.jiaodi_time)){
@@ -269,10 +283,11 @@
           return date.toLocaleDateString();
         }
       },
-      getJiaodis(){
+      getJiaodis(page){
         this.$store.dispatch('jiaodi/getJiaodis', {
+          "page":page,
+          "per_page":this.page_size,
           "buwei":this.insertData.buwei_name,
-          // "doc_name":this.name,
           "shigong_unit":this.insertData.shigong_danwei,
           "jiaodi_ren":this.insertData.jiaodi_ren,
           "bei_jiaodi_ren":this.insertData.bei_jiaodi_ren
@@ -351,7 +366,12 @@
           confirmButtonText: '確定',
           cancelButtonText: '取消',
         }).then(() => {
+          // 删除一条数据之后的页数
+          var total_pages =  Math.ceil((this.total_datas-1) / this.page_size)
           this.$store.dispatch('jiaodi/removeJiaodis',data);
+          // 解决删除一条数据后，当前页大于总页数的问题
+          var page = this.cur_page > total_pages ? total_pages : this.cur_page;
+          this.getJiaodis(page)
         })
       },
       handleClose(done) {
@@ -363,6 +383,9 @@
     },
 
     computed: {
+      total_pages(){
+        return Math.ceil(this.total_datas / this.page_size)
+      },
       buwei_name(){
         if(Boolean(this.insertData.buweiid)){
           return this.insertData.buweis.filter(item => item.id === this.insertData.buweiid)[0]["name"]
@@ -376,6 +399,7 @@
       ),
       ...mapGetters('jiaodi',{
         'jiaodis':'jiaodis',
+        'total_datas':'total_datas',
 		  }),
     },
 
