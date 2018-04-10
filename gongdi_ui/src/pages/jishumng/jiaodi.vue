@@ -5,7 +5,7 @@
         <el-collapse-item title="可选筛选项" name="1">
           <div class="select">
             <span>选择部位：</span>
-            <el-select v-model="insertData.companyid" filterable clearable placeholder="请选择公司">
+            <el-select v-model="filterData.companyid" filterable clearable placeholder="请选择公司">
               <el-option
                 v-for="company in companies"
                 :key="company.id"
@@ -13,7 +13,7 @@
                 :value="company.id">
               </el-option>
             </el-select>
-            <el-select v-model="insertData.dantiid" filterable clearable placeholder="请选择单体">
+            <el-select v-model="filterData.dantiid" filterable clearable placeholder="请选择单体">
               <el-option
                 v-for="danti in dantis"
                 :key="danti.id"
@@ -21,7 +21,7 @@
                 :value="danti.id">
               </el-option>
             </el-select>
-            <el-select v-model="insertData.buweiid" filterable clearable placeholder="请选择部位">
+            <el-select v-model="filterData.buweiid" filterable clearable placeholder="请选择部位">
               <el-option
                 v-for="buwei in buweis"
                 :key="buwei.id"
@@ -33,21 +33,21 @@
             <span>施工单位：</span>
             <el-input
               placeholder="请输入施工单位"
-              v-model="insertData.shigong_danwei"
+              v-model="filterData.shigong_danwei"
               clearable>
             </el-input>
             <br>            
             <span>交底人：</span>
             <el-input
               placeholder="请输入交底人"
-              v-model="insertData.jiaodi_ren"
+              v-model="filterData.jiaodi_ren"
               clearable>
             </el-input>
             <br>            
             <span>被交底人：</span>
             <el-input
               placeholder="请输入被交底人"
-              v-model="insertData.bei_jiaodi_ren"
+              v-model="filterData.bei_jiaodi_ren"
               clearable>
             </el-input>
           </div>
@@ -114,6 +114,7 @@
     </el-table>
 
     <el-pagination
+      v-show="Number(total_datas)"
       background
       layout="prev, pager, next"
       :current-page.sync="cur_page"
@@ -121,15 +122,16 @@
       :page-size="page_size"
       :page-count="total_pages">
     </el-pagination>
+
     <el-dialog
       :title="title"
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <el-form label-position="right" label-width="100px" :model="insertData" :rules="rules" ref="ruleForm">
+      <el-form label-position="right" label-width="100px" :model="formData" :rules="rules" ref="ruleForm">
         <template v-if="title === '新增交底'">
           <el-form-item label="公司名称" prop="companyid">
-            <el-select v-model="insertData.companyid" filterable clearable placeholder="请选择公司">
+            <el-select v-model="formData.companyid" filterable clearable placeholder="请选择公司">
               <el-option
                 v-for="company in companies"
                 :key="company.id"
@@ -139,7 +141,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="所属单体" prop="dantiid">
-            <el-select v-model="insertData.dantiid" filterable clearable placeholder="请选择单体">
+            <el-select v-model="formData.dantiid" filterable clearable placeholder="请选择单体">
               <el-option
                 v-for="danti in dantis"
                 :key="danti.id"
@@ -149,7 +151,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="所属部位" prop="buweiid">
-            <el-select v-model="insertData.buweiid" filterable clearable placeholder="请选择部位">
+            <el-select v-model="formData.buweiid" filterable clearable placeholder="请选择部位">
               <el-option
                 v-for="buwei in buweis"
                 :key="buwei.id"
@@ -162,38 +164,38 @@
         <el-form-item label="编号" prop="code">
           <el-input
             placeholder="请输入文档编号"
-            v-model="insertData.code"
+            v-model="formData.code"
             clearable>
           </el-input>
         </el-form-item>        
         <el-form-item label="交底名称" prop="name">
           <el-input
             placeholder="请输入交底名称"
-            v-model="insertData.name"
+            v-model="formData.name"
             clearable>
           </el-input>
         </el-form-item>
         <el-form-item label="交底时间" prop="jiaodi_time">
-          <el-date-picker v-model="insertData.jiaodi_time" type="date" placeholder="选择日期"></el-date-picker>          
+          <el-date-picker v-model="formData.jiaodi_time" type="date" placeholder="选择日期"></el-date-picker>          
         </el-form-item>
         <el-form-item label="施工单位" prop="shigong_danwei">
           <el-input
             placeholder="请输入施工单位"
-            v-model="insertData.shigong_danwei"
+            v-model="formData.shigong_danwei"
             clearable>
           </el-input>
         </el-form-item>
         <el-form-item label="交底人" prop="jiaodi_ren">
           <el-input
             placeholder="请输入交底人"
-            v-model="insertData.jiaodi_ren"
+            v-model="formData.jiaodi_ren"
             clearable>
           </el-input>
         </el-form-item>
         <el-form-item label="被交底人" prop="bei_jiaodi_ren">
           <el-input
             placeholder="请输入被交底人"
-            v-model="insertData.bei_jiaodi_ren"
+            v-model="formData.bei_jiaodi_ren"
             clearable>
           </el-input>
         </el-form-item>
@@ -202,7 +204,7 @@
             type="textarea"
             :rows="2"
             placeholder="请输入内容"
-            v-model="insertData.description">
+            v-model="formData.description">
           </el-input>
         </el-form-item>
       </el-form>
@@ -250,7 +252,15 @@
             { required: true, message: '请输入被交底人', trigger: 'blur' },
           ]
         },
-        insertData:{
+        filterData:{
+          companyid: '',
+          dantiid: '',
+          buweiid: null,
+          shigong_danwei: '',
+          jiaodi_ren: '',
+          bei_jiaodi_ren: '',
+        },
+        formData:{
           companyid: '',
           dantiid: '',
           buweiid: null,
@@ -274,7 +284,6 @@
     methods: {
       handleCurrentChange(val) {
         this.getJiaodis(val)
-        // this.cur_page = val
       },
       // 用于格式化时间显示的值
       formatter(row, column) {
@@ -287,35 +296,35 @@
         this.$store.dispatch('jiaodi/getJiaodis', {
           "page":page,
           "per_page":this.page_size,
-          "buwei":this.insertData.buwei_name,
-          "shigong_unit":this.insertData.shigong_danwei,
-          "jiaodi_ren":this.insertData.jiaodi_ren,
-          "bei_jiaodi_ren":this.insertData.bei_jiaodi_ren
+          "buwei":this.buwei_name,
+          "shigong_unit":this.filterData.shigong_danwei,
+          "jiaodi_ren":this.filterData.jiaodi_ren,
+          "bei_jiaodi_ren":this.filterData.bei_jiaodi_ren
           })        
       },
       insert(){
         // 新增时先清空表单数据        
         this.title = '新增交底'
         this.dialogVisible = true
-        this.insertData.jiaodi_time = ''
-        this.insertData.shigong_danwei = ''
-        this.insertData.jiaodi_ren = ''
-        this.insertData.bei_jiaodi_ren = ''
-        this.insertData.name = ''
-        this.insertData.code = ''
-        this.insertData.description = ''
+        this.formData.jiaodi_time = ''
+        this.formData.shigong_danwei = ''
+        this.formData.jiaodi_ren = ''
+        this.formData.bei_jiaodi_ren = ''
+        this.formData.name = ''
+        this.formData.code = ''
+        this.formData.description = ''
       },
       edit(data){
         // 点编辑时，将对应行数据写入表单        
         this.title = '编辑交底'
         this.jiaodi_id = data.id
-        this.insertData.name = data.name
-        this.insertData.code = data.code
-        this.insertData.jiaodi_time = data.jiaodi_time
-        this.insertData.shigong_danwei = data.shigong_danwei
-        this.insertData.jiaodi_ren = data.jiaodi_ren
-        this.insertData.bei_jiaodi_ren = data.bei_jiaodi_ren
-        this.insertData.description = data.description
+        this.formData.name = data.name
+        this.formData.code = data.code
+        this.formData.jiaodi_time = data.jiaodi_time
+        this.formData.shigong_danwei = data.shigong_danwei
+        this.formData.jiaodi_ren = data.jiaodi_ren
+        this.formData.bei_jiaodi_ren = data.bei_jiaodi_ren
+        this.formData.description = data.description
         this.dialogVisible = true
       },
       resetForm(formName) {
@@ -335,14 +344,14 @@
       submitData(){
         // 组织表单需要的数据，创建或更新数据        
         var data = {
-          code:this.insertData.code,
-          name:this.insertData.name,
-          buweiid:this.insertData.buweiid,
-          jiaodi_time:this.insertData.jiaodi_time,
-          shigong_danwei:this.insertData.shigong_danwei,
-          jiaodi_ren:this.insertData.jiaodi_ren,
-          bei_jiaodi_ren:this.insertData.bei_jiaodi_ren,
-          description:this.insertData.description,
+          code:this.formData.code,
+          name:this.formData.name,
+          buweiid:this.formData.buweiid,
+          jiaodi_time:this.formData.jiaodi_time,
+          shigong_danwei:this.formData.shigong_danwei,
+          jiaodi_ren:this.formData.jiaodi_ren,
+          bei_jiaodi_ren:this.formData.bei_jiaodi_ren,
+          description:this.formData.description,
         }
         if(!Boolean(data.jiaodi_time)){
           delete data.jiaodi_time
@@ -387,8 +396,8 @@
         return Math.ceil(this.total_datas / this.page_size)
       },
       buwei_name(){
-        if(Boolean(this.insertData.buweiid)){
-          return this.insertData.buweis.filter(item => item.id === this.insertData.buweiid)[0]["name"]
+        if(Boolean(this.filterData.buweiid)){
+          return this.buweis.filter(item => item.id === this.filterData.buweiid)[0]["name"]
         }
       },
       ...mapGetters('jiaodi/buwei',{
@@ -404,18 +413,32 @@
     },
 
     watch:{
-      "insertData.companyid": function(){
-        this.insertData.dantiid = ''
+      "filterData.companyid": function(){
+        this.filterData.dantiid = ''
         this.$store.commit('jiaodi/buwei/setDantis',[])
-        if(Boolean(this.insertData.companyid)){
-          this.$store.dispatch('jiaodi/buwei/getDantis', this.insertData.companyid)
+        if(Boolean(this.filterData.companyid)){
+          this.$store.dispatch('jiaodi/buwei/getDantis', {companyid:this.filterData.companyid})
         }
       },
-      "insertData.dantiid": function(){
-        this.insertData.buweiid = null
+      "filterData.dantiid": function(){
+        this.filterData.buweiid = null
         this.$store.commit('jiaodi/buwei/setBuweis',[])
-        if(Boolean(this.insertData.dantiid)){
-          this.$store.dispatch('jiaodi/buwei/getBuweis', this.insertData.dantiid)
+        if(Boolean(this.filterData.dantiid)){
+          this.$store.dispatch('jiaodi/buwei/getBuweis', this.filterData.dantiid)
+        }
+      },
+      "formData.companyid": function(){
+        this.formData.dantiid = ''
+        this.$store.commit('jiaodi/buwei/setDantis',[])
+        if(Boolean(this.formData.companyid)){
+          this.$store.dispatch('jiaodi/buwei/getDantis', {companyid:this.formData.companyid})
+        }
+      },
+      "formData.dantiid": function(){
+        this.formData.buweiid = null
+        this.$store.commit('jiaodi/buwei/setBuweis',[])
+        if(Boolean(this.formData.dantiid)){
+          this.$store.dispatch('jiaodi/buwei/getBuweis', this.formData.dantiid)
         }
       },
     }     

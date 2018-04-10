@@ -95,7 +95,8 @@ const actions = {
                     commit_method = `set_${response.config.doc_type}_total_datas`.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})
                     commit(commit_method,total)
                 }
-            }).catch(function(error){
+            })
+            .catch(function(error){
                 alert('getDocs失败')
             })
         }
@@ -113,7 +114,8 @@ const actions = {
                 var commit_method = `set_${doc_type}s`.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})                
                 commit(commit_method, docs)
             }
-		}).catch(function(error){
+        })
+        .catch(function(error){
 			alert('postDocs失败')
 		})
     },
@@ -123,10 +125,10 @@ const actions = {
         axios.put(`/kong/gongdi_mng/v1.0/${doc_type}_docs/${data.id}`,data)
         .then(response => {
             if(response.status === 201){
-                for(var item of getters[`${doc_type}s`]){
+                var [...docs] = getters[`${doc_type}s`]
+                for(var item of docs){
                     if(item.id === data.id){
-                        var index = getters[`${doc_type}s`].indexOf(item)
-                        var [...docs] = getters[`${doc_type}s`]
+                        var index = docs.indexOf(item)
                         var {...doc} = response.data
                         doc["doc_type"] = doc_type
                         docs.splice(index, 1, doc)

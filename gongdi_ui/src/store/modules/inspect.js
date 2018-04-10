@@ -101,10 +101,15 @@ const actions = {
         axios.post(`/kong/gongdi_mng/v1.0/${insp_type}_inspects`,data)
 		.then(response => {            
             if (response.status === 201) {
-                var newData = {insp_types:[insp_type],buweiid:data.buweiid,insp_date:data.insp_date,insp_emp:data.insp_emp}
-                dispatch('getInspects',newData)
+                var {...inspect} = response.data
+                var [...inspects] = getters[`${insp_type}_inspects`]
+                inspect["type"] = insp_type
+                inspects.splice(0, 0, inspect)
+                var commit_method = `set_${insp_type}_inspects`.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})                                        
+                commit(commit_method,inspects)
             }
-		}).catch(function(error){
+        })
+        .catch(function(error){
 			alert('postInspects失败')
 		})
     },
@@ -116,13 +121,23 @@ const actions = {
         axios.put(`/kong/gongdi_mng/v1.0/${insp_type}_inspects/${id}`,data)
         .then(response => {
             if(response.status === 201){
-                var newData = {insp_types:[insp_type],buweiid:data.buweiid,insp_date:data.insp_date,insp_emp:data.insp_emp}
-                dispatch('getInspects',newData)
+                var [...inspects] = getters[`${insp_type}_inspects`]
+                for(var item of inspects){
+                    if(item.id === response.data["id"]){
+                        var index = inspects.indexOf(item)
+                        var {...inspect} = response.data
+                        inspect["type"] = insp_type
+                        inspects.splice(index, 1, inspect)
+                        var commit_method = `set_${insp_type}_inspects`.replace(/_(\w)/g, (x)=>{return x.slice(1).toUpperCase()})                                        
+                        commit(commit_method,inspects)
+                        break
+                    }
+                }
             }
         })
-        // .catch(error => {
-        //     alert('putInspects出错')
-        // })
+        .catch(error => {
+            alert('putInspects出错')
+        })
     },
     removeInspects({commit,getters},data){
         var insp_type = data.type

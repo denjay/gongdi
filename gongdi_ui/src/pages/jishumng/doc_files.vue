@@ -304,7 +304,7 @@
         this.insertData.dantiid = ''
         this.$store.commit('doc_files/buwei/setDantis',[])
         if(Boolean(this.insertData.companyid)){
-          this.$store.dispatch('doc_files/buwei/getDantis', this.insertData.companyid)
+          this.$store.dispatch('doc_files/buwei/getDantis', {companyid:this.insertData.companyid})
         }
       },
       "insertData.dantiid": function(){

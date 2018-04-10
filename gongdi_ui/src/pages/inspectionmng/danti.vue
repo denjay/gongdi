@@ -79,6 +79,16 @@
       </el-table-column>
     </el-table>
 
+    <el-pagination
+      v-show="Number(total_datas)"
+      background
+      layout="prev, pager, next"
+      :current-page.sync="cur_page"
+      @current-change="handleCurrentChange"
+      :page-size="page_size"
+      :page-count="total_pages">
+    </el-pagination>
+
     <el-dialog
       :title="title"
       :visible.sync="dialogVisible"
@@ -137,6 +147,8 @@
         },
         companyid: '',
         dialogVisible: false,
+        page_size: 5,
+        cur_page:1,
         title: '',
         insertData:{
           name: '',
@@ -152,6 +164,9 @@
     },
 
     methods: {
+      handleCurrentChange(val) {
+        this.$store.dispatch('getDantis', { companyid:this.companyid, page:val, per_page:this.page_size })
+      },
       insert(){
         this.title = '新增单体'
         this.dialogVisible = true
@@ -203,7 +218,12 @@
           confirmButtonText: '確定',
           cancelButtonText: '取消',
         }).then(() => {
+          // 删除一条数据之后的页数
+          var total_pages =  Math.ceil((this.total_datas-1) / this.page_size)
           this.$store.dispatch('removeDantis',data);
+          // 解决删除一条数据后，当前页大于总页数的问题
+          var page = this.cur_page > total_pages ? total_pages : this.cur_page;
+          this.$store.dispatch('getDantis', { companyid:this.companyid, page:page, per_page:this.page_size })
         })
       },
       handleClose(done) {
@@ -215,15 +235,19 @@
     },
 
     computed: {
+      total_pages(){
+        return Math.ceil(this.total_datas / this.page_size)
+      },
       ...mapGetters([
         'dantis',
-        'companies'
+        'companies',
+        'total_datas',
 		  ])
     },
 
     watch:{
       companyid: function(){
-        this.$store.dispatch('getDantis', this.companyid)
+        this.$store.dispatch('getDantis', { companyid:this.companyid, page:1, per_page:this.page_size } )
       }
     }    
   }

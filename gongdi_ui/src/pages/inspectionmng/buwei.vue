@@ -171,7 +171,7 @@
       companyid: function(){
         this.dantiid = ''
         this.$store.commit('buwei/setDantis',[])
-        this.$store.dispatch('buwei/getDantis', this.companyid)
+        this.$store.dispatch('buwei/getDantis', {companyid:this.companyid})
       },
       dantiid: function(){
         this.$store.commit('buwei/setBuweis',[])        

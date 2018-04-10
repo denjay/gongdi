@@ -5,7 +5,7 @@
         <el-collapse-item title="可选筛选项" name="1">
           <div class="select">
             <span>请选择部位：</span>
-            <el-select v-model="insertData.companyid" filterable clearable placeholder="请选择公司">
+            <el-select v-model="filterData.companyid" filterable clearable placeholder="请选择公司">
               <el-option
                 v-for="company in companies"
                 :key="company.id"
@@ -13,7 +13,7 @@
                 :value="company.id">
               </el-option>
             </el-select>
-            <el-select v-model="insertData.dantiid" filterable clearable placeholder="请选择单体">
+            <el-select v-model="filterData.dantiid" filterable clearable placeholder="请选择单体">
               <el-option
                 v-for="danti in dantis"
                 :key="danti.id"
@@ -21,7 +21,7 @@
                 :value="danti.id">
               </el-option>
             </el-select>
-            <el-select v-model="insertData.buweiid" filterable clearable placeholder="请选择部位">
+            <el-select v-model="filterData.buweiid" filterable clearable placeholder="请选择部位">
               <el-option
                 v-for="buwei in buweis"
                 :key="buwei.id"
@@ -31,12 +31,12 @@
             </el-select>
             <br>
             <span>请选择日期：</span>
-            <el-date-picker v-model="insertData.insp_date" value-format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>
+            <el-date-picker v-model="filterData.insp_date" value-format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>
             <br>
             <span>巡检人姓名：</span>
             <el-input
               placeholder="请输入巡检人姓名"
-              v-model="insertData.insp_emp"
+              v-model="filterData.insp_emp"
               clearable>
             </el-input>
           </div>
@@ -89,13 +89,14 @@
           </el-table-column>
         </el-table>
 
-        <el-pagination
-          background
-          layout="prev, pager, next"
-          @current-change="(value) => handleCurrentChange(value, item.type)"
-          :page-size="page_size"
-          :total="Number(item.total_datas)">
-        </el-pagination>
+          <el-pagination
+            v-show="Number(item.total_datas)"
+            background
+            layout="prev, pager, next"
+            @current-change="(value) => handleCurrentChange(value, item.type)"
+            :page-size="page_size"
+            :page-count="item.total_pages">
+          </el-pagination>
 
       </el-collapse-item>
     </el-collapse>
@@ -105,10 +106,10 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <el-form label-position="right" label-width="100px" :model="insertData" :rules="rules" ref="ruleForm">
+      <el-form label-position="right" label-width="100px" :model="formData" :rules="rules" ref="ruleForm">
         <template v-if="title === '新增巡检'">
           <el-form-item label="公司名称" prop="companyid">
-            <el-select v-model="insertData.companyid" filterable clearable placeholder="请选择公司">
+            <el-select v-model="formData.companyid" filterable clearable placeholder="请选择公司">
               <el-option
                 v-for="company in companies"
                 :key="company.id"
@@ -118,7 +119,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="所属单体" prop="dantiid">
-            <el-select v-model="insertData.dantiid" filterable clearable placeholder="请选择单体">
+            <el-select v-model="formData.dantiid" filterable clearable placeholder="请选择单体">
               <el-option
                 v-for="danti in dantis"
                 :key="danti.id"
@@ -128,7 +129,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="所属部位" prop="buweiid">
-            <el-select v-model="insertData.buweiid" filterable clearable placeholder="请选择部位">
+            <el-select v-model="formData.buweiid" filterable clearable placeholder="请选择部位">
               <el-option
                 v-for="buwei in buweis"
                 :key="buwei.id"
@@ -138,7 +139,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="巡检类型" prop="type">
-            <el-select v-model="insertData.type" filterable clearable placeholder="请选择巡检类型">
+            <el-select v-model="formData.type" filterable clearable placeholder="请选择巡检类型">
               <el-option
                 v-for="(val, key, index)  in insp_types"
                 :key="index"
@@ -149,17 +150,17 @@
           </el-form-item>
         </template>
         <el-form-item label="巡检日期" prop="insp_date">
-          <el-date-picker v-model="insertData.insp_date" value-format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>          
+          <el-date-picker v-model="formData.insp_date" value-format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>          
         </el-form-item>
         <el-form-item label="巡检人" prop="insp_emp">
           <el-input
             placeholder="请输入巡检人姓名"
-            v-model="insertData.insp_emp"
+            v-model="formData.insp_emp"
             clearable>
           </el-input>
         </el-form-item>
         <el-form-item label="是否合格" prop="is_qualified">
-          <el-select v-model="insertData.is_qualified" filterable clearable placeholder="请选择是否合格">
+          <el-select v-model="formData.is_qualified" filterable clearable placeholder="请选择是否合格">
             <el-option
               label="是"
               :value=true>
@@ -175,7 +176,7 @@
             type="textarea"
             :rows="2"
             placeholder="请输入内容"
-            v-model="insertData.description">
+            v-model="formData.description">
           </el-input>
         </el-form-item>
       </el-form>
@@ -220,7 +221,14 @@
             { required: true, message: '请选择是否合格', trigger: 'change' },
           ],
         },
-        insertData:{
+        filterData:{
+          companyid: "",
+          dantiid: "",
+          buweiid: null,
+          insp_date: "",
+          type: "",
+        },
+        formData:{
           companyid: "",
           dantiid: "",
           buweiid: null,
@@ -253,7 +261,7 @@
       },
       getInspects(page, insp_types=["quality", "safety", "produce"]){
           this.$store.dispatch('inspect/getInspects', 
-          { "insp_types":insp_types, "buweiid":this.insertData.buweiid, "insp_date":this.insertData.insp_date, "insp_emp":this.insertData.insp_emp, "per_page":this.page_size, "page":page })        
+          { "insp_types":insp_types, "buweiid":this.filterData.buweiid, "insp_date":this.filterData.insp_date, "insp_emp":this.filterData.insp_emp, "per_page":this.page_size, "page":page })        
       },
       insert(){
         // 新增时先清空表单数据        
@@ -261,15 +269,15 @@
         this.dialogVisible = true
       },
       edit(data){
-        // 点编辑时，将对应行数据写入表单        
+        // 点编辑时，将对应行数据写入表单   
         this.insp_id = data.id
         this.title = '编辑巡检'
-        this.insertData.buweiid = data.buweiid
-        this.insertData.type = data.type
-        this.insertData.insp_date = data.insp_date
-        this.insertData.insp_emp = data.insp_emp
-        this.insertData.is_qualified = data.is_qualified
-        this.insertData.description = data.description
+        this.formData.buweiid = data.buweiid
+        this.formData.type = data.type
+        this.formData.insp_date = data.insp_date
+        this.formData.insp_emp = data.insp_emp
+        this.formData.is_qualified = data.is_qualified
+        this.formData.description = data.description
         this.dialogVisible = true
       },
       resetForm(formName) {
@@ -289,12 +297,12 @@
       submitData(){
         // 组织表单需要的数据，创建或更新数据        
         var data = {
-          type:this.insertData.type,
-          buweiid:this.insertData.buweiid,
-          insp_date:this.insertData.insp_date,
-          insp_emp:this.insertData.insp_emp,
-          is_qualified:this.insertData.is_qualified,
-          description:this.insertData.description,
+          type:this.formData.type,
+          buweiid:this.formData.buweiid,
+          insp_date:this.formData.insp_date,
+          insp_emp:this.formData.insp_emp,
+          is_qualified:this.formData.is_qualified,
+          description:this.formData.description,
         }
         if(this.title === '新增巡检'){
           this.$store.dispatch('inspect/postInspects',data)
@@ -311,8 +319,12 @@
           cancelButtonText: '取消',
         }).then(() => {
           var insp_type = data["type"]
+          // 删除一条数据之后的页数
+          var total_pages =  Math.ceil((this[`${insp_type}_total_datas`]-1) / this.page_size)
           this.$store.dispatch('inspect/removeInspects',data);
-          this.getInspects(this[`${insp_type}_cur_page`],[insp_type])
+          // 解决删除数据后，当前页大于总页数的问题
+          var page = this[`${insp_type}_cur_page`] > total_pages ? total_pages : this[`${insp_type}_cur_page`];
+          this.getInspects(page,[insp_type])
         })
       },
       handleClose(done) {
@@ -324,6 +336,15 @@
     },
 
     computed: {
+      quality_total_pages(){
+        return Math.ceil(this.quality_total_datas / this.page_size)        
+      },
+      safety_total_pages(){
+        return Math.ceil(this.safety_total_datas / this.page_size)        
+      },
+      produce_total_pages(){
+        return Math.ceil(this.produce_total_datas / this.page_size)        
+      },
       ...mapGetters('inspect/buwei',{
         'dantis':'dantis',
         'companies':'companies',
@@ -340,28 +361,44 @@
 		  }),
       insp_table(){
         return [
-          {title:"质量巡检", name:"2", type:"quality", total_datas:this.quality_total_datas, data:this.quality_inspects},
-          {title:"安全巡检", name:"3", type:"safety", total_datas:this.safety_total_datas, data:this.safety_inspects},
-          {title:"产品巡检", name:"4", type:"produce", total_datas:this.produce_total_datas, data:this.produce_inspects},
+          {title:"质量巡检", name:"2", type:"quality", total_pages:this.quality_total_pages, total_datas:this.quality_total_datas, data:this.quality_inspects},
+          {title:"安全巡检", name:"3", type:"safety", total_pages:this.safety_total_pages, total_datas:this.safety_total_datas, data:this.safety_inspects},
+          {title:"产品巡检", name:"4", type:"produce", total_pages:this.produce_total_pages, total_datas:this.produce_total_datas, data:this.produce_inspects},
         ]
       },
     },
 
     watch:{
-      "insertData.companyid": function(){
-        this.insertData.dantiid = ''
-        this.insertData.buweiid = ''
+      "formData.companyid": function(){
+        this.formData.dantiid = ''
+        this.formData.buweiid = ''
         this.$store.commit('inspect/buwei/setDantis',[])
         this.$store.commit('inspect/buwei/setBuweis',[])
-        if(Boolean(this.insertData.companyid)){
-          this.$store.dispatch('inspect/buwei/getDantis', this.insertData.companyid)
+        if(Boolean(this.formData.companyid)){
+          this.$store.dispatch('inspect/buwei/getDantis', {companyid:this.formData.companyid})
         }
       },
-      "insertData.dantiid": function(){
-        this.insertData.buweiid = ''
+      "formData.dantiid": function(){
+        this.formData.buweiid = ''
         this.$store.commit('inspect/buwei/setBuweis',[])
-        if(Boolean(this.insertData.dantiid)){
-          this.$store.dispatch('inspect/buwei/getBuweis', this.insertData.dantiid)
+        if(Boolean(this.formData.dantiid)){
+          this.$store.dispatch('inspect/buwei/getBuweis', this.formData.dantiid)
+        }
+      },
+      "filterData.companyid": function(){
+        this.filterData.dantiid = ''
+        this.filterData.buweiid = ''
+        this.$store.commit('inspect/buwei/setDantis',[])
+        this.$store.commit('inspect/buwei/setBuweis',[])
+        if(Boolean(this.filterData.companyid)){
+          this.$store.dispatch('inspect/buwei/getDantis', {companyid:this.filterData.companyid})
+        }
+      },
+      "filterData.dantiid": function(){
+        this.filterData.buweiid = ''
+        this.$store.commit('inspect/buwei/setBuweis',[])
+        if(Boolean(this.filterData.dantiid)){
+          this.$store.dispatch('inspect/buwei/getBuweis', this.filterData.dantiid)
         }
       },
     }     

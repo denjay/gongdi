@@ -5,7 +5,7 @@
         <el-collapse-item title="可选筛选项" name="1">
           <div class="select">
             <span>选择部位：</span>
-            <el-select v-model="insertData.companyid" filterable clearable placeholder="请选择公司">
+            <el-select v-model="filterData.companyid" filterable clearable placeholder="请选择公司">
               <el-option
                 v-for="company in companies"
                 :key="company.id"
@@ -13,7 +13,7 @@
                 :value="company.id">
               </el-option>
             </el-select>
-            <el-select v-model="insertData.dantiid" filterable clearable placeholder="请选择单体">
+            <el-select v-model="filterData.dantiid" filterable clearable placeholder="请选择单体">
               <el-option
                 v-for="danti in dantis"
                 :key="danti.id"
@@ -21,7 +21,7 @@
                 :value="danti.id">
               </el-option>
             </el-select>
-            <el-select v-model="insertData.buweiid" filterable clearable placeholder="请选择部位">
+            <el-select v-model="filterData.buweiid" filterable clearable placeholder="请选择部位">
               <el-option
                 v-for="buwei in buweis"
                 :key="buwei.id"
@@ -33,7 +33,7 @@
             <span>文档名：</span>
             <el-input
               placeholder="请输入文档名"
-              v-model="insertData.name"
+              v-model="filterData.name"
               clearable>
             </el-input>
           </div>
@@ -81,6 +81,7 @@
         </el-table>
 
         <el-pagination
+          v-show="Number(item.total_datas)"
           background
           layout="prev, pager, next"
           @current-change="(value) => handleCurrentChange(value, item.doc_type)"
@@ -95,10 +96,10 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <el-form label-position="right" label-width="100px" :model="insertData" :rules="rules" ref="ruleForm">
+      <el-form label-position="right" label-width="100px" :model="formData" :rules="rules" ref="ruleForm">
         <template v-if="title === '新增文档'">
           <el-form-item label="公司名称" prop="companyid">
-            <el-select v-model="insertData.companyid" filterable clearable placeholder="请选择公司">
+            <el-select v-model="formData.companyid" filterable clearable placeholder="请选择公司">
               <el-option
                 v-for="company in companies"
                 :key="company.id"
@@ -108,7 +109,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="所属单体" prop="dantiid">
-            <el-select v-model="insertData.dantiid" filterable clearable placeholder="请选择单体">
+            <el-select v-model="formData.dantiid" filterable clearable placeholder="请选择单体">
               <el-option
                 v-for="danti in dantis"
                 :key="danti.id"
@@ -118,7 +119,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="所属部位" prop="buweiid">
-            <el-select v-model="insertData.buweiid" filterable clearable placeholder="请选择部位">
+            <el-select v-model="formData.buweiid" filterable clearable placeholder="请选择部位">
               <el-option
                 v-for="buwei in buweis"
                 :key="buwei.id"
@@ -128,7 +129,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="文档类型" prop="doc_type">
-            <el-select v-model="insertData.doc_type" filterable clearable placeholder="请选择文档类型">
+            <el-select v-model="formData.doc_type" filterable clearable placeholder="请选择文档类型">
               <el-option
                 v-for="(val,key,index) in doc_types"
                 :key="index"
@@ -141,14 +142,14 @@
         <el-form-item label="编号" prop="code">
           <el-input
             placeholder="请输入文档编号"
-            v-model="insertData.code"
+            v-model="formData.code"
             clearable>
           </el-input>
         </el-form-item>
         <el-form-item label="文档名称" prop="name">
           <el-input
             placeholder="请输入文档名称"
-            v-model="insertData.name"
+            v-model="formData.name"
             clearable>
           </el-input>
         </el-form-item>
@@ -157,7 +158,7 @@
             type="textarea"
             :rows="2"
             placeholder="请输入内容"
-            v-model="insertData.description">
+            v-model="formData.description">
           </el-input>
         </el-form-item>
       </el-form>
@@ -199,7 +200,13 @@
             { required: true, message: '请输入文档名', trigger: 'blur' },
           ]
         },
-        insertData:{
+        filterData:{
+          companyid: '',
+          dantiid: '',
+          buweiid: null,
+          name: null, 
+        },
+        formData:{
           companyid: '',
           dantiid: '',
           buweiid: null,
@@ -226,25 +233,25 @@
         this[`${type}_cur_page`] = val
       },
       getDocs(page,doc_types=["guifang","tuzhi","tuji"]){
-        this.$store.dispatch('guifan_tuzhi_tuji/getDocs', {"doc_types":doc_types, "page":page, "per_page":this.page_size, "buwei":this.buwei_name, "doc_name":this.insertData.name })        
+        this.$store.dispatch('guifan_tuzhi_tuji/getDocs', {"doc_types":doc_types, "page":page, "per_page":this.page_size, "buwei":this.buwei_name, "doc_name":this.filterData.name })        
       },
       insert(){
         // 新增时先清空表单数据
         this.title = '新增文档'
         this.dialogVisible = true
-        this.insertData.doc_type = ''
-        this.insertData.name = ''
-        this.insertData.code = ''
-        this.insertData.description = ''
+        this.formData.doc_type = ''
+        this.formData.name = ''
+        this.formData.code = ''
+        this.formData.description = ''
       },
       edit(data){
         // 点编辑时，将对应行数据写入表单
         this.title = '编辑文档'
-        this.insertData.doc_type = data.doc_type
+        this.formData.doc_type = data.doc_type
         this.doc_id = data.id
-        this.insertData.name = data.name
-        this.insertData.code = data.code
-        this.insertData.description = data.description
+        this.formData.name = data.name
+        this.formData.code = data.code
+        this.formData.description = data.description
         this.dialogVisible = true
       },
       resetForm(formName) {
@@ -264,17 +271,16 @@
       submitData(){
         // 组织表单需要的数据，创建或更新数据
         var data = {
-          doc_type:this.insertData.doc_type,
-          code:this.insertData.code,
-          name:this.insertData.name,
-          buweiid:this.insertData.buweiid,
-          description:this.insertData.description,
+          doc_type:this.formData.doc_type,
+          code:this.formData.code,
+          name:this.formData.name,
+          buweiid:this.formData.buweiid,
+          description:this.formData.description,
         }
         if(this.title === '新增文档'){
           this.$store.dispatch('guifan_tuzhi_tuji/postDocs',data)
         }
         else if(this.title === '编辑文档'){
-          console.log(data)
           data["id"] = this.doc_id
           delete data.buweiid          
           this.$store.dispatch('guifan_tuzhi_tuji/putDocs',data)
@@ -289,7 +295,7 @@
           // 删除一条数据之后的页数
           var total_pages =  Math.ceil((this[`${data.doc_type}_total_datas`]-1) / this.page_size)
           this.$store.dispatch('guifan_tuzhi_tuji/removeDocs',data);
-          // 解决删除一条数据后，当前页大于总页数的问题
+          // 解决删除数据后，当前页大于总页数的问题
           var page = this[`${data.doc_type}_cur_page`] > total_pages ? total_pages : this[`${data.doc_type}_cur_page`];
           this.getDocs(page,[data.doc_type])
         })
@@ -314,8 +320,8 @@
       },
       // 根据buwiid取得部位名
       buwei_name(){
-        if(Boolean(this.insertData.buweiid)){
-          return this.buweis.filter(item => item.id === this.insertData.buweiid)[0]["name"]
+        if(Boolean(this.filterData.buweiid)){
+          return this.buweis.filter(item => item.id === this.filterData.buweiid)[0]["name"]
         }
       },
       doc_table(){
@@ -342,18 +348,32 @@
     },
 
     watch:{
-      "insertData.companyid": function(){
-        this.insertData.dantiid = ''
+      "filterData.companyid": function(){
+        this.filterData.dantiid = ''
         this.$store.commit('guifan_tuzhi_tuji/buwei/setDantis',[])
-        if(Boolean(this.insertData.companyid)){
-          this.$store.dispatch('guifan_tuzhi_tuji/buwei/getDantis', this.insertData.companyid)
+        if(Boolean(this.filterData.companyid)){
+          this.$store.dispatch('guifan_tuzhi_tuji/buwei/getDantis', {companyid:this.filterData.companyid})
         }
       },
-      "insertData.dantiid": function(){
-        this.insertData.buweiid = null
+      "filterData.dantiid": function(){
+        this.filterData.buweiid = null
         this.$store.commit('guifan_tuzhi_tuji/buwei/setBuweis',[])
-        if(Boolean(this.insertData.dantiid)){
-          this.$store.dispatch('guifan_tuzhi_tuji/buwei/getBuweis', this.insertData.dantiid)
+        if(Boolean(this.filterData.dantiid)){
+          this.$store.dispatch('guifan_tuzhi_tuji/buwei/getBuweis', this.filterData.dantiid)
+        }
+      },
+      "formData.companyid": function(){
+        this.formData.dantiid = ''
+        this.$store.commit('guifan_tuzhi_tuji/buwei/setDantis',[])
+        if(Boolean(this.formData.companyid)){
+          this.$store.dispatch('guifan_tuzhi_tuji/buwei/getDantis', {companyid:this.formData.companyid})
+        }
+      },
+      "formData.dantiid": function(){
+        this.formData.buweiid = null
+        this.$store.commit('guifan_tuzhi_tuji/buwei/setBuweis',[])
+        if(Boolean(this.formData.dantiid)){
+          this.$store.dispatch('guifan_tuzhi_tuji/buwei/getBuweis', this.formData.dantiid)
         }
       },
     }     

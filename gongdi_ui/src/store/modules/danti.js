@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const state = ()=>{
-    return {dantis: [],companies:[]}
+    return {dantis: [],companies:[],total_datas:null}
 }
 
 const getters = {
@@ -10,6 +10,9 @@ const getters = {
     },
     companies:state=>{
         return state.companies
+    },
+    total_datas:state=>{
+        return state.total_datas
     }
 }
 
@@ -26,7 +29,10 @@ const mutations = {
     },
     setCompanies(state,data){
         state.companies = data
-    }
+    },
+    setTotalDatas(state,data){
+        state.total_datas = data
+    },
 }
 
 const actions = {
@@ -39,12 +45,23 @@ const actions = {
         })
     },
     getDantis({commit},data){
-        axios.get(`/kong/gongdi_mng/v1.0/company/${data}/dantis`)
+        var companyid = data["companyid"]
+        delete data["companyid"]
+        var query_args = "?"
+        for(var key in data){
+            if(Boolean(data[key])){
+                query_args = `${query_args}&${key}=${data[key]}`
+            }
+        }
+        axios.get(`/kong/gongdi_mng/v1.0/company/${companyid}/dantis${query_args}`)
 		.then(function(response){
             commit('setDantis',response.data)
-            console.log("actions",response);
-		}).catch(function(error){
-			console.log("actions");
+            // 获取数据条数
+            var total = response.headers["x-total"]       
+            commit("setTotalDatas",total)
+        })
+        .catch(function(error){
+			alert('getDantis失败')
 		})
     },
     postDantis({commit, getters},data){
@@ -77,17 +94,19 @@ const actions = {
             }
         })
         .catch(error => {
-            alert('出错')
+            alert('putDantis出错')
         })
     },
     removeDantis({commit},data){
         axios.delete(`/kong/gongdi_mng/v1.0/dantis/${data.id}`)
-			.then(function(response){
-                if(response.status === 204){
-                    commit('removeDanti',data)
-                }
-			}).catch(function(error){
-			})
+        .then(function(response){
+            if(response.status === 204){
+                commit('removeDanti',data)
+            }
+        })
+        .catch(function(error){
+            alert('removeDantis出错')
+        })
     }
 }
 
