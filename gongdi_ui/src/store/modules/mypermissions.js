@@ -7,7 +7,7 @@ const state = {
 
 }
 
-// getters  ÔÚ×é¼þÖÐÒª»ñµÃÕâ¸ö state ÀïµÄ event, ÄÇ¾ÍÐèÒªÐ´¸ögetters
+// getters  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ state ï¿½ï¿½ï¿½ event, ï¿½Ç¾ï¿½ï¿½ï¿½ÒªÐ´ï¿½ï¿½getters
 const getters = {
     dailyformright:state=>state.data.dailyform||{},
 	monthlyformright:state=>state.data.monthlyform||{},
@@ -39,7 +39,7 @@ const actions = {
     }
 }
 
-// mutations ÐÞ¸Ä state
+// mutations ï¿½Þ¸ï¿½ state
 const mutations = {
     loadpermissions(state,data){
         state.data=data;

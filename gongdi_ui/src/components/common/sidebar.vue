@@ -3,8 +3,11 @@
 		<el-menu  class="el-menu-vertical-demo" :default-active="$route.path" :router="true">
 			<el-submenu index="accident">
 				<template slot="title"><i class="el-icon-menu"></i>违规管理</template>	
-				<el-menu-item  index="/pages/illegalmng/illegal_category"><i class="fa fa-users"></i>违规类别</el-menu-item>
-				<el-menu-item  index="/pages/illegalmng/illegal_type"><i class="fa fa-users"></i>违规类型</el-menu-item>
+				<el-menu-item  index="/pages/illegalmng/illegal_category"><i class="fa fa-list-ol"></i>违规类别</el-menu-item>
+				<el-menu-item  index="/pages/illegalmng/illegal_type"><i class="fa fa-list-ul"></i>违规类型</el-menu-item>
+				<el-menu-item  index="/pages/illegalmng/subcontractors"><i class="fa fa-building"></i>分包商</el-menu-item>
+				<el-menu-item  index="/pages/illegalmng/emp_illegal"><i class="fa fa-times-circle"></i>员工违规</el-menu-item>
+				<el-menu-item  index="/pages/illegalmng/subcon_illegal"><i class="fa fa-times-circle"></i>分包商违规</el-menu-item>				
 			</el-submenu>  
 			<el-submenu index="inspection">
 				<template slot="title"><i class="el-icon-view"></i>巡检管理</template>	
@@ -20,10 +23,10 @@
 				<el-menu-item  index="/pages/jishumng/doc_files"><i class="fa fa-file"></i>文档附件管理</el-menu-item>
 			</el-submenu> 
 			<el-submenu index="base">
-				<template slot="title"><i class="el-icon-setting"></i>權限管理</template>
-				<el-menu-item v-if="userright" index="/pages/rightmanagemng/appuser"><i class="fa fa-user-circle"></i>用戶權限</el-menu-item>
-				<el-menu-item v-if="userright" index="/pages/rightmanagemng/approle"><i class="fa fa-sitemap"></i>角色權限</el-menu-item>
-				<el-menu-item index="/pages/rightmanagemng/curruser"><i class="fa fa-pencil-square-o"></i>修改密碼</el-menu-item>
+				<template slot="title"><i class="el-icon-setting"></i>权限管理</template>
+				<el-menu-item v-if="userright" index="/pages/rightmanagemng/appuser"><i class="fa fa-user-circle"></i>用户权限</el-menu-item>
+				<el-menu-item v-if="userright" index="/pages/rightmanagemng/approle"><i class="fa fa-sitemap"></i>角色权限</el-menu-item>
+				<el-menu-item index="/pages/rightmanagemng/curruser"><i class="fa fa-pencil-square-o"></i>修改密码</el-menu-item>
 			</el-submenu>
 		</el-menu>
 	</div>

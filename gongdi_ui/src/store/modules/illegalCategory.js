@@ -2,9 +2,6 @@ import axios from 'axios';
 const state = {
     datas:[],
 	total:0,
-	LSempdatas:[],
-	departFEdatas:[],//部门资料
-	MLempdatas:[],//请假系统月报表所需要的员工数据
 	//isLoad:false,
 	isLSempLoad:false,
 	isLSptypeLoad:false,
@@ -31,12 +28,6 @@ const getters = {
     },
 	waitICStatus:state=>{
 		return state.waitcomplete;
-    },
-	departFEdatas:state=>{
-		return state.departFEdatas;
-    },
-	MLempdatas:state=>{
-		return state.MLempdatas;
     },
 }
 
@@ -155,9 +146,6 @@ const mutations = {
         //state.illegalCategorydata=data;
 		state.datas=data;
 		state.total=data.total
-    },
-	loadMlillegalCategory(state,data){
-		state.MLempdatas=data;		
     },
 	resetillegal_category(state){
         //state.illegalCategorydata=data;

@@ -147,7 +147,7 @@
         },
         companyid: '',
         dialogVisible: false,
-        page_size: 5,
+        page_size: 15,
         cur_page:1,
         title: '',
         insertData:{

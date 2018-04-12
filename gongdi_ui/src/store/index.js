@@ -1,9 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
-import illegalCategory from './modules/illegalCategory'
-import illegalType from './modules/illegalType' 
+   
 import mypermissions from './modules/mypermissions'
+import illegalCategory from './modules/illegalCategory'
+import illegalType from './modules/illegalType'
+import subcontractors from './modules/subcontractors'
+import empIllegal from './modules/empIllegal'
+import subconIllegal from './modules/subconIllegal'
 import danti from './modules/danti'
 import gongdi from './modules/gongdi'
 import buwei from './modules/buwei'
@@ -23,7 +26,10 @@ export default new Vuex.Store({
     modules: {
 		illegalCategory,
 		illegalType,
+		subcontractors,
 		mypermissions,
+		empIllegal,
+		subconIllegal,
 		danti,
 		gongdi,
 		buwei,

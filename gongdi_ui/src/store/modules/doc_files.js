@@ -1,9 +1,9 @@
 import axios from 'axios'
-import buwei from './buwei'
 
-const state = {
-    doc_files:[],
-    docs:[]
+// 以后要把docs部分删掉
+
+const state = ()=>{
+    return { doc_files:[], docs:[] }
 }
 
 const getters = {
@@ -61,5 +61,4 @@ export default {
     getters,
     mutations,
     actions,
-    modules:{buwei}
 }

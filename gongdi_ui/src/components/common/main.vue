@@ -19,7 +19,7 @@ import { mapGetters } from 'vuex';
 import sidebar from './sidebar.vue';
 import container from './container.vue';
 import axios from 'axios'
-import '../../locale/lang/zh_tw.js'
+import '../../locale/lang/zh_cn.js'
 import { Loading } from 'element-ui';
 export default {
 	data(){

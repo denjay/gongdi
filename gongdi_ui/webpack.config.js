@@ -73,42 +73,35 @@ module.exports = (options = {}) => ({
 	disableHostCheck: true,
     proxy: {
       '/kong/auth': {
-        target: 'http://192.168.101.170:8008',
+        target: 'http://192.168.101.171:8008',
         changeOrigin: true,
         pathRewrite: {
           '^/kong/auth': ''
         }
       },
-	  // '/kong/gongdi_mng': {
-    //     target: 'http://192.168.101.170:8008',
-    //     changeOrigin: true,
-    //     pathRewrite: {
-    //       '^/kong': ''
-    //     }
-    //   },
       '/kong/employeemng': {
-        target: 'http://192.168.101.170:8001',
+        target: 'http://192.168.101.171:8001',
         changeOrigin: true,
         pathRewrite: {
           '^/kong': ''
         }
       },
 	  '/kong/rightmanage': {
-        target: 'http://192.168.101.170:8008',
+        target: 'http://192.168.101.171:8008',
         changeOrigin: true,
         pathRewrite: {
           '^/kong': ''
         }
       },
 	  '/kong/gongdi_mng': {
-        target: 'http://192.168.101.170:8889',
+        target: 'http://192.168.101.171:8889',
         changeOrigin: true,
         pathRewrite: {
           '^/kong': ''
         }
       },
 	  '/kong/': {
-		target: 'http://192.168.101.170:8899',
+		target: 'http://192.168.101.171:8899',
 		changeOrigin: true,
 		pathRewrite: {
 		  '^/kong': ''

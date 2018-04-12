@@ -217,7 +217,7 @@
         },
         doc_types:{"规范管理":"guifang","图纸管理":"tuzhi","图集管理":"tuji"},
         doc_id: null,
-        page_size: 5,  
+        page_size: 15,  
         guifang_cur_page:1,      
         tuzhi_cur_page:1,      
         tuji_cur_page:1,      

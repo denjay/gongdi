@@ -105,10 +105,11 @@
       <el-table-column
         fixed="right"
         label="操作"
-        width="130">
+        width="180">
         <template slot-scope="scope">
           <el-button @click="remove(scope.row)" size="mini" icon="el-icon-delete"></el-button>
           <el-button @click="edit(scope.row)" size="mini" icon="el-icon-edit"></el-button>
+          <el-button @click="file_manage(scope.row)" size="mini" icon="el-icon-document"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -123,9 +124,57 @@
       :page-count="total_pages">
     </el-pagination>
 
+    <el-dialog title="文档附件管理" :visible.sync="dialogVisible_file" width="60%" :before-close="handleClose">
+      <el-table
+        :data="doc_files"
+        border
+        style="width: 100%">
+        <el-table-column
+          fixed
+          prop="id"
+          label="id"
+          width="100">
+        </el-table-column>
+        <el-table-column
+          prop="file_size"
+          width="150"
+          label="文件大小(kb)">
+        </el-table-column>
+        <el-table-column
+          prop="file_name"
+          label="文件名">
+        </el-table-column>
+        <el-table-column
+          fixed="right"
+          label="操作"
+          width="130">
+          <template slot-scope="scope">
+            <el-button @click="remove(scope.row)" size="mini" icon="el-icon-delete"></el-button>
+            <a :href="`/kong/gongdi_mng/v1.0/doc_files/${scope.row.id}`">
+              <el-button size="mini" icon="el-icon-download"></el-button>
+            </a>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <el-upload
+        class="upload-demo"
+        ref="upload"
+        action="/kong/gongdi_mng/v1.0/doc_files"
+        multiple
+        name="doc"
+        :data={docsid:docsid}
+        :before-remove="beforeRemove"
+        :on-change="handleChange"            
+        :auto-upload="false"
+        :file-list="fileList">
+        <el-button size="small" type="primary">选择文件</el-button>
+      </el-upload>
+    </el-dialog>
+    
     <el-dialog
       :title="title"
-      :visible.sync="dialogVisible"
+      :visible.sync="dialogVisible_doc"
       width="30%"
       :before-close="handleClose">
       <el-form label-position="right" label-width="100px" :model="formData" :rules="rules" ref="ruleForm">
@@ -226,6 +275,8 @@
 
     data() {
       return {
+        docsid : null,
+        fileList:[],        
         rules: {
           companyid: [
             { required: true, message: '请选择所属公司', trigger: 'change' },
@@ -272,11 +323,12 @@
           bei_jiaodi_ren: '',
           description: ''
         },
-        page_size:5,
+        page_size: 15,
         cur_page:1,
         jiaodi_id: null,
         activeNames: ['1'],
-        dialogVisible: false,
+        dialogVisible_doc: false,
+        dialogVisible_file: false,
         title: '',
       }
     },
@@ -305,7 +357,7 @@
       insert(){
         // 新增时先清空表单数据        
         this.title = '新增交底'
-        this.dialogVisible = true
+        this.dialogVisible_doc = true
         this.formData.jiaodi_time = ''
         this.formData.shigong_danwei = ''
         this.formData.jiaodi_ren = ''
@@ -315,7 +367,7 @@
         this.formData.description = ''
       },
       edit(data){
-        // 点编辑时，将对应行数据写入表单        
+        // 点编辑时，将对应行数据写入表单   
         this.title = '编辑交底'
         this.jiaodi_id = data.id
         this.formData.name = data.name
@@ -325,11 +377,11 @@
         this.formData.jiaodi_ren = data.jiaodi_ren
         this.formData.bei_jiaodi_ren = data.bei_jiaodi_ren
         this.formData.description = data.description
-        this.dialogVisible = true
+        this.dialogVisible_doc = true
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
-        this.dialogVisible = false
+        this.dialogVisible_doc = false
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -368,7 +420,7 @@
           delete data.buweiid          
           this.$store.dispatch('jiaodi/putJiaodis',data)
         }
-        this.dialogVisible = false
+        this.dialogVisible_doc = false
       },
       remove(data) {
         this.$confirm('此操作將永久刪除該資料, 是否繼續?', '提示', {
@@ -383,12 +435,24 @@
           this.getJiaodis(page)
         })
       },
+      file_manage(data){
+        this.$store.dispatch('jiaodi/doc_files/getDocFiles', data.id)  
+        this.docsid = data.id
+        this.dialogVisible_file = true      
+      },
       handleClose(done) {
         this.$confirm('确认关闭？')
           .then(_ => {
             done();
           })
-      }
+      },
+      // upload相关
+      beforeRemove(file, fileList) {
+        return this.$confirm(`确定移除 ${ file.name }？`);
+      },
+      handleChange(file, fileList) {
+        this.fileList = fileList;
+      } 
     },
 
     computed: {
@@ -404,6 +468,10 @@
         'dantis':'dantis',
         'companies':'companies',
         'buweis':'buweis',
+        }
+      ),
+      ...mapGetters('jiaodi/doc_files',{
+        'doc_files':'doc_files',
         }
       ),
       ...mapGetters('jiaodi',{
@@ -471,9 +539,9 @@
 </style>
 
 <style>
-  .el-dialog {
+  /* .el-dialog {
     width: 385px !important;
-  }
+  } */
   .el-table {
     margin-top: 5px;
   }

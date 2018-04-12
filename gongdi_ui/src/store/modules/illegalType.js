@@ -3,8 +3,6 @@ const state = {
     datas:[],
 	total:0,
 	LSempdatas:[],
-	departFEdatas:[],//部门资料
-	MLempdatas:[],//请假系统月报表所需要的员工数据
 	//isLoad:false,
 	isLSempLoad:false,
 	isLSptypeLoad:false,
@@ -31,12 +29,6 @@ const getters = {
     },
 	waitITstatus:state=>{
 		return state.waitcomplete;
-    },
-	departFEdatas:state=>{
-		return state.departFEdatas;
-    },
-	MLempdatas:state=>{
-		return state.MLempdatas;
     },
 }
 
@@ -175,18 +167,9 @@ const mutations = {
 		state.datas=data;
 		//state.total=data.total
     },
-	loadDepartFE(state,data){
-		state.departFEdatas=data;		
-    },
-	resetDepartFE(state,data){
-		state.departFEdatas=[];		
-    },
 	loadLeaveSystememp(state,data){
 		state.isLSempLoad=true;
 		state.LSempdatas=data;		
-    },
-	loadMlemployee(state,data){
-		state.MLempdatas=data;		
     },
 	resetemp(state){
         //state.employeedata=data;

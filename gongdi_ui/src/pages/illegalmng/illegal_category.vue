@@ -8,11 +8,11 @@
 					<el-row type="flex" justify="space-between" style="margin-bottom:5px">
 						<el-col :inline="true"  style="float:left;">
 							<el-button v-if="employeeright.ops.indexOf('insert')>=0" type="primary" @click="insert()" style="margin-left:10px;">新增</el-button>
-            </el-col>
-          </el-row>
-                    <!-- 資料列表-->
+                        </el-col>
+                    </el-row>
+                    <!-- 资料列表-->
                     <el-table :data="illegal_categorys" stripe v-loading="loading"
-						element-loading-text="資料加載中..."
+						element-loading-text="资料加载中..."
 						:max-height="theheight" border>     
 						<el-table-column
 							type="index"
@@ -43,7 +43,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer" >
             <el-button @click="reset">取 消</el-button>
-            <el-button type="primary" :loading="waitICStatus" @click="submitData()">確 定</el-button>
+            <el-button type="primary" :loading="waitICStatus" @click="submitData()">确 定</el-button>
         </div>
     </el-dialog>
   </div>
@@ -97,15 +97,15 @@ export default {
 		edit(data){
 			console.log(this.$refs.dialog.title);
 			this.title=chg['updatedata'];
-			//this.$refs.dialog.title='資料修改';
+			//this.$refs.dialog.title='资料修改';
 			for (var key in data){
 				this.insertdata[key]=data[key];
 			};
 			this.$store.dispatch('editIllegalCategorys',{id:data.id});
         },
 		remove(data){
-			this.$confirm('此操作將永久刪除該資料, 是否繼續?', '提示', {
-				confirmButtonText: '確定',
+			this.$confirm('此操作将永久删除该资料, 是否继续?', '提示', {
+				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 			}).then(() => {
 				this.$store.dispatch('removeIllegalCategorys',{id:data.id});

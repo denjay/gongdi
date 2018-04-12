@@ -238,7 +238,7 @@
           is_qualified: "",
           description: "",
         },
-        page_size: 5,
+        page_size: 15,
         insp_id: null,
         quality_cur_page:1,
         safety_cur_page:1,

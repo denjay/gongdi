@@ -1,5 +1,6 @@
 import axios from 'axios'
 import buwei from './buwei'
+import doc_files from './doc_files'
 
 const state = ()=>{
     return {jiaodis:[],total_datas:null}
@@ -96,5 +97,5 @@ export default {
     getters,
     mutations,
     actions,
-    modules:{buwei}
+    modules:{buwei,doc_files}
 }
