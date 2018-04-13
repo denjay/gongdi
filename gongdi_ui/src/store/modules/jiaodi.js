@@ -44,7 +44,8 @@ const actions = {
                 var total = response.headers["x-total"]       
                 commit("setTotalDatas",total)
             }
-        }).catch(function(error){
+        })
+        .catch(function(error){
 			alert('getJiaodis失败')
 		})
     },
@@ -56,7 +57,8 @@ const actions = {
                 jiaodi.unshift(response.data)
                 commit('setJiaodis', jiaodi)
             }
-		}).catch(function(error){
+        })
+        .catch(function(error){
 			alert('postJiaodis失败')
 		})
     },
@@ -74,7 +76,8 @@ const actions = {
                     }
                 }
             }
-        }).catch(error => {
+        })
+        .catch(error => {
             alert('putJiaodis出错')
         })
     },

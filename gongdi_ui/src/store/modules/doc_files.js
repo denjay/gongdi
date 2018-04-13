@@ -36,6 +36,9 @@ const actions = {
                 commit('setDocs',response.data)
             }
         })
+        .catch(function(error){
+			alert('getDocs失败')
+		})
     },
     getDocFiles({commit},docsid){
         axios.get(`/kong/gongdi_mng/v1.0/docs/${docsid}/files`)
@@ -44,14 +47,20 @@ const actions = {
                 commit('setDocFiles',response.data)
             }
         })
+        .catch(function(error){
+			alert('getDocFiles失败')
+		})
     },
     removeDocFiles({commit},data){
         axios.delete(`/kong/gongdi_mng/v1.0/doc_files/${data.id}`)
-			.then(function(response){
-                if(response.status === 204){
-                    commit('removeDocFiles',data)
-                }
-			})
+        .then(function(response){
+            if(response.status === 204){
+                commit('removeDocFiles',data)
+            }
+        })
+        .catch(function(error){
+            alert('removeDocFiles失败')
+        })
     }
 }
 

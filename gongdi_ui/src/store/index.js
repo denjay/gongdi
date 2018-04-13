@@ -14,6 +14,7 @@ import inspect from './modules/inspect'
 import guifan_tuzhi_tuji from './modules/guifan_tuzhi_tuji'
 import jiaodi from './modules/jiaodi'
 import doc_files from './modules/doc_files'
+import doc from './modules/doc'
 
 Vue.use(Vuex)
 
@@ -36,6 +37,7 @@ export default new Vuex.Store({
 		inspect,
 		guifan_tuzhi_tuji,
 		jiaodi,
-		doc_files
+		doc_files,
+		doc
     }
 })

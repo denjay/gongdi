@@ -29,37 +29,22 @@
                 :value="buwei.id">
               </el-option>
             </el-select>
-            <br>            
-            <span>施工单位：</span>
+            <br>
+            <span>文档名：</span>
             <el-input
-              placeholder="请输入施工单位"
-              v-model="filterData.shigong_danwei"
-              clearable>
-            </el-input>
-            <br>            
-            <span>交底人：</span>
-            <el-input
-              placeholder="请输入交底人"
-              v-model="filterData.jiaodi_ren"
-              clearable>
-            </el-input>
-            <br>            
-            <span>被交底人：</span>
-            <el-input
-              placeholder="请输入被交底人"
-              v-model="filterData.bei_jiaodi_ren"
+              placeholder="请输入文档名"
+              v-model="filterData.name"
               clearable>
             </el-input>
           </div>
         </el-collapse-item>
       </el-collapse>
-      <el-button @click="getJiaodis(1)" type="primary">查询</el-button>
-      <el-button @click="insert" type="primary">新增交底</el-button>
+      <el-button @click="getDocs(1)" type="primary">查询</el-button>
+      <el-button @click="insert" type="primary">新增文档</el-button>
     </div>
 
     <el-table
-      class="dialog_doc"
-      :data="jiaodis"
+      :data="docs"
       border
       style="width: 100%">
       <el-table-column
@@ -70,34 +55,13 @@
       </el-table-column>
       <el-table-column
         prop="name"
-        width="150"
-        label="交底名">
+        label="文档名"
+        width="150">
       </el-table-column>
       <el-table-column
         prop="buwei_name"
-        width="150"
-        label="所属部位">
-      </el-table-column>
-      <el-table-column
-        prop="jiaodi_time"
-        label="交底时间"
-        width="100"
-        :formatter="formatter">
-      </el-table-column>
-      <el-table-column
-        prop="shigong_danwei"
-        width="200"
-        label="施工单位">
-      </el-table-column>
-      <el-table-column
-        prop="jiaodi_ren"
-        width="100"
-        label="交底人">
-      </el-table-column>
-      <el-table-column
-        prop="bei_jiaodi_ren"
-        width="100"
-        label="被交底人">
+        label="所属部位"
+        width="150">
       </el-table-column>
       <el-table-column
         prop="description"
@@ -169,12 +133,9 @@
       </el-upload>
     </el-dialog>
     
-    <el-dialog
-      :title="title"
-      :visible.sync="dialogVisible_doc"
-      :before-close="handleClose">
+    <el-dialog :title="title" :visible.sync="dialogVisible_doc">
       <el-form label-position="right" label-width="100px" :model="formData" :rules="rules" ref="ruleForm">
-        <template v-if="title === '新增交底'">
+        <template v-if="title === '新增文档'">
           <el-form-item label="公司名称" prop="companyid">
             <el-select v-model="formData.companyid" filterable clearable placeholder="请选择公司">
               <el-option
@@ -212,35 +173,11 @@
             v-model="formData.code"
             clearable>
           </el-input>
-        </el-form-item>        
-        <el-form-item label="交底名称" prop="name">
+        </el-form-item>
+        <el-form-item label="文档名称" prop="name">
           <el-input
-            placeholder="请输入交底名称"
+            placeholder="请输入文档名称"
             v-model="formData.name"
-            clearable>
-          </el-input>
-        </el-form-item>
-        <el-form-item label="交底时间" prop="jiaodi_time">
-          <el-date-picker v-model="formData.jiaodi_time" type="date" placeholder="选择日期"></el-date-picker>          
-        </el-form-item>
-        <el-form-item label="施工单位" prop="shigong_danwei">
-          <el-input
-            placeholder="请输入施工单位"
-            v-model="formData.shigong_danwei"
-            clearable>
-          </el-input>
-        </el-form-item>
-        <el-form-item label="交底人" prop="jiaodi_ren">
-          <el-input
-            placeholder="请输入交底人"
-            v-model="formData.jiaodi_ren"
-            clearable>
-          </el-input>
-        </el-form-item>
-        <el-form-item label="被交底人" prop="bei_jiaodi_ren">
-          <el-input
-            placeholder="请输入被交底人"
-            v-model="formData.bei_jiaodi_ren"
             clearable>
           </el-input>
         </el-form-item>
@@ -267,7 +204,7 @@
   import {mapGetters} from 'vuex'
   export default {
     mounted(){
-      this.$store.dispatch('jiaodi/buwei/getCompanies')
+      this.$store.dispatch('doc/buwei/getCompanies')
     },
 
     data() {
@@ -293,20 +230,12 @@
           shigong_danwei: [
             { required: true, message: '请输施工单位', trigger: 'blur' },
           ],
-          jiaodi_ren: [
-            { required: true, message: '请输入交底人', trigger: 'blur' },
-          ],
-          bei_jiaodi_ren: [
-            { required: true, message: '请输入被交底人', trigger: 'blur' },
-          ]
         },
         filterData:{
           companyid: '',
           dantiid: '',
           buweiid: null,
-          shigong_danwei: '',
-          jiaodi_ren: '',
-          bei_jiaodi_ren: '',
+          name: null, 
         },
         formData:{
           companyid: '',
@@ -314,15 +243,12 @@
           buweiid: null,
           code: null,
           name: null, 
-          jiaodi_time: '',
-          shigong_danwei: '',
-          jiaodi_ren: '',
-          bei_jiaodi_ren: '',
-          description: ''
+          description: '',
         },
+        doc_type:'guifang',
         page_size: 15,
         cur_page:1,
-        jiaodi_id: null,
+        doc_id: null,
         activeNames: ['1'],
         dialogVisible_doc: false,
         dialogVisible_file: false,
@@ -332,47 +258,31 @@
 
     methods: {
       handleCurrentChange(val) {
-        this.getJiaodis(val)
+        this.getDocs(val)
       },
-      // 用于格式化时间显示的值
-      formatter(row, column) {
-        if(Boolean(row.jiaodi_time)){
-          var date = new Date(row.jiaodi_time)
-          return date.toLocaleDateString();
-        }
-      },
-      getJiaodis(page){
-        this.$store.dispatch('jiaodi/getJiaodis', {
+      getDocs(page){
+        this.$store.dispatch('doc/getDocs', {
+          "doc_type":this.doc_type,
           "page":page,
           "per_page":this.page_size,
           "buwei":this.buwei_name,
-          "shigong_unit":this.filterData.shigong_danwei,
-          "jiaodi_ren":this.filterData.jiaodi_ren,
-          "bei_jiaodi_ren":this.filterData.bei_jiaodi_ren
+          "doc_name":this.filterData.name
           })        
       },
       insert(){
         // 新增时先清空表单数据        
-        this.title = '新增交底'
+        this.title = '新增文档'
         this.dialogVisible_doc = true
-        this.formData.jiaodi_time = ''
-        this.formData.shigong_danwei = ''
-        this.formData.jiaodi_ren = ''
-        this.formData.bei_jiaodi_ren = ''
         this.formData.name = ''
         this.formData.code = ''
         this.formData.description = ''
       },
       edit(data){
         // 点编辑时，将对应行数据写入表单   
-        this.title = '编辑交底'
-        this.jiaodi_id = data.id
+        this.title = '编辑文档'
+        this.doc_id = data.id
         this.formData.name = data.name
         this.formData.code = data.code
-        this.formData.jiaodi_time = data.jiaodi_time
-        this.formData.shigong_danwei = data.shigong_danwei
-        this.formData.jiaodi_ren = data.jiaodi_ren
-        this.formData.bei_jiaodi_ren = data.bei_jiaodi_ren
         this.formData.description = data.description
         this.dialogVisible_doc = true
       },
@@ -393,29 +303,19 @@
       submitData(){
         // 组织表单需要的数据，创建或更新数据        
         var data = {
+          doc_type:this.doc_type,
           code:this.formData.code,
           name:this.formData.name,
           buweiid:this.formData.buweiid,
-          jiaodi_time:this.formData.jiaodi_time,
-          shigong_danwei:this.formData.shigong_danwei,
-          jiaodi_ren:this.formData.jiaodi_ren,
-          bei_jiaodi_ren:this.formData.bei_jiaodi_ren,
           description:this.formData.description,
         }
-        if(!Boolean(data.jiaodi_time)){
-          delete data.jiaodi_time
+        if(this.title === '新增文档'){
+          this.$store.dispatch('doc/postDocs',data)
         }
-        else{
-          // 解决时间格式不对的问题
-          data.jiaodi_time = new Date(data.jiaodi_time)
-        }
-        if(this.title === '新增交底'){
-          this.$store.dispatch('jiaodi/postJiaodis',data)
-        }
-        else if(this.title === '编辑交底'){
-          data["id"] = this.jiaodi_id
+        else if(this.title === '编辑文档'){
+          data["id"] = this.doc_id
           delete data.buweiid          
-          this.$store.dispatch('jiaodi/putJiaodis',data)
+          this.$store.dispatch('doc/putDocs',data)
         }
         this.dialogVisible_doc = false
       },
@@ -426,33 +326,36 @@
         }).then(() => {
           // 删除一条数据之后的页数
           var total_pages =  Math.ceil((this.total_datas-1) / this.page_size)
-          this.$store.dispatch('jiaodi/removeJiaodis',data);
           // 解决删除一条数据后，当前页大于总页数的问题
           var page = this.cur_page > total_pages ? total_pages : this.cur_page;
-          this.getJiaodis(page)
+          var query_args = {
+          "doc_type":this.doc_type,
+          "page":page,
+          "per_page":this.page_size,
+          "buwei":this.buwei_name,
+          "doc_name":this.filterData.name
+          }
+          this.$store.dispatch('doc/removeDocs',{"doc_type":data.doc_type,"id":data.id,"query_args":query_args});
         })
       },
       file_manage(data){
-        this.$store.dispatch('jiaodi/doc_files/getDocFiles', data.id)  
+        this.$store.dispatch('doc/doc_files/getDocFiles', data.id)  
         this.docsid = data.id
         this.dialogVisible_file = true      
       },
       handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
+        this.fileList = []
+        done()
       },
       // upload相关
       submitUpload() {
         this.$refs.upload.submit();
-        // this.dialogVisible_file = false
       },
       beforeRemove(file, fileList) {
         return this.$confirm(`确定移除 ${ file.name }？`);
       },
       handleAvatarSuccess(file) {
-        this.$store.dispatch('jiaodi/doc_files/getDocFiles', this.docsid)
+        this.$store.dispatch('doc/doc_files/getDocFiles', this.docsid)
         this.fileList = []
         this.$message({
           message: '文件上传成功',
@@ -464,7 +367,7 @@
           confirmButtonText: '確定',
           cancelButtonText: '取消',
         }).then(() => {
-          this.$store.dispatch('jiaodi/doc_files/removeDocFiles',data);
+          this.$store.dispatch('doc/doc_files/removeDocFiles',data);
         })
       },
     },
@@ -478,18 +381,18 @@
           return this.buweis.filter(item => item.id === this.filterData.buweiid)[0]["name"]
         }
       },
-      ...mapGetters('jiaodi/buwei',{
+      ...mapGetters('doc/buwei',{
         'dantis':'dantis',
         'companies':'companies',
         'buweis':'buweis',
         }
       ),
-      ...mapGetters('jiaodi/doc_files',{
+      ...mapGetters('doc/doc_files',{
         'doc_files':'doc_files',
         }
       ),
-      ...mapGetters('jiaodi',{
-        'jiaodis':'jiaodis',
+      ...mapGetters('doc',{
+        'docs':'docs',
         'total_datas':'total_datas',
 		  }),
     },
@@ -497,30 +400,30 @@
     watch:{
       "filterData.companyid": function(){
         this.filterData.dantiid = ''
-        this.$store.commit('jiaodi/buwei/setDantis',[])
+        this.$store.commit('doc/buwei/setDantis',[])
         if(Boolean(this.filterData.companyid)){
-          this.$store.dispatch('jiaodi/buwei/getDantis', {companyid:this.filterData.companyid})
+          this.$store.dispatch('doc/buwei/getDantis', {companyid:this.filterData.companyid})
         }
       },
       "filterData.dantiid": function(){
         this.filterData.buweiid = null
-        this.$store.commit('jiaodi/buwei/setBuweis',[])
+        this.$store.commit('doc/buwei/setBuweis',[])
         if(Boolean(this.filterData.dantiid)){
-          this.$store.dispatch('jiaodi/buwei/getBuweis', this.filterData.dantiid)
+          this.$store.dispatch('doc/buwei/getBuweis', this.filterData.dantiid)
         }
       },
       "formData.companyid": function(){
         this.formData.dantiid = ''
-        this.$store.commit('jiaodi/buwei/setDantis',[])
+        this.$store.commit('doc/buwei/setDantis',[])
         if(Boolean(this.formData.companyid)){
-          this.$store.dispatch('jiaodi/buwei/getDantis', {companyid:this.formData.companyid})
+          this.$store.dispatch('doc/buwei/getDantis', {companyid:this.formData.companyid})
         }
       },
       "formData.dantiid": function(){
         this.formData.buweiid = null
-        this.$store.commit('jiaodi/buwei/setBuweis',[])
+        this.$store.commit('doc/buwei/setBuweis',[])
         if(Boolean(this.formData.dantiid)){
-          this.$store.dispatch('jiaodi/buwei/getBuweis', this.formData.dantiid)
+          this.$store.dispatch('doc/buwei/getBuweis', this.formData.dantiid)
         }
       },
     }     

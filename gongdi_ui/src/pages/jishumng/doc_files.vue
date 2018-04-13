@@ -96,7 +96,6 @@
     <el-dialog
       :title="title"
       :visible.sync="dialogVisible"
-      width="30%"
       :before-close="handleClose">
       <el-form label-position="right" label-width="100px" :model="insertData" :rules="rules" ref="ruleForm">
         <template v-if="title === '新增文档附件'">
