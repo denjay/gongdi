@@ -80,11 +80,22 @@
           </el-table-column>
           <el-table-column
             fixed="right"
+            label="下载二维码"
+            width="100">
+            <template slot-scope="scope">
+              <a :href="`/kong/gongdi_mng/v1.0/bw_${scope.row.type}_qrcode/${scope.row.id}`" :download="scope.row.id">
+                <el-button size="mini" icon="el-icon-download"></el-button>
+              </a>
+            </template>
+          </el-table-column>
+          <el-table-column
+            fixed="right"
             label="操作"
-            width="130">
+            width="160">
             <template slot-scope="scope">
               <el-button @click="remove(scope.row)" size="mini" icon="el-icon-delete"></el-button>
               <el-button @click="edit(scope.row)" size="mini" icon="el-icon-edit"></el-button>
+              <el-button @click="file_manage(scope.row)" size="mini" icon="el-icon-document"></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -101,9 +112,53 @@
       </el-collapse-item>
     </el-collapse>
 
+    <el-dialog class="dialog_file" title="文档附件管理" :visible.sync="dialogVisible_pic" :before-close="handleClose">
+      <el-table
+        :data="inspect_pics"
+        border
+        style="width: 100%">
+        <el-table-column
+          prop="file_name"
+          label="文件名">
+        </el-table-column>
+        <el-table-column
+          prop="pic_size"
+          width="150"
+          label="文件大小(kb)">
+        </el-table-column>
+        <el-table-column
+          fixed="right"
+          label="操作"
+          width="115">
+          <template slot-scope="scope">
+            <el-button @click="remove_inspect_pic(scope.row)" size="mini" icon="el-icon-delete"></el-button>
+            <a :href="`/kong/gongdi_mng/v1.0/inspect_pics/${scope.row.id}`" :download="scope.row.file_name">
+              <el-button size="mini" icon="el-icon-download"></el-button>
+            </a>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <el-upload
+        class="upload-demo"
+        ref="upload"
+        action="/kong/gongdi_mng/v1.0/inspect_pics"
+        multiple
+        name="pic"
+        :data={inspectid:insp_id}
+        :before-remove="beforeRemove"
+        :on-success="handleAvatarSuccess"
+        :file-list="fileList"
+        :auto-upload="false">
+        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+        <div slot="tip" class="el-upload__tip">可以上传多个文件</div>
+      </el-upload>
+    </el-dialog>
+
     <el-dialog
       :title="title"
-      :visible.sync="dialogVisible"
+      :visible.sync="dialogVisible_insp"
       width="30%"
       :before-close="handleClose">
       <el-form label-position="right" label-width="100px" :model="formData" :rules="rules" ref="ruleForm">
@@ -198,6 +253,7 @@
 
     data() {
       return {
+        fileList:[],
         rules: {
           companyid: [
             { required: true, message: '请选择所属公司', trigger: 'change' },
@@ -245,7 +301,8 @@
         produce_cur_page:1,
         insp_types: {质量巡检:'quality',安全巡检:'safety',产品巡检:'produce'},             
         activeNames: ['1','2','3','4'],
-        dialogVisible: false,
+        dialogVisible_insp: false,
+        dialogVisible_pic: false,
         title: "",
       }
     },
@@ -266,9 +323,10 @@
       insert(){
         // 新增时先清空表单数据        
         this.title = '新增巡检'
-        this.dialogVisible = true
+        this.dialogVisible_insp = true
       },
       edit(data){
+        console.log(data)
         // 点编辑时，将对应行数据写入表单   
         this.insp_id = data.id
         this.title = '编辑巡检'
@@ -278,11 +336,11 @@
         this.formData.insp_emp = data.insp_emp
         this.formData.is_qualified = data.is_qualified
         this.formData.description = data.description
-        this.dialogVisible = true
+        this.dialogVisible_insp = true
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
-        this.dialogVisible = false
+        this.dialogVisible_insp = false
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -311,13 +369,14 @@
           data["id"] = this.insp_id
           this.$store.dispatch('inspect/putInspects',data)
         }
-        this.dialogVisible = false
+        this.dialogVisible_insp = false
       },
       remove(data) {
         this.$confirm('此操作將永久刪除該資料, 是否繼續?', '提示', {
           confirmButtonText: '確定',
           cancelButtonText: '取消',
-        }).then(() => {
+        })
+        .then(() => {
           var insp_type = data["type"]
           // 删除一条数据之后的页数
           var total_pages =  Math.ceil((this[`${insp_type}_total_datas`]-1) / this.page_size)
@@ -327,12 +386,38 @@
           this.getInspects(page,[insp_type])
         })
       },
+      file_manage(data){
+        this.$store.dispatch('inspect/inspect_pics/getInspectPics', data.id)  
+        this.insp_id = data.id
+        this.dialogVisible_pic = true      
+      },
       handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-      }
+        this.fileList = []
+        done()
+      },
+      // upload相关
+      submitUpload() {
+        this.$refs.upload.submit();
+      },
+      beforeRemove(file, fileList) {
+        return this.$confirm(`确定移除 ${ file.name }？`);
+      },
+      handleAvatarSuccess(file) {
+        this.$store.dispatch('inspect/inspect_pics/getInspectPics', this.insp_id)
+        this.fileList = []
+        this.$message({
+          message: '文件上传成功',
+          type: 'success'
+        });
+      }, 
+      remove_inspect_pic(data) {
+        this.$confirm('此操作將永久刪除該資料, 是否繼續?', '提示', {
+          confirmButtonText: '確定',
+          cancelButtonText: '取消',
+        }).then(() => {
+          this.$store.dispatch('inspect/inspect_pics/removeInspectPics',data);
+        })
+      },
     },
 
     computed: {
@@ -358,7 +443,11 @@
         'quality_total_datas':'quality_total_datas',
         'safety_total_datas':'safety_total_datas',
         'produce_total_datas':'produce_total_datas',
-		  }),
+      }),
+      ...mapGetters('inspect/inspect_pics',{
+        'inspect_pics':'inspect_pics',
+        }
+      ),
       insp_table(){
         return [
           {title:"质量巡检", name:"2", type:"quality", total_pages:this.quality_total_pages, total_datas:this.quality_total_datas, data:this.quality_inspects},
@@ -407,8 +496,10 @@
 
 <style scoped>
   .select .el-select {
-    width: 200px;
     margin-bottom: 20px;
+  } 
+  .el-select {
+    width: 200px;
   } 
   .select {
     width: 700px;
@@ -424,11 +515,17 @@
   .el-textarea {
     width: 200px;
   }
+  .el-button+.el-button {
+    margin-left: 0px;
+  }
 </style>
 
 <style>
   .el-dialog {
     width: 385px !important;
+  }
+  .dialog_file .el-dialog {
+    width: 700px !important;
   }
   .el-table {
     margin-top: 5px;

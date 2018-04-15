@@ -214,12 +214,12 @@
   import {mapGetters} from 'vuex'
   export default {
     mounted(){
-      this.$store.dispatch('guifan/doc/buwei/getCompanies')
+      this.$store.dispatch('tuji/doc/buwei/getCompanies')
     },
 
     data() {
       return {
-        fileList:[],
+        fileList:[],        
         rules: {
           companyid: [
             { required: true, message: '请选择所属公司', trigger: 'change' },
@@ -254,7 +254,7 @@
           name: null, 
           description: '',
         },
-        doc_type:'guifang',
+        doc_type:'tuji',
         page_size: 15,
         cur_page:1,
         doc_id: null,
@@ -270,7 +270,7 @@
         this.getDocs(val)
       },
       getDocs(page){
-        this.$store.dispatch('guifan/doc/getDocs', {
+        this.$store.dispatch('tuji/doc/getDocs', {
           "doc_type":this.doc_type,
           "page":page,
           "per_page":this.page_size,
@@ -319,12 +319,12 @@
           description:this.formData.description,
         }
         if(this.title === '新增文档'){
-          this.$store.dispatch('guifan/doc/postDocs',data)
+          this.$store.dispatch('tuji/doc/postDocs',data)
         }
         else if(this.title === '编辑文档'){
           data["id"] = this.doc_id
           delete data.buweiid          
-          this.$store.dispatch('guifan/doc/putDocs',data)
+          this.$store.dispatch('tuji/doc/putDocs',data)
         }
         this.dialogVisible_doc = false
       },
@@ -344,11 +344,11 @@
           "buwei":this.buwei_name,
           "doc_name":this.filterData.name
           }
-          this.$store.dispatch('guifan/doc/removeDocs',{"doc_type":data.doc_type,"id":data.id,"query_args":query_args});
+          this.$store.dispatch('tuji/doc/removeDocs',{"doc_type":data.doc_type,"id":data.id,"query_args":query_args});
         })
       },
       file_manage(data){
-        this.$store.dispatch('guifan/doc/doc_files/getDocFiles', data.id)  
+        this.$store.dispatch('tuji/doc/doc_files/getDocFiles', data.id)  
         this.doc_id = data.id
         this.dialogVisible_file = true      
       },
@@ -364,7 +364,7 @@
         return this.$confirm(`确定移除 ${ file.name }？`);
       },
       handleAvatarSuccess(file) {
-        this.$store.dispatch('guifan/doc/doc_files/getDocFiles', this.doc_id)
+        this.$store.dispatch('tuji/doc/doc_files/getDocFiles', this.doc_id)
         this.fileList = []
         this.$message({
           message: '文件上传成功',
@@ -376,7 +376,7 @@
           confirmButtonText: '確定',
           cancelButtonText: '取消',
         }).then(() => {
-          this.$store.dispatch('guifan/doc/doc_files/removeDocFiles',data);
+          this.$store.dispatch('tuji/doc/doc_files/removeDocFiles',data);
         })
       },
     },
@@ -390,17 +390,17 @@
           return this.buweis.filter(item => item.id === this.filterData.buweiid)[0]["name"]
         }
       },
-      ...mapGetters('guifan/doc/buwei',{
+      ...mapGetters('tuji/doc/buwei',{
         'dantis':'dantis',
         'companies':'companies',
         'buweis':'buweis',
         }
       ),
-      ...mapGetters('guifan/doc/doc_files',{
+      ...mapGetters('tuji/doc/doc_files',{
         'doc_files':'doc_files',
         }
       ),
-      ...mapGetters('guifan/doc',{
+      ...mapGetters('tuji/doc',{
         'docs':'docs',
         'total_datas':'total_datas',
 		  }),
@@ -409,30 +409,30 @@
     watch:{
       "filterData.companyid": function(){
         this.filterData.dantiid = ''
-        this.$store.commit('guifan/doc/buwei/setDantis',[])
+        this.$store.commit('tuji/doc/buwei/setDantis',[])
         if(Boolean(this.filterData.companyid)){
-          this.$store.dispatch('guifan/doc/buwei/getDantis', {companyid:this.filterData.companyid})
+          this.$store.dispatch('tuji/doc/buwei/getDantis', {companyid:this.filterData.companyid})
         }
       },
       "filterData.dantiid": function(){
         this.filterData.buweiid = null
-        this.$store.commit('guifan/doc/buwei/setBuweis',[])
+        this.$store.commit('tuji/doc/buwei/setBuweis',[])
         if(Boolean(this.filterData.dantiid)){
-          this.$store.dispatch('guifan/doc/buwei/getBuweis', this.filterData.dantiid)
+          this.$store.dispatch('tuji/doc/buwei/getBuweis', this.filterData.dantiid)
         }
       },
       "formData.companyid": function(){
         this.formData.dantiid = ''
-        this.$store.commit('guifan/doc/buwei/setDantis',[])
+        this.$store.commit('tuji/doc/buwei/setDantis',[])
         if(Boolean(this.formData.companyid)){
-          this.$store.dispatch('guifan/doc/buwei/getDantis', {companyid:this.formData.companyid})
+          this.$store.dispatch('tuji/doc/buwei/getDantis', {companyid:this.formData.companyid})
         }
       },
       "formData.dantiid": function(){
         this.formData.buweiid = null
-        this.$store.commit('guifan/doc/buwei/setBuweis',[])
+        this.$store.commit('tuji/doc/buwei/setBuweis',[])
         if(Boolean(this.formData.dantiid)){
-          this.$store.dispatch('guifan/doc/buwei/getBuweis', this.formData.dantiid)
+          this.$store.dispatch('tuji/doc/buwei/getBuweis', this.formData.dantiid)
         }
       },
     }     

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import buwei from './buwei'
+import inspect_pics from './inspect_pics'
 
 const state = {
     quality_inspects:[],
@@ -163,5 +164,5 @@ export default {
     getters,
     mutations,
     actions,
-    modules:{buwei}
+    modules:{buwei,inspect_pics}
 }

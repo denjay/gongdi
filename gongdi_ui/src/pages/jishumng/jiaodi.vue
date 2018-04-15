@@ -105,6 +105,16 @@
       </el-table-column>
       <el-table-column
         fixed="right"
+        label="下载二维码"
+        width="100">
+        <template slot-scope="scope">
+          <a :href="`/kong/gongdi_mng/v1.0/bw_jishu_qrcode/${scope.row.id}`" :download="scope.row.id">
+            <el-button size="mini" icon="el-icon-download"></el-button>
+          </a>
+        </template>
+      </el-table-column>
+      <el-table-column
+        fixed="right"
         label="操作"
         width="160">
         <template slot-scope="scope">
@@ -158,7 +168,7 @@
         action="/kong/gongdi_mng/v1.0/doc_files"
         multiple
         name="doc"
-        :data={docsid:docsid}
+        :data={docsid:jiaodi_id}
         :before-remove="beforeRemove"
         :on-success="handleAvatarSuccess"
         :file-list="fileList"
@@ -272,7 +282,6 @@
 
     data() {
       return {
-        docsid : null,
         fileList:[],        
         rules: {
           companyid: [
@@ -434,14 +443,12 @@
       },
       file_manage(data){
         this.$store.dispatch('jiaodi/doc_files/getDocFiles', data.id)  
-        this.docsid = data.id
+        this.jiaodi_id = data.id
         this.dialogVisible_file = true      
       },
       handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
+        this.fileList = []
+        done()
       },
       // upload相关
       submitUpload() {
@@ -452,7 +459,7 @@
         return this.$confirm(`确定移除 ${ file.name }？`);
       },
       handleAvatarSuccess(file) {
-        this.$store.dispatch('jiaodi/doc_files/getDocFiles', this.docsid)
+        this.$store.dispatch('jiaodi/doc_files/getDocFiles', this.jiaodi_id)
         this.fileList = []
         this.$message({
           message: '文件上传成功',

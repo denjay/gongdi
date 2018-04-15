@@ -43,59 +43,107 @@
       <el-button @click="insert" type="primary">新增文档</el-button>
     </div>
 
-    <el-collapse v-model="activeNames">
-      <el-collapse-item  v-for="item in doc_table" :key="item.index" :title="item.title" :name="item.name">
-        <el-table
-          :data="item.data"
-          border
-          style="width: 100%">
-          <el-table-column
-            fixed
-            prop="code"
-            label="编号"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="文档名"
-            width="150">
-          </el-table-column>
-          <el-table-column
-            prop="buwei_name"
-            label="所属部位"
-            width="150">
-          </el-table-column>
-          <el-table-column
-            prop="description"
-            label="描述">
-          </el-table-column>
-          <el-table-column
-            fixed="right"
-            label="操作"
-            width="130">
-            <template slot-scope="scope">
-              <el-button @click="remove(scope.row)" size="mini" icon="el-icon-delete"></el-button>
-              <el-button @click="edit(scope.row)" size="mini" icon="el-icon-edit"></el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+    <el-table
+      :data="docs"
+      border
+      style="width: 100%">
+      <el-table-column
+        fixed
+        prop="code"
+        label="编号"
+        width="100">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="文档名"
+        width="150">
+      </el-table-column>
+      <el-table-column
+        prop="buwei_name"
+        label="所属部位"
+        width="150">
+      </el-table-column>
+      <el-table-column
+        prop="description"
+        label="描述">
+      </el-table-column>
+      <el-table-column
+        fixed="right"
+        label="下载二维码"
+        width="100">
+        <template slot-scope="scope">
+          <a :href="`/kong/gongdi_mng/v1.0/bw_jishu_qrcode/${scope.row.id}`" :download="scope.row.id">
+            <el-button size="mini" icon="el-icon-download"></el-button>
+          </a>
+        </template>
+      </el-table-column>
+      <el-table-column
+        fixed="right"
+        label="操作"
+        width="160">
+        <template slot-scope="scope">
+          <el-button @click="remove(scope.row)" size="mini" icon="el-icon-delete"></el-button>
+          <el-button @click="edit(scope.row)" size="mini" icon="el-icon-edit"></el-button>
+          <el-button @click="file_manage(scope.row)" size="mini" icon="el-icon-document"></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
 
-        <el-pagination
-          v-show="Number(item.total_datas)"
-          background
-          layout="prev, pager, next"
-          @current-change="(value) => handleCurrentChange(value, item.doc_type)"
-          :page-size="page_size"
-          :page-count="item.total_pages">
-        </el-pagination>
-      </el-collapse-item>
-    </el-collapse>
+    <el-pagination
+      v-show="Number(total_datas)"
+      background
+      layout="prev, pager, next"
+      :current-page.sync="cur_page"
+      @current-change="handleCurrentChange"
+      :page-size="page_size"
+      :page-count="total_pages">
+    </el-pagination>
 
-    <el-dialog
-      :title="title"
-      :visible.sync="dialogVisible"
-      width="30%"
-      :before-close="handleClose">
+    <el-dialog class="dialog_file" title="文档附件管理" :visible.sync="dialogVisible_file" :before-close="handleClose">
+      <el-table
+        :data="doc_files"
+        border
+        style="width: 100%">
+        <el-table-column
+          prop="file_name"
+          label="文件名">
+        </el-table-column>
+        <el-table-column
+          prop="file_size"
+          width="150"
+          label="文件大小(kb)">
+        </el-table-column>
+        <el-table-column
+          fixed="right"
+          label="操作"
+          width="115">
+          <template slot-scope="scope">
+            <el-button @click="remove_doc_file(scope.row)" size="mini" icon="el-icon-delete"></el-button>
+            <a :href="`/kong/gongdi_mng/v1.0/doc_files/${scope.row.id}`">
+              <el-button size="mini" icon="el-icon-download"></el-button>
+            </a>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <el-upload
+        class="upload-demo"
+        ref="upload"
+        action="/kong/gongdi_mng/v1.0/doc_files"
+        multiple
+        name="doc"
+        :data={docsid:doc_id}
+        :before-remove="beforeRemove"
+        :on-success="handleAvatarSuccess"
+        :file-list="fileList"
+        :auto-upload="false">
+        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+        <div slot="tip" class="el-upload__tip">可以上传多个文件</div>
+      </el-upload>
+    </el-dialog>
+    
+    <el-dialog :title="title" :visible.sync="dialogVisible_doc">
       <el-form label-position="right" label-width="100px" :model="formData" :rules="rules" ref="ruleForm">
         <template v-if="title === '新增文档'">
           <el-form-item label="公司名称" prop="companyid">
@@ -125,16 +173,6 @@
                 :key="buwei.id"
                 :label="buwei.name"
                 :value="buwei.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="文档类型" prop="doc_type">
-            <el-select v-model="formData.doc_type" filterable clearable placeholder="请选择文档类型">
-              <el-option
-                v-for="(val,key,index) in doc_types"
-                :key="index"
-                :label="key"
-                :value="val">
               </el-option>
             </el-select>
           </el-form-item>
@@ -172,14 +210,16 @@
 </template>
 
 <script>
+  import axios from 'axios'
   import {mapGetters} from 'vuex'
   export default {
     mounted(){
-      this.$store.dispatch('guifan_tuzhi_tuji/buwei/getCompanies')
+      this.$store.dispatch('tuzhi/doc/buwei/getCompanies')
     },
 
     data() {
       return {
+        fileList:[],        
         rules: {
           companyid: [
             { required: true, message: '请选择所属公司', trigger: 'change' },
@@ -190,15 +230,15 @@
           buweiid: [
             { required: true, message: '请选择所属部位', trigger: 'change' },
           ],
-          doc_type: [
-            { required: true, message: '请选择文档类型', trigger: 'change' },
-          ],
           code: [
             { required: true, message: '请输入文件编码', trigger: 'blur' },
           ],
           name: [
             { required: true, message: '请输入文档名', trigger: 'blur' },
-          ]
+          ],
+          shigong_danwei: [
+            { required: true, message: '请输施工单位', trigger: 'blur' },
+          ],
         },
         filterData:{
           companyid: '',
@@ -210,53 +250,54 @@
           companyid: '',
           dantiid: '',
           buweiid: null,
-          doc_type: null,
           code: null,
           name: null, 
           description: '',
         },
-        doc_types:{"规范管理":"guifang","图纸管理":"tuzhi","图集管理":"tuji"},
+        doc_type:'tuzhi',
+        page_size: 15,
+        cur_page:1,
         doc_id: null,
-        page_size: 15,  
-        guifang_cur_page:1,      
-        tuzhi_cur_page:1,      
-        tuji_cur_page:1,      
-        activeNames: ['1','2','3','4'],
-        dialogVisible: false,
+        activeNames: ['1'],
+        dialogVisible_doc: false,
+        dialogVisible_file: false,
         title: '',
       }
     },
 
     methods: {
-      handleCurrentChange(val,type) {
-        this.getDocs(val,[type])
-        this[`${type}_cur_page`] = val
+      handleCurrentChange(val) {
+        this.getDocs(val)
       },
-      getDocs(page,doc_types=["guifang","tuzhi","tuji"]){
-        this.$store.dispatch('guifan_tuzhi_tuji/getDocs', {"doc_types":doc_types, "page":page, "per_page":this.page_size, "buwei":this.buwei_name, "doc_name":this.filterData.name })        
+      getDocs(page){
+        this.$store.dispatch('tuzhi/doc/getDocs', {
+          "doc_type":this.doc_type,
+          "page":page,
+          "per_page":this.page_size,
+          "buwei":this.buwei_name,
+          "doc_name":this.filterData.name
+          })        
       },
       insert(){
-        // 新增时先清空表单数据
+        // 新增时先清空表单数据        
         this.title = '新增文档'
-        this.dialogVisible = true
-        this.formData.doc_type = ''
+        this.dialogVisible_doc = true
         this.formData.name = ''
         this.formData.code = ''
         this.formData.description = ''
       },
       edit(data){
-        // 点编辑时，将对应行数据写入表单
+        // 点编辑时，将对应行数据写入表单   
         this.title = '编辑文档'
-        this.formData.doc_type = data.doc_type
         this.doc_id = data.id
         this.formData.name = data.name
         this.formData.code = data.code
         this.formData.description = data.description
-        this.dialogVisible = true
+        this.dialogVisible_doc = true
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
-        this.dialogVisible = false
+        this.dialogVisible_doc = false
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -269,23 +310,23 @@
         });
       },
       submitData(){
-        // 组织表单需要的数据，创建或更新数据
+        // 组织表单需要的数据，创建或更新数据        
         var data = {
-          doc_type:this.formData.doc_type,
+          doc_type:this.doc_type,
           code:this.formData.code,
           name:this.formData.name,
           buweiid:this.formData.buweiid,
           description:this.formData.description,
         }
         if(this.title === '新增文档'){
-          this.$store.dispatch('guifan_tuzhi_tuji/postDocs',data)
+          this.$store.dispatch('tuzhi/doc/postDocs',data)
         }
         else if(this.title === '编辑文档'){
           data["id"] = this.doc_id
           delete data.buweiid          
-          this.$store.dispatch('guifan_tuzhi_tuji/putDocs',data)
+          this.$store.dispatch('tuzhi/doc/putDocs',data)
         }
-        this.dialogVisible = false
+        this.dialogVisible_doc = false
       },
       remove(data) {
         this.$confirm('此操作將永久刪除該資料, 是否繼續?', '提示', {
@@ -293,87 +334,105 @@
           cancelButtonText: '取消',
         }).then(() => {
           // 删除一条数据之后的页数
-          var total_pages =  Math.ceil((this[`${data.doc_type}_total_datas`]-1) / this.page_size)
-          this.$store.dispatch('guifan_tuzhi_tuji/removeDocs',data);
-          // 解决删除数据后，当前页大于总页数的问题
-          var page = this[`${data.doc_type}_cur_page`] > total_pages ? total_pages : this[`${data.doc_type}_cur_page`];
-          this.getDocs(page,[data.doc_type])
+          var total_pages =  Math.ceil((this.total_datas-1) / this.page_size)
+          // 解决删除一条数据后，当前页大于总页数的问题
+          var page = this.cur_page > total_pages ? total_pages : this.cur_page;
+          var query_args = {
+          "doc_type":this.doc_type,
+          "page":page,
+          "per_page":this.page_size,
+          "buwei":this.buwei_name,
+          "doc_name":this.filterData.name
+          }
+          this.$store.dispatch('tuzhi/doc/removeDocs',{"doc_type":data.doc_type,"id":data.id,"query_args":query_args});
         })
       },
+      file_manage(data){
+        this.$store.dispatch('tuzhi/doc/doc_files/getDocFiles', data.id)  
+        this.doc_id = data.id
+        this.dialogVisible_file = true      
+      },
       handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-      }
+        this.fileList = []
+        done()
+      },
+      // upload相关
+      submitUpload() {
+        this.$refs.upload.submit();
+      },
+      beforeRemove(file, fileList) {
+        return this.$confirm(`确定移除 ${ file.name }？`);
+      },
+      handleAvatarSuccess(file) {
+        this.$store.dispatch('tuzhi/doc/doc_files/getDocFiles', this.doc_id)
+        this.fileList = []
+        this.$message({
+          message: '文件上传成功',
+          type: 'success'
+        });
+      }, 
+      remove_doc_file(data) {
+        this.$confirm('此操作將永久刪除該資料, 是否繼續?', '提示', {
+          confirmButtonText: '確定',
+          cancelButtonText: '取消',
+        }).then(() => {
+          this.$store.dispatch('tuzhi/doc/doc_files/removeDocFiles',data);
+        })
+      },
     },
 
     computed: {
-      guifang_total_pages(){
-        return Math.ceil(this.guifang_total_datas / this.page_size)
+      total_pages(){
+        return Math.ceil(this.total_datas / this.page_size)
       },
-      tuzhi_total_pages(){
-        return Math.ceil(this.tuzhi_total_datas / this.page_size)
-      },
-      tuji_total_pages(){
-        return Math.ceil(this.tuji_total_datas / this.page_size)
-      },
-      // 根据buwiid取得部位名
       buwei_name(){
         if(Boolean(this.filterData.buweiid)){
           return this.buweis.filter(item => item.id === this.filterData.buweiid)[0]["name"]
         }
       },
-      doc_table(){
-        return [
-          {title:"规范管理", name:"2", doc_type:"guifang", total_pages:this.guifang_total_pages, total_datas:this.guifang_total_datas, data:this.guifangs},
-          {title:"图纸管理", name:"3", doc_type:"tuzhi", total_pages:this.tuzhi_total_pages, total_datas:this.tuzhi_total_datas, data:this.tuzhis},
-          {title:"图集管理", name:"4", doc_type:"tuji", total_pages:this.tuji_total_pages, total_datas:this.tuji_total_datas, data:this.tujis},
-        ]
-      },
-      ...mapGetters('guifan_tuzhi_tuji/buwei',{
+      ...mapGetters('tuzhi/doc/buwei',{
         'dantis':'dantis',
         'companies':'companies',
         'buweis':'buweis',
         }
       ),
-      ...mapGetters('guifan_tuzhi_tuji',{
-        'guifangs':'guifangs',
-        'tuzhis':'tuzhis',
-        'tujis':'tujis',
-        'guifang_total_datas':'guifang_total_datas',
-        'tuzhi_total_datas':'tuzhi_total_datas',
-        'tuji_total_datas':'tuji_total_datas',
+      ...mapGetters('tuzhi/doc/doc_files',{
+        'doc_files':'doc_files',
+        }
+      ),
+      ...mapGetters('tuzhi/doc',{
+        'docs':'docs',
+        'total_datas':'total_datas',
 		  }),
     },
 
     watch:{
       "filterData.companyid": function(){
         this.filterData.dantiid = ''
-        this.$store.commit('guifan_tuzhi_tuji/buwei/setDantis',[])
+        this.$store.commit('tuzhi/doc/buwei/setDantis',[])
         if(Boolean(this.filterData.companyid)){
-          this.$store.dispatch('guifan_tuzhi_tuji/buwei/getDantis', {companyid:this.filterData.companyid})
+          this.$store.dispatch('tuzhi/doc/buwei/getDantis', {companyid:this.filterData.companyid})
         }
       },
       "filterData.dantiid": function(){
         this.filterData.buweiid = null
-        this.$store.commit('guifan_tuzhi_tuji/buwei/setBuweis',[])
+        this.$store.commit('tuzhi/doc/buwei/setBuweis',[])
         if(Boolean(this.filterData.dantiid)){
-          this.$store.dispatch('guifan_tuzhi_tuji/buwei/getBuweis', this.filterData.dantiid)
+          this.$store.dispatch('tuzhi/doc/buwei/getBuweis', this.filterData.dantiid)
         }
       },
       "formData.companyid": function(){
         this.formData.dantiid = ''
-        this.$store.commit('guifan_tuzhi_tuji/buwei/setDantis',[])
+        this.$store.commit('tuzhi/doc/buwei/setDantis',[])
         if(Boolean(this.formData.companyid)){
-          this.$store.dispatch('guifan_tuzhi_tuji/buwei/getDantis', {companyid:this.formData.companyid})
+          this.$store.dispatch('tuzhi/doc/buwei/getDantis', {companyid:this.formData.companyid})
         }
       },
       "formData.dantiid": function(){
         this.formData.buweiid = null
-        this.$store.commit('guifan_tuzhi_tuji/buwei/setBuweis',[])
+        this.$store.commit('tuzhi/doc/buwei/setBuweis',[])
         if(Boolean(this.formData.dantiid)){
-          this.$store.dispatch('guifan_tuzhi_tuji/buwei/getBuweis', this.formData.dantiid)
+          this.$store.dispatch('tuzhi/doc/buwei/getBuweis', this.formData.dantiid)
         }
       },
     }     
@@ -384,16 +443,20 @@
   .select span {
     display:inline-block;
     width: 70px;
-    font-size: 13px;
   }
   .select .el-select {
-    width: 200px;
     margin-bottom: 20px;
-  }
+  } 
+  .el-select {
+    width: 200px;
+  } 
   .select {
     width: 700px;
     margin-right: 20px;
     display: inline-block;
+  }
+  .select .el-input {
+    margin-bottom: 20px;
   }
   .el-input {
     width: 200px;
@@ -401,11 +464,17 @@
   .el-textarea {
     width: 200px;
   }
+  .el-button+.el-button {
+    margin-left: 0px;
+  }
 </style>
 
 <style>
   .el-dialog {
     width: 385px !important;
+  }
+  .dialog_file .el-dialog {
+    width: 700px !important;
   }
   .el-table {
     margin-top: 5px;

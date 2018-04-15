@@ -64,9 +64,14 @@
         width="150">
       </el-table-column>
       <el-table-column
-        prop="dantiid"
-        label="单体id"
-        width="120">
+        fixed="right"
+        label="下载二维码"
+        width="100">
+        <template slot-scope="scope">
+          <a :href="`/kong/gongdi_mng/v1.0/danti_qrcode/${scope.row.id}`" :download="scope.row.id">
+            <el-button size="mini" icon="el-icon-download"></el-button>
+          </a>
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"

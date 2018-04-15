@@ -1,24 +1,16 @@
 import axios from 'axios'
 
-// 以后要把docs部分删掉
-
 const state = ()=>{
-    return { doc_files:[], docs:[] }
+    return { doc_files:[] }
 }
 
 const getters = {
     doc_files:state=>{
         return state.doc_files
     },
-    docs:state=>{
-        return state.docs
-    }
 }
 
 const  mutations = {
-    setDocs(state, data){
-        state.docs = data
-    },
     setDocFiles(state, data){
         state.doc_files = data
     },
@@ -29,17 +21,6 @@ const  mutations = {
 }
 
 const actions = {
-    getDocs({commit,getters},buweiid){
-        axios.get(`/kong/gongdi_mng/v1.0/buwei/${buweiid}/jishu_docs`)
-        .then(response=>{
-            if(response.status === 200){
-                commit('setDocs',response.data)
-            }
-        })
-        .catch(function(error){
-			alert('getDocs失败')
-		})
-    },
     getDocFiles({commit},docsid){
         axios.get(`/kong/gongdi_mng/v1.0/docs/${docsid}/files`)
         .then(response=>{

@@ -71,6 +71,16 @@
       </el-table-column>
       <el-table-column
         fixed="right"
+        label="下载二维码"
+        width="100">
+        <template slot-scope="scope">
+          <a :href="`/kong/gongdi_mng/v1.0/gongdis_qrcode/${scope.row.id}`" :download="scope.row.id">
+            <el-button size="mini" icon="el-icon-download"></el-button>
+          </a>
+        </template>
+      </el-table-column>
+      <el-table-column
+        fixed="right"
         label="操作"
         width="130">
         <template slot-scope="scope">
