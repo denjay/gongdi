@@ -2,6 +2,7 @@ import axios from 'axios';
 const state = {
     datas:[],
 	total:0,
+    illegal_pics:[],
 	LSempdatas:[],
 	//isLoad:false,
 	isLSempLoad:false,
@@ -21,8 +22,8 @@ const getters = {
 	emp_illegalstotal:state=>{
 		return state.total;
     },
-	LSemp_illegals:state=>{
-		return state.LSempdatas;
+    eillegal_pics:state=>{
+		return state.illegal_pics;
     },
 	empIllegalActionStatus:state=>{
 		return state.actionStatus;
@@ -155,6 +156,24 @@ const actions = {
 		commit('deleteingEmpIllegal');
 		dispatch('saveEmpIllegal',{});
 	},
+    getEIllegal_pics({dispatch,commit,state},{id}){
+        axios.get('/kong/gongdi_mng/v1.0/illegal/'+id+'/pics')
+            .then(function(response){
+                commit('getEIllegal_pics',response.data)
+            }).catch(function(error){
+            	commit('getEIllegal_pics',response.data)
+        })
+    },
+    removeEPic({dispatch,commit,state},{id}){
+        axios.delete('/kong/gongdi_mng/v1.0/illegal_pics/'+id)
+		.then(function(response){
+			if(response.status === 204){
+				commit('removeEPic',id)
+			}
+		}).catch(function(error){
+
+        })
+    }
 }
 
 // mutations 修改 state
@@ -225,9 +244,16 @@ const mutations = {
 		state.active=state.datas.find(item =>item.id==id);
 		//console.log(id);
 	},
-	setuserid(state,userid){
-		state.userid=userid;
-	}
+    getEIllegal_pics(state,data){
+		state.illegal_pics=data;
+	},
+	clearEIllegal_pics(state,data){
+        state.illegal_pics=[];
+    },
+    removeEPic(state,id){
+		console.log(id)
+		state.illegal_pics=state.illegal_pics.filter(item =>item.id!=id);
+    },
 }
 
 export default {

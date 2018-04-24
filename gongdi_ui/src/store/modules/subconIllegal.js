@@ -3,6 +3,7 @@ const state = {
     datas:[],
 	total:0,
 	LSempdatas:[],
+    illegal_pics:[],
 	//isLoad:false,
 	isLSempLoad:false,
 	isLSptypeLoad:false,
@@ -18,8 +19,8 @@ const getters = {
     subcon_illegals:state=>{
 		return state.datas;
     },
-	subcon_illegalstotal:state=>{
-		return state.total;
+    sillegal_pics:state=>{
+        return state.illegal_pics;
     },
 	LSsubcon_illegals:state=>{
 		return state.LSempdatas;
@@ -158,6 +159,24 @@ const actions = {
 		commit('deleteingSubconIllegal');
 		dispatch('saveSubconIllegal',{});
 	},
+	getSIllegal_pics({dispatch,commit,state},{id}){
+        axios.get('/kong/gongdi_mng/v1.0/illegal/'+id+'/pics')
+            .then(function(response){
+                commit('getSIllegal_pics',response.data)
+            }).catch(function(error){
+            commit('getSIllegal_pics',response.data)
+        })
+    },
+    removeSPic({dispatch,commit,state},{id}){
+        axios.delete('/kong/gongdi_mng/v1.0/illegal_pics/'+id)
+            .then(function(response){
+                if(response.status === 204){
+                    commit('removeSPic',id)
+                }
+            }).catch(function(error){
+
+        })
+    }
 }
 
 // mutations 修改 state
@@ -228,9 +247,16 @@ const mutations = {
 		state.active=state.datas.find(item =>item.id==id);
 		//console.log(id);
 	},
-	setuserid(state,userid){
-		state.userid=userid;
-	}
+    getSIllegal_pics(state,data){
+        state.illegal_pics=data;
+    },
+    clearSIllegal_pics(state,data){
+        state.illegal_pics=[];
+    },
+    removeSPic(state,id){
+        console.log(id)
+        state.illegal_pics=state.illegal_pics.filter(item =>item.id!=id);
+    },
 }
 
 export default {
