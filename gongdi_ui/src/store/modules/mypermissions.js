@@ -1,28 +1,28 @@
 import axios from 'axios';
 const state = {
     data:{},
-	superright:false,
+	superright:true,
     loaded:false,
 	rightLoad:false
-
 }
 
 // getters  �������Ҫ������ state ��� event, �Ǿ���Ҫд��getters
 const getters = {
-    dailyformright:state=>state.data.dailyform||{},
-	monthlyformright:state=>state.data.monthlyform||{},
-	hourstatisticsright:state=>state.data.hourstatistics||{},
-	lr_settingright:state=>state.data.lr_setting||{},
-	abnormalstatisticsright:state=>state.data.abnormalstatistics||{},
 	employeeright:state=>state.data.employee||{},
-	leave_typeright:state=>state.data.leave_type||{},
-	position_typeright:state=>state.data.position_type||{},
-	departright:state=>state.data.depart||{},
-	leave_applicationright:state=>state.data.leave_application||{},
-	leave_checkright:state=>state.data.leave_check||{},
-	annual_leave_balanceright:state=>state.data.annual_leave_balance||{},
-	monthly_leaveright:state=>state.data.monthly_leaves||{},
-	superright:state=>true,
+	illegal_category_right:state=>state.data.illegal_category||{},
+	illegal_type_right:state=>state.data.illegal_type||{},
+	subcontractors_right:state=>state.data.subcontractors||{},
+	emp_illegal_right:state=>state.data.emp_illegal||{},
+	subcon_illegal_right:state=>state.data.subcon_illegal||{},
+	danti_right:state=>state.data.danti||{},
+	gongdi_right:state=>state.data.gongdi||{},
+	buwei_right:state=>state.data.buwei||{},
+	inspect_right:state=>state.data.inspect||{},
+	guifan_right:state=>state.data.guifan||{},
+	tuzhi_right:state=>state.data.tuzhi||{},
+	tuji_right:state=>state.data.tuji||{},
+	jiaodi_right:state=>state.data.inspect||{},
+	super_right:state=>state.superright,
 }
 
 // actions

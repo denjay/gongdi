@@ -40,83 +40,26 @@ axios.interceptors.response.use(function (response) {
 router.beforeEach(function(to,from,next) {
 	function ispermission(to,from,next){
 		let valid=true;
-		//console.log(to.path)
-		if(to.path=='/pages/formmng/dailyform'){
-			if(store.state.mypermissions.data.dailyform){
-				valid=store.state.mypermissions.data.dailyform.ops.indexOf('view')>=0;
-			}
-			else{
-				valid=false;
-			}
-		}
-		if (to.path=='/pages/formmng/monthlyform'){
-			if(store.state.mypermissions.data.monthlyform){
-				valid=store.state.mypermissions.data.monthlyform.ops.indexOf('view')>=0;
-			}
-			else{
-				valid=false;
-			}
-		}
-		if (to.path=='/pages/hourstatisticsmng/hourstatistics'){
-			if(store.state.mypermissions.data.hourstatistics){
-				valid=store.state.mypermissions.data.hourstatistics.ops.indexOf('view')>=0;
-				//console.log(valid);
-			}
-			else{
-				valid=false;
-			}	
-		}
-		if (to.path=='/pages/lr_settingmng/lr_setting'){
-			if(store.state.mypermissions.data.lr_setting){
-				valid=store.state.mypermissions.data.lr_setting.ops.indexOf('view')>=0;
-			}
-			else{
-				valid=false;
-			}
-		}
-		if (to.path=='/pages/leave_systemmng/leave_type'){
-			if(store.state.mypermissions.data.leave_type){
-				valid=store.state.mypermissions.data.leave_type.ops.indexOf('view')>=0;
-			}
-			else{
-				valid=false;
-			}
-		}
-		if (to.path=='/pages/leave_systemmng/position_type'){
-			if(store.state.mypermissions.data.position_type){
-				valid=store.state.mypermissions.data.position_type.ops.indexOf('view')>=0;
-			}
-			else{
-				valid=false;
-			}
-		}
-		if (to.path=='/pages/leave_systemmng/depart'){
-			if(store.state.mypermissions.data.depart){
-				valid=store.state.mypermissions.data.depart.ops.indexOf('view')>=0;
-			}
-			else{
-				valid=false;
-			}
-		}
-		if (to.path=='/pages/leave_systemmng/leave_application'){
-			if(store.state.mypermissions.data.leave_application){
-				valid=store.state.mypermissions.data.leave_application.ops.indexOf('view')>=0;
-			}
-			else{
-				valid=false;
-			}
-		}
-		if (to.path=='/pages/leave_systemmng/leave_check'){
-			if(store.state.mypermissions.data.leave_check){
-				valid=store.state.mypermissions.data.leave_check.ops.indexOf('view')>=0;
-			}
-			else{
-				valid=false;
-			}
-		}
-		if (to.path=='/pages/leave_systemmng/annual_leave_balance'){
-			if(store.state.mypermissions.data.annual_leave_balance){
-				valid=store.state.mypermissions.data.annual_leave_balance.ops.indexOf('view')>=0;
+		const paths = [
+			"/pages/illegalmng/illegal_category",
+			"/pages/illegalmng/illegal_type",
+			"/pages/illegalmng/subcontractors",
+			"/pages/illegalmng/emp_illegal",
+			"/pages/illegalmng/subcon_illegal",
+			"/pages/inspectionmng/danti",
+			"/pages/inspectionmng/gongdi",
+			"/pages/inspectionmng/buwei",
+			"/pages/inspectionmng/inspect",
+			"/pages/jishumng/guifan",
+			"/pages/jishumng/tuzhi",
+			"/pages/jishumng/tuji",
+			"/pages/jishumng/jiaodi"
+		]
+		var index = paths.indexOf(to.path)
+		if(index>=0){
+			var right_name = to.path.split("/").slice(-1)
+			if(store.state.mypermissions.data[right_name]){
+				valid=store.state.mypermissions.data[right_name].ops.indexOf('view')>=0;
 			}
 			else{
 				valid=false;

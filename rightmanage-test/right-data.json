@@ -1,34 +1,87 @@
 {
-  "abnormalstatistics": {
+  "danti": {
     "ops": [
       "view"
     ],
-    "path": "hoursweb/lr_setting/abnormalstatistics"
+    "path": "hoursweb/lr_setting/danti"
   },
-  "annual_leave_balance": {
-    "ops": [
-      "delete",
-      "edit",
-      "insert",
-      "view"
-    ],
-    "path": "hoursweb/lr_setting/annual_leave_balance"
-  },
-  "dailyform": {
+  "gongdi": {
     "ops": [
       "view"
     ],
-    "path": "hoursweb/lr_setting/dailyform"
+    "path": "hoursweb/lr_setting/gongdi"
   },
-  "depart": {
+  "buwei": {
     "ops": [
-      "delete",
-      "edit",
-      "insert",
       "view"
     ],
-    "path": "hoursweb/lr_setting/depart"
+    "path": "hoursweb/lr_setting/buwei"
   },
+  "inspect": {
+    "ops": [
+      "view"
+    ],
+    "path": "hoursweb/lr_setting/inspect"
+  },
+  "guifan": {
+    "ops": [
+      "view"
+    ],
+    "path": "hoursweb/lr_setting/guifan"
+  },
+  "tuzhi": {
+    "ops": [
+      "view"
+    ],
+    "path": "hoursweb/lr_setting/tuzhi"
+  },
+  "tuji": {
+    "ops": [
+      "view"
+    ],
+    "path": "hoursweb/lr_setting/tuji"
+  },
+  "jiaodi": {
+    "ops": [
+      "view"
+    ],
+    "path": "hoursweb/lr_setting/jiaodi"
+  },
+  "illegal_category": {
+    "ops": [
+      "view"
+    ],
+    "path": "hoursweb/lr_setting/illegal_category"
+  },
+  
+  "illegal_type": {
+    "ops": [
+      "view"
+    ],
+    "path": "hoursweb/lr_setting/illegal_type"
+  },
+  
+  "subcontractors": {
+    "ops": [
+      "view"
+    ],
+    "path": "hoursweb/lr_setting/subcontractors"
+  },
+  
+  "emp_illegal": {
+    "ops": [
+      "view"
+    ],
+    "path": "hoursweb/lr_setting/emp_illegal"
+  },
+  
+  "subcon_illegal": {
+    "ops": [
+      "view"
+    ],
+    "path": "hoursweb/lr_setting/subcon_illegal"
+  },
+  
   "employee": {
     "ops": [
       "delete",
@@ -37,68 +90,5 @@
       "view"
     ],
     "path": "hoursweb/lr_setting/employee"
-  },
-  "hourstatistics": {
-    "ops": [
-      "edit",
-      "view"
-    ],
-    "path": "hoursweb/lr_setting/hourstatistics"
-  },
-  "leave_application": {
-    "ops": [
-      "delete",
-      "edit",
-      "insert",
-      "view"
-    ],
-    "path": "hoursweb/lr_setting/leave_application"
-  },
-  "leave_check": {
-    "ops": [
-      "dispatcher_check",
-      "manager_check",
-      "view"
-    ],
-    "path": "hoursweb/lr_setting/leave_check"
-  },
-  "leave_type": {
-    "ops": [
-      "delete",
-      "edit",
-      "insert",
-      "view"
-    ],
-    "path": "hoursweb/lr_setting/leave_type"
-  },
-  "lr_setting": {
-    "ops": [
-      "delete",
-      "edit",
-      "insert",
-      "view"
-    ],
-    "path": "hoursweb/lr_setting/lr_setting"
-  },
-  "monthly_leaves": {
-    "ops": [
-      "view"
-    ],
-    "path": "hoursweb/lr_setting/monthly_leaves"
-  },
-  "monthlyform": {
-    "ops": [
-      "view"
-    ],
-    "path": "hoursweb/lr_setting/monthlyform"
-  },
-  "position_type": {
-    "ops": [
-      "delete",
-      "edit",
-      "insert",
-      "view"
-    ],
-    "path": "hoursweb/lr_setting/position_type"
   }
 }
