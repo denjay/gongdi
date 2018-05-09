@@ -19,7 +19,7 @@ const getters = {
     emp_illegals:state=>{
 		return state.datas;
     },
-    emp_illegalstotal:state=>{
+	emp_illegalstotal:state=>{
 		return state.total;
     },
     eillegal_pics:state=>{
@@ -39,10 +39,10 @@ const actions = {
 		axios.get('/kong/gongdi_mng/v1.0/emp_illegals',{params: data})
 		.then(function(response){
 			console.log("actions",response);
-			commit('loadEmpIllegals',response)
+			commit('loadEmpIllegals',response.data)
 		}).catch(function(error){
 			//console.log("actions");
-			commit('loadEmpIllegals',response)
+			commit('loadEmpIllegals',response.data)
 		})
     },
 	loadLeaveSystememp ({ commit, state }) {
@@ -183,8 +183,8 @@ const mutations = {
 		console.log(state.issuccess);
     },
     loadEmpIllegals(state,data){
-		state.datas=data.data;
-		state.total=parseInt(data.headers['x-total']);
+		state.datas=data;
+		//state.total=data.total
     },
 	loadLeaveSystememp(state,data){
 		state.isLSempLoad=true;
@@ -202,7 +202,6 @@ const mutations = {
 		state.waitcomplete=false;
 		if (isSuccess){
 			state.datas.push(data);
-            state.total+=1;
 			state.active=null;
 			state.actionStatus=0;
 		}else{
@@ -232,7 +231,6 @@ const mutations = {
 		if (isSuccess){
 			state.datas=state.datas.filter(item =>item.id!=state.active['id']);
 			state.actionStatus=0;
-            state.total-=1;
 			state.active=null;
 		}else{
 			state.actionStatus=3;

@@ -2,12 +2,12 @@
 	<div>
 		<el-menu  class="el-menu-vertical-demo" :default-active="$route.path" :router="true">
 			<el-submenu index="accident">
-				<template slot="title"><i class="el-icon-menu"></i>违规管理</template>
+				<template slot="title"><i class="el-icon-menu"></i>违规管理</template>	
 				<el-menu-item v-if="view('illegal_category_right')" index="/pages/illegalmng/illegal_category"><i class="fa fa-list-ol"></i>违规类别</el-menu-item>
-				<el-menu-item v-if="false && view('illegal_type_right')" index="/pages/illegalmng/illegal_type"><i class="fa fa-list-ul"></i>违规类型</el-menu-item>
+				<el-menu-item v-if="view('illegal_type_right')" index="/pages/illegalmng/illegal_type"><i class="fa fa-list-ul"></i>违规类型</el-menu-item>
 				<el-menu-item v-if="view('subcontractors_right')" index="/pages/illegalmng/subcontractors"><i class="fa fa-building"></i>分包商</el-menu-item>
 				<el-menu-item v-if="view('emp_illegal_right')" index="/pages/illegalmng/emp_illegal"><i class="fa fa-times-circle"></i>员工违规</el-menu-item>
-				<el-menu-item v-if="view('subcon_illegal_right')" index="/pages/illegalmng/subcon_illegal"><i class="fa fa-times-circle"></i>分包商违规</el-menu-item>
+				<el-menu-item v-if="view('subcon_illegal_right')" index="/pages/illegalmng/subcon_illegal"><i class="fa fa-times-circle"></i>分包商违规</el-menu-item>				
 			</el-submenu>  
 			<el-submenu index="inspection">
 				<template slot="title"><i class="el-icon-view"></i>巡检管理</template>	
@@ -51,7 +51,7 @@
 					}
 					catch(err) {
 				　　 　　return false;
-				　　}
+				　　} 
 				}
 				else{
 					return false;

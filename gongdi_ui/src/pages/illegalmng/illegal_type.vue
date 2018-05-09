@@ -7,7 +7,7 @@
 					<!-- 操作 -->
 					<el-row type="flex" justify="space-between" style="margin-bottom:5px">
 						<el-col :inline="true"  style="float:left;">
-							<el-select v-if="false" filterable clearable v-model="illegal_categoryid"  style="width:180px;margin-left:20px;" placeholder="违规类别">
+							<el-select filterable clearable v-model="illegal_categoryid"  style="width:180px;margin-left:20px;" placeholder="违规类别">
 								<el-option 
 									v-for="item in illegal_categorys"
 									:key="item.id"
@@ -15,13 +15,13 @@
 									:value="item.id">
 								</el-option>
 							</el-select>
-							<el-button v-if="illegal_type_right.ops.indexOf('insert')>=0" type="primary" @click="insert()" style="margin-left:10px;">新增</el-button>
+							<el-button v-if="employeeright.ops.indexOf('insert')>=0" type="primary" @click="insert()" style="margin-left:10px;">新增</el-button>
                         </el-col>
                     </el-row>
                     <!-- 资料列表-->
                     <el-table :data="illegal_types" stripe v-loading="loading"
 							element-loading-text="资料加载中..."
-							:height="theheight" border>
+							:max-height="theheight" border>     
 						<el-table-column
 							type="index"
 							width="50">
@@ -32,12 +32,12 @@
 						<el-table-column prop="illegal_category_name" style="incenter"
                             label="违规种类">
                         </el-table-column>
-                        <el-table-column v-if="illegal_type_right.ops.indexOf('edit')>=0 || illegal_type_right.ops.indexOf('edit')>=0" 
+                        <el-table-column v-if="employeeright.ops.indexOf('edit')>=0 || employeeright.ops.indexOf('edit')>=0" 
 								fixed="right" 
                             label="操       作" width="130">
                             <template slot-scope="scope">
-                                <el-button v-if="illegal_type_right.ops.indexOf('delete')>=0" size="mini"  icon="el-icon-delete" @click="remove(scope.row)"></el-button>
-                                <el-button v-if="illegal_type_right.ops.indexOf('edit')>=0" size="mini" icon="el-icon-edit" @click="edit(scope.row)"></el-button>
+                                <el-button v-if="employeeright.ops.indexOf('delete')>=0" size="mini"  icon="el-icon-delete" @click="remove(scope.row)"></el-button>
+                                <el-button v-if="employeeright.ops.indexOf('edit')>=0" size="mini" icon="el-icon-edit" @click="edit(scope.row)"></el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -45,13 +45,13 @@
             </div>
         </section>
     </section>   
-	<el-dialog  ref="dialog" :title="title" class="centers" :visible.sync="dialogVisible" width="30%"
+	<el-dialog  ref="dialog" :title="title" class="centers" :visible.sync="dialogVisible" width="32%" 
 	 :close-on-click-modal="false" :close-on-press-escape="false" :before-close="reset">
-        <el-form id="#insertdata"  ref="insertdata" :rules="rules" :model="insertdata"  label-width="60px">
+        <el-form id="#insertdata"  ref="insertdata" :rules="rules" :model="insertdata"  label-width="100px">			
 			<el-form-item label="名称" prop="name">
 				<el-input v-model="insertdata.name"></el-input>
 			</el-form-item>
-			<!--<el-form-item label="违规类别" prop="name">
+			<el-form-item label="违规类别" prop="name">
 				<el-select filterable v-model="insertdata.illegal_categoryid" 
 					clearable  style="margin-left:10px;" @change="selectIllegal_categoryid"
 					placeholder="违规类别">
@@ -62,7 +62,7 @@
 						:value="item.id">
 					</el-option>
 				</el-select>
-			</el-form-item>-->
+			</el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer" >
             <el-button @click="reset">取 消</el-button>
@@ -74,13 +74,12 @@
 <script>
 import {mapGetters} from 'vuex'
 export default {
-    props: ['illegal_categoryid'],
 	data(){
 		return {
 			theheight:"",
 			logicroutes:"",
 			optionsForEmp:[],
-			//illegal_categoryid:0,
+			illegal_categoryid:0,
 			insertsubcompanyid:'',
 			employeeid:"",
 			insertdata:{
@@ -89,22 +88,21 @@ export default {
             },
 			title:'',
 			loading:false,
-            rules:{
-                name: [{ required: true, message: '必填字段', trigger: 'change' }],
-            }
+			rules:{
+			},
 		}
 	},
 	mounted: function() {
 		this.theheight=window.innerHeight-190;
 		this.$nextTick(() => {
-			//this.loadIllegalCategorys();
+			this.loadIllegalCategorys();
 		})
 	},	
 	computed: {   
 		...mapGetters([
 			'illegal_types',
 			'illegal_categorys',
-			'illegal_type_right',
+			'employeeright',
 			'waitITstatus',
 			'illegalTypesActionStatus',
 		]),
@@ -117,13 +115,14 @@ export default {
 		},
 	},
 	watch:{
-		/*illegal_categorys:function(newValue){
+		illegal_categorys:function(newValue){
 			if(newValue.length!=0){
 				this.illegal_categoryid=newValue[0].id;
 			}
-		},*/
+		},
 		illegal_categoryid: function (val, oldVal) {  
 			if(val){
+				console.log('aaa');
 				this.loadIllegalTypes();
 			}		
 		},
@@ -149,24 +148,14 @@ export default {
 		loadPosition_type(){
 			this.$store.dispatch('loadPosition_typeFE');
 		},
-		insert(){
-		    if(this.illegal_categoryid){
-                this.title=chg['illegal_type']+chg['insertdata'];
-                this.resetForm();
-                this.insertdata.illegal_categoryid=this.illegal_categoryid;
-                delete this.insertdata.id;
-                this.$store.commit('insertingIllegal_type',this.insertdata);
-            }
-            else{
-                this.$message({
-                    showClose: true,
-                    message: '请先选择违规类型!',
-                    type: 'error'
-                });
-            }
+		insert(){		
+			this.title=chg['insertdata'];
+			this.resetForm();
+			delete this.insertdata.id;
+			this.$store.commit('insertingIllegal_type',this.insertdata);
 		},
 		edit(data){
-			this.title=chg['illegal_type']+chg['updatedata'];
+			this.title=chg['updatedata'];
 			//this.$refs.dialog.title='资料修改';
 			for (var key in data){
 				this.insertdata[key]=data[key];

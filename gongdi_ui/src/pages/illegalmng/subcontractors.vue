@@ -9,15 +9,15 @@
 						<el-col :inline="true"  style="float:left;">
 							<el-select filterable clearable v-model="filter.companyid"  style="width:180px;margin-left:20px;" placeholder="公司名称">
 								<el-option 
-									v-for="item in companies"
+									v-for="item in companys"
 									:key="item.id"
-									:label="item.company_name"
+									:label="item.comp_name"
 									:value="item.id">
 								</el-option>
 							</el-select>
 							<el-input v-model="filter.manager" style="width:180px;" placeholder="负责人"></el-input>							
 							<el-button type="primary" @click="loadSubcontractors" style="margin-left:10px;">查询</el-button>
-							<el-button v-if="subcontractors_right.ops.indexOf('insert')>=0" type="primary" @click="insert()" style="margin-left:10px;">新增</el-button>
+							<el-button v-if="employeeright.ops.indexOf('insert')>=0" type="primary" @click="insert()" style="margin-left:10px;">新增</el-button>
                         </el-col>
                     </el-row>
                     <!-- 资料列表-->
@@ -49,12 +49,12 @@
 						<el-table-column prop="departure_date" style="incenter"
                             label="离场日期">
                         </el-table-column>
-                        <el-table-column v-if="subcontractors_right.ops.indexOf('edit')>=0 || subcontractors_right.ops.indexOf('edit')>=0" 
+                        <el-table-column v-if="employeeright.ops.indexOf('edit')>=0 || employeeright.ops.indexOf('edit')>=0" 
 								fixed="right" 
                             label="操       作" width="130">
                             <template slot-scope="scope">
-                                <el-button v-if="subcontractors_right.ops.indexOf('delete')>=0" size="mini"  icon="el-icon-delete" @click="remove(scope.row)"></el-button>
-                                <el-button v-if="subcontractors_right.ops.indexOf('edit')>=0" size="mini" icon="el-icon-edit" @click="edit(scope.row)"></el-button>
+                                <el-button v-if="employeeright.ops.indexOf('delete')>=0" size="mini"  icon="el-icon-delete" @click="remove(scope.row)"></el-button>
+                                <el-button v-if="employeeright.ops.indexOf('edit')>=0" size="mini" icon="el-icon-edit" @click="edit(scope.row)"></el-button>
                             </template>
                         </el-table-column>
                     </el-table>					
@@ -73,11 +73,11 @@
     </section>   
 	<el-dialog  ref="dialog" :title="title" class="centers" :visible.sync="dialogVisible" width="32%" 
 	 :close-on-click-modal="false" :close-on-press-escape="false" :before-close="reset">
-        <el-form id="#insertdata"  ref="insertdata" :rules="rules" :model="insertdata"  label-width="80px">
-			<el-form-item label="公司名称" prop="companyid" style="width:100%">
+        <el-form id="#insertdata"  ref="insertdata" :rules="rules" :model="insertdata"  label-width="100px">			
+			<el-form-item label="公司名称" prop="comp_name">
 				<el-select filterable v-model="insertdata.companyid" 
-					clearable style="width:100%" @change="selectcompanyid"
-					placeholder="公司">
+					clearable  style="margin-left:10px;" @change="selectcompanyid"
+					placeholder="公司名称">
 					<el-option 
 						v-for="item in companys"
 						:key="item.id"
@@ -86,34 +86,34 @@
 					</el-option>
 				</el-select>
 			</el-form-item>
-			<el-form-item label="电话" prop="tel" style="width:100%">
+			<el-form-item label="电话" prop="tel">
 				<el-input v-model="insertdata.tel"></el-input>
 			</el-form-item>
-			<el-form-item label="负责人" prop="manager" style="width:100%">
+			<el-form-item label="负责人" prop="manager">
 				<el-input v-model="insertdata.manager"></el-input>
 			</el-form-item>
-			<el-form-item label="营业执照" prop="license" style="width:100%">
+			<el-form-item label="营业执照" prop="license">
 				<el-input v-model="insertdata.license"></el-input>
 			</el-form-item>
-			<el-form-item label="邮件" prop="email" style="width:100%">
+			<el-form-item label="邮件" prop="email">
 				<el-input v-model="insertdata.email"></el-input>
 			</el-form-item>
-			<el-form-item label="进场日期" prop="approach_date" style="width:100%">
+			<el-form-item label="进场日期" prop="approach_date">
 				<el-date-picker
 					v-model="insertdata.approach_date"
 					align="right"
 					type="date"
 					placeholder="选择进场日期"
-					:picker-options="pickerOptions1"  style="width:100%">
+					:picker-options="pickerOptions1">
 				</el-date-picker>
 			</el-form-item>
-			<el-form-item label="离场日期" prop="departure_date" style="width:100%">
+			<el-form-item label="离场日期" prop="departure_date">
 				<el-date-picker
 					v-model="insertdata.departure_date"
 					align="right"
 					type="date"
 					placeholder="选择离场日期"
-					:picker-options="pickerOptions1" style="width:100%">
+					:picker-options="pickerOptions1">
 				</el-date-picker>
 			</el-form-item>
         </el-form>
@@ -148,7 +148,6 @@ export default {
 			title:'',
 			loading:false,
 			rules:{
-                companyid: [{ required: true, message: '请选择公司', trigger: 'change' }],
 			},
 			filter:{
 				comp_name:"",
@@ -159,7 +158,7 @@ export default {
 			companys:[
 				{comp_name: "公司一", id: 1},
 				{comp_name: "公司二", id: 2},
-				{comp_name: "公司三", id: 3},
+				{comp_name: "公司三", id: 3},			
 			],			
 			pickerOptions1: {
 				disabledDate(time) {
@@ -192,16 +191,14 @@ export default {
 		this.theheight=window.innerHeight-190;
 		this.$nextTick(() => {
 			this.loadSubcontractors();
-			this.$store.dispatch('getCompanies');
 		})
 	},	 
 	computed: {   
 		...mapGetters([
 			'subcontractors',
 			'subcontractorstotal',
-            'companies',
 			'illegal_categorys',
-			'subcontractors_right',
+			'employeeright',
 			'waitsubcstatus',
 			'subcontractorsActionStatus',
 		]),
@@ -276,12 +273,7 @@ export default {
         },
 		submitData(){
 			this.$refs.insertdata.validate((valid) => {
-				if (valid) {
-                    for(var key in this.insertdata){
-                        if(!this.insertdata[key]){
-                            delete this.insertdata[key]
-                        }
-                    }
+				if (valid) {                           
 					this.insertdata.comp_name=this.companys.find((item)=>(item.id==this.insertdata.companyid)).comp_name;					
 					if(this.insertdata.approach_date) this.insertdata.approach_date=(new Date(this.insertdata.approach_date)).format('yyyy-MM-dd');
 					if(this.insertdata.departure_date) this.insertdata.departure_date=(new Date(this.insertdata.departure_date)).format('yyyy-MM-dd');

@@ -3,12 +3,8 @@ const state = {
     datas:[],
 	total:0,
 	LSempdatas:[],
-    IllegalTypelksdatas:[],
-    isIllegalTypelkLoad:false,
 	//isLoad:false,
 	isLSempLoad:false,
-	illegal_typetrees:[],
-    isTreeload:false,
 	isLSptypeLoad:false,
 	userid:'',
 	active:null,
@@ -22,14 +18,14 @@ const getters = {
     illegal_types:state=>{
 		return state.datas;
     },
-    illegal_typetrees:state=>{
-		return state.illegal_typetrees;
+	illegal_typestotal:state=>{
+		return state.total;
+    },
+	LSillegal_types:state=>{
+		return state.LSempdatas;
     },
 	illegalTypesActionStatus:state=>{
 		return state.actionStatus;
-    },
-	illegaltyplks:state=>{
-        return state.IllegalTypelksdatas;
     },
 	waitITstatus:state=>{
 		return state.waitcomplete;
@@ -38,16 +34,6 @@ const getters = {
 
 // actions
 const actions = {
-    loadIllTyeTree ({ commit, state }) {
-        if(!state.isTreeload){
-			axios.get('/kong/gongdi_mng/v1.0/illegal__typetrees')
-				.then(function(response){
-					commit('loadIllTyeTree',response.data)
-				}).catch(function(error){
-				commit('loadIllTyeTree',response.data)
-			})
-        }
-    },
     loadIllegalTypes ({ commit, state },data) {
 		axios.get('/kong/gongdi_mng/v1.0/illegal_categorys/'+data+'/types',)
 		.then(function(response){
@@ -69,19 +55,14 @@ const actions = {
 			})
 		}
     },
-	loadIllegalTypelks ({ commit, state,dispatch }) {
-        if(!state.isIllegalTypelkLoad){
-            dispatch('getIllegalTypelks');
-        }
-    },
-    getIllegalTypelks ({ commit}) {
-		axios.get('/kong/gongdi_mng/v1.0/illegal_typelks')
-			.then(function(response){
-				console.log("actions",response);
-				commit('loadIllegalTypelks',response.data)
-			}).catch(function(error){
+	loadLpemployee ({ commit, state },data) {
+		axios.get('/kong/gongdi_mng/v1.0/illegal_types_lk',{params: data})
+		.then(function(response){
+			console.log("actions",response);
+			commit('loademployee',response.data)
+		}).catch(function(error){
 			//console.log("actions");
-			commit('loadIllegalTypelks',response.data)
+			commit('loademployee',response.data)
 		})
     },
 	loadMlemployee ({ commit, state },data) {   
@@ -124,13 +105,12 @@ const actions = {
 			commit('loademployee',response.data)
 		})
     },
-	saveIllegal_type({ commit,state,dispatch},data){
+	saveIllegal_type({ commit,state},data){	
 		if (state.actionStatus==1){  // insert
 			state.waitcomplete=true;
 			axios.post('/kong/gongdi_mng/v1.0/illegal_types',data)
 			.then(function(response){
 				commit('insertedIllegal_type',{isSuccess:true,data:response.data});
-                dispatch('getIllegalTypelks');
 			}).catch(function(error){
 				commit('insertedIllegal_type',{isSuccess:false})
 			})
@@ -149,7 +129,6 @@ const actions = {
 				axios.put('/kong/gongdi_mng/v1.0/illegal_types/'+data['id'],modify)
 				.then(function(response){
 					commit('editedIllegal_type',{isSuccess:true,data:response.data});
-                    dispatch('getIllegalTypelks');
 				}).catch(function(error){
 					commit('editedIllegal_type',{isSuccess:false})
 				})  
@@ -162,7 +141,6 @@ const actions = {
 			axios.delete('/kong/gongdi_mng/v1.0/illegal_types/'+state.active['id'])
 			.then(function(response){
 				commit('deleteedIllegal_type',{isSuccess:true});
-                dispatch('getIllegalTypelks');
 			}).catch(function(error){
 				commit('deleteedIllegal_type',{isSuccess:false})
 			})
@@ -185,17 +163,13 @@ const mutations = {
 		state.issuccess=true;
 		console.log(state.issuccess);
     },
-    loadIllTyeTree(state,data){
-        state.illegal_typetrees=data;
-        state.isTreeload=true;
-    },
     loadIllegalTypes(state,data){
 		state.datas=data;
 		//state.total=data.total
     },
-    loadIllegalTypelks(state,data){
-		state.isIllegalTypelkLoad=true;
-		state.IllegalTypelksdatas=data;
+	loadLeaveSystememp(state,data){
+		state.isLSempLoad=true;
+		state.LSempdatas=data;		
     },
 	resetemp(state){
         //state.employeedata=data;

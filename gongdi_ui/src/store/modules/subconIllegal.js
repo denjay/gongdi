@@ -22,9 +22,6 @@ const getters = {
     sillegal_pics:state=>{
         return state.illegal_pics;
     },
-    subcon_illegalstotal:state=>{
-        return state.total;
-    },
 	LSsubcon_illegals:state=>{
 		return state.LSempdatas;
     },
@@ -45,10 +42,10 @@ const actions = {
 		axios.get('/kong/gongdi_mng/v1.0/subcon_illegals',{params: data})
 		.then(function(response){
 			console.log("actions",response);
-			commit('loadSubconIllegals',response)
+			commit('loadSubconIllegals',response.data)
 		}).catch(function(error){
 			//console.log("actions");
-			commit('loadSubconIllegals',error)
+			commit('loadSubconIllegals',response.data)
 		})
     },
 	loadLeaveSystememp ({ commit, state }) {
@@ -189,8 +186,8 @@ const mutations = {
 		console.log(state.issuccess);
     },
     loadSubconIllegals(state,data){
-		state.datas=data.data;
-		state.total=parseInt(data.headers['x-total']);
+		state.datas=data;
+		//state.total=data.total
     },
 	loadLeaveSystememp(state,data){
 		state.isLSempLoad=true;
@@ -208,7 +205,6 @@ const mutations = {
 		state.waitcomplete=false;
 		if (isSuccess){
 			state.datas.push(data);
-            state.total+=1;
 			state.active=null;
 			state.actionStatus=0;
 		}else{
@@ -237,7 +233,6 @@ const mutations = {
 	deleteedSubconIllegal(state,{isSuccess}){
 		if (isSuccess){
 			state.datas=state.datas.filter(item =>item.id!=state.active['id']);
-            state.total-=1;
 			state.actionStatus=0;
 			state.active=null;
 		}else{
