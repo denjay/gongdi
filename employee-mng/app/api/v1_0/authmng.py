@@ -1,6 +1,6 @@
 ########################################
-# create by :cxh-pc
-# create time :2018-03-15 18:39:26.864684
+# create by :sin
+# create time :2018-05-04 09:39:27.372690
 ########################################
 from app import auth, db, p
 from app.models import Company_auth,Company,new_id

@@ -51,21 +51,22 @@ module.exports = (options = {}) => ({
 		/element-ui[\/\\]lib[\/\\]locale[\/\\]lang[\/\\]zh-CN/,
 		'element-ui/lib/locale/lang/zh-TW'
 	),
-	/*new webpack.DefinePlugin({
+	new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"'
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    })*/
+      /*new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          warnings: false
+        }
+      })*/
   ],
   resolve: {
-    alias: {
-      '~': resolve(__dirname, 'src')
-    }
+        alias: {
+            '~': resolve(__dirname, 'src'),
+            vue: 'vue/dist/vue.common.js',
+        }
   },
   devServer: {
     host: '0.0.0.0',
@@ -73,35 +74,35 @@ module.exports = (options = {}) => ({
 	disableHostCheck: true,
     proxy: {
       '/kong/auth': {
-        target: 'http://192.168.101.171:8008',
+        target: 'http://localhost:8008',
         changeOrigin: true,
         pathRewrite: {
           '^/kong/auth': ''
         }
       },
       '/kong/employeemng': {
-        target: 'http://192.168.101.171:8001',
+        target: 'http://localhost:8001',
         changeOrigin: true,
         pathRewrite: {
           '^/kong': ''
         }
       },
 	  '/kong/rightmanage': {
-        target: 'http://192.168.101.171:8008',
+        target: 'http://localhost:8008',
         changeOrigin: true,
         pathRewrite: {
           '^/kong': ''
         }
       },
 	  '/kong/gongdi_mng': {
-        target: 'http://192.168.101.171:8889',
+        target: 'http://localhost:8889',
         changeOrigin: true,
         pathRewrite: {
           '^/kong': ''
         }
       },
 	  '/kong/': {
-		target: 'http://192.168.101.171:8899',
+		target: 'http://localhost:8899',
 		changeOrigin: true,
 		pathRewrite: {
 		  '^/kong': ''

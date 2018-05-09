@@ -6,6 +6,7 @@ import connexion
 from flask_redis import FlaskRedis
 from flask_sqlalchemy import SQLAlchemy
 from mwauth.kong_auth import KongAuth
+from mwauth.redis_session import RedisSessionInterface
 from config import config
 from flask_cors import CORS
 from mwpermission.permission import Permission
@@ -25,6 +26,7 @@ def create_app_swagger(config_name):
                             )
     yaml_host=app_swg.add_api('./v1_0/employeemng.yaml', arguments={'title': 'api v1.0'})
     app = app_swg.app
+    app.session_interface = RedisSessionInterface(app, rds)
     CORS(app)
     app.config.from_object(conf)
     config[config_name].init_app(app)

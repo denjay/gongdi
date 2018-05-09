@@ -1,6 +1,6 @@
 ########################################
-# create by :cxh-pc
-# create time :2018-03-15 18:39:24.754692
+# create by :sin
+# create time :2018-05-04 09:39:25.266091
 ########################################
 from app.models_base import *
 from flask import current_app
@@ -119,7 +119,7 @@ class Company_auth(Company_auth_base):
         return {"id": self.id,
                 "appuserid": self.appuserid,
                 "companyid": self.companyid,
-                "user_name": '',#self.appuser.name,
+                "user_name": self.appuser.name,
                 "company_name": self.company.company_name,
                 }
 class Depart(Depart_base):

@@ -68,8 +68,8 @@ class DevelopmentConfig(Config):
     LOGIN_USER_NAME = 'super'
     # 开发模式下的用户ID
     LOGIN_USER_ID = '1999'
-    LOGIN_USER_SYSTEMUSER=False
-    LOGIN_USER_MANAGEUSER=True
+    # LOGIN_USER_SYSTEMUSER=False
+    # LOGIN_USER_MANAGEUSER=True
     # LOGIN_USER_MANAGEUSER_ID=''
     SYSTEM_NAME = 'kaoqing'
     # 输出sql
@@ -79,12 +79,12 @@ class DevelopmentConfig(Config):
     # SQLALCHEMY_DATABASE_URI = "mssql+pymssql://sa:111@192.168.101.238:1433/gxtest"
     # SQLALCHEMY_DATABASE_URI = "mysql+mysqldb://root:111@192.168.101.33:3306/ms"
     
-    REDIS_URL ='redis://192.168.101.33:6380/0'
+    REDIS_URL ='redis://192.168.101.70:6380/0'
 class ProductionConfig(Config):
     PORT = int(os.environ.get('WEB_PORT') or conf_parse.getint('web','port',fallback=8001))
     
     # 权限用的系统名
-    SYSTEM_NAME =  os.environ.get('SYSTEM_NAME','kaoqing')
+    SYSTEM_NAME =  os.environ.get('SYSTEM_NAME','scs')
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = DatabaseConf(os.environ.get('DATABASE_NAME','kaoqing')).\
                               sqlalchemy_database_uri() if not is_development else ''
