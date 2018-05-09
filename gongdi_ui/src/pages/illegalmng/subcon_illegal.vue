@@ -7,15 +7,25 @@
 					<!-- 操作 -->
 					<el-row type="flex" justify="space-between" style="margin-bottom:5px">
 						<el-col :inline="true"  style="float:left;">
-							<el-select filterable clearable v-model="illegal_categoryid"  style="width:180px;margin-left:20px;" placeholder="违规类别">
-								<el-option 
-									v-for="item in illegal_categorys"
-									:key="item.id"
-									:label="item.name"
-									:value="item.id">
+							<el-select filterable clearable v-model="filter.illegal_typeid" style="width:180px;margin-left:20px;" placeholder="违规类别">
+								<el-option
+										v-for="item in illegaltyplks"
+										:key="item.id"
+										:label="item.name"
+										:value="item.id">
 								</el-option>
 							</el-select>
-							<el-button v-if="employeeright.ops.indexOf('insert')>=0" type="primary" @click="insert()" style="margin-left:10px;">新增</el-button>
+							<el-select filterable clearable v-model.number="auditing_status" style="width:180px;margin-left:20px;" placeholder="审核状态">
+								<el-option
+										v-for="item in auditing_statuss"
+										:key="item.id"
+										:label="item.name"
+										:value="item.id">
+								</el-option>
+							</el-select>
+							<el-input v-model="filter.subcon_name"  style="width:180px;margin-left:20px;" placeholder="请输入分包商名称"></el-input>
+							<el-button v-if="subcon_illegal_right.ops.indexOf('view')>=0" type="primary" @click="loadSubconIllegals()" style="margin-left:10px;">查询</el-button>
+							<el-button v-if="subcon_illegal_right.ops.indexOf('insert')>=0" type="primary" @click="insert()" style="margin-left:10px;">新增</el-button>
                         </el-col>
                     </el-row>
                     <!-- 资料列表-->
@@ -51,60 +61,73 @@
 						<el-table-column prop="illegal_type_name" style="incenter"
                             label="违规类型">
                         </el-table-column>
-						<el-table-column prop="company_name" style="incenter"
+						<el-table-column prop="comp_name" style="incenter"
                             label="公司名">
                         </el-table-column>
 						<el-table-column prop="subcon_com_name" style="incenter"
                             label="分包商公司名">
                         </el-table-column>
-                        <el-table-column v-if="employeeright.ops.indexOf('edit')>=0 || employeeright.ops.indexOf('edit')>=0" 
+                        <el-table-column v-if="subcon_illegal_right.ops.indexOf('edit')>=0 || subcon_illegal_right.ops.indexOf('edit')>=0" 
 								fixed="right" 
                             label="操       作" width="130">
                             <template slot-scope="scope">
-                                <el-button v-if="employeeright.ops.indexOf('delete')>=0" size="mini"  icon="el-icon-delete" @click="remove(scope.row)"></el-button>
-                                <el-button v-if="employeeright.ops.indexOf('edit')>=0" size="mini" icon="el-icon-edit" @click="edit(scope.row)"></el-button>
+                                <el-button v-if="subcon_illegal_right.ops.indexOf('delete')>=0" size="mini"  icon="el-icon-delete" @click="remove(scope.row)"></el-button>
+                                <el-button v-if="subcon_illegal_right.ops.indexOf('edit')>=0" size="mini" icon="el-icon-edit" @click="edit(scope.row)"></el-button>
                             </template>
                         </el-table-column>
                     </el-table>
+					<el-col>
+						<el-pagination style="text-align:center"
+									   :current-page="filter.page"
+									   :page-size="filter.per_page"
+									   layout="total, prev, pager, next"
+									   :total="subcon_illegalstotal"
+									   @current-change="pageCurrentChange">
+						</el-pagination>
+					</el-col>
                 </div>
             </div>
         </section>
     </section>   
-	<el-dialog  ref="dialog" :title="title" class="centers" :visible.sync="dialogVisible" width="32%" 
-	 :close-on-click-modal="false" :close-on-press-escape="false" :before-close="reset">
+	<el-dialog  ref="dialog" :title="title" class="centers" :visible.sync="dialogVisible" width="40%"
+	 :close-on-click-modal="false" :close-on-press-escape="false" :before-close="reset" style="margin-top: -50px">
         <el-form id="#insertdata"  ref="insertdata" :rules="rules" :model="insertdata"  label-width="100px">	
 			 <el-tabs v-model="activeName" @tab-click="handleClick">
-				<el-tab-pane label="违规管理" name="first" style="overflow-y:scroll;height:330px;">
-					<el-form-item label="违规时间" prop="illegal_time">
+				<el-tab-pane label="违规管理" name="first" style="overflow-y:scroll;height:400px;">
+					<el-form-item label="违规时间" prop="illegal_time" style="width:90%">
 						<el-date-picker
 							v-model="insertdata.illegal_time"
 							align="right"
 							type="datetime"
 							placeholder="选择违规时间"
-							:picker-options="pickerOptions1">
+							:picker-options="pickerOptions1" style="width:100%">
 						</el-date-picker>
 					</el-form-item>
-					<el-form-item label="整改时间" prop="rectify_time">
+					<el-form-item label="整改时间" prop="rectify_time" style="width:90%">
 						<el-date-picker
 							v-model="insertdata.rectify_time"
 							align="right"
 							type="datetime"
 							placeholder="选择整改时间"
-							:picker-options="pickerOptions1">
+							:picker-options="pickerOptions1" style="width:100%">
 						</el-date-picker>
 					</el-form-item>
-					<el-form-item label="违规明细" prop="memo">
+					<el-form-item label="违规明细" prop="memo" style="width:90%">
 						<el-input v-model="insertdata.memo"></el-input>
 					</el-form-item>
-					<el-form-item prop="recorder" label="记录员">
+					<el-form-item prop="recorder" label="记录员" style="width:90%">
 						<el-input v-model="insertdata.recorder"></el-input>
 					</el-form-item>
-					<el-form-item prop="auditing_status" label="审状态核">
-						<el-input v-model.number="insertdata.auditing_status"></el-input>
+					<el-form-item prop="auditing_status" label="审状态核" style="width:90%">
+						<el-radio-group v-model.number="insertdata.auditing_status">
+							<el-radio :label="0">未审核</el-radio>
+							<el-radio :label="1">审核通过</el-radio>
+							<el-radio :label="2">审核未通过</el-radio>
+						</el-radio-group>
 					</el-form-item>
-					<el-form-item label="整改人" prop="rectify_empid">
+					<el-form-item label="整改人" prop="rectify_empid" style="width:90%">
 						<el-select filterable v-model="insertdata.rectify_empid" 
-							clearable  style="margin-left:10px;" @change="selectIllegal_categoryid"
+							clearable   style="width:100%" @change="selectIllegal_categoryid"
 							placeholder="整改人">
 							<el-option 
 								v-for="item in employees"
@@ -114,34 +137,29 @@
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="违规类型" prop="illegal_categoryid">
-						<el-select filterable v-model="insertdata.illegal_typeid"
-							clearable  style="margin-left:10px;"
-							placeholder="违规类型">
-							<el-option 
-								v-for="item in illegal_categorys"
-								:key="item.id"
-								:label="item.name"
-								:value="item.id">
-							</el-option>
-						</el-select>
+					<el-form-item label="违规类型" prop="casillegal_typeid" style="width:90%">
+							<el-cascader
+									expand-trigger="hover" :show-all-levels="false"
+									:options="illegal_typetrees"
+									@change="cashandleChange" v-model="insertdata.casillegal_typeid" style="width:100%">
+							</el-cascader>
 					</el-form-item>
-					<el-form-item label="公司名" prop="companyid">
+					<el-form-item label="公司名" prop="companyid" style="width:90%">
 						<el-select filterable v-model="insertdata.companyid" 
-							clearable  style="margin-left:10px;"
+							clearable   style="width:100%"
 							placeholder="公司名">
 							<el-option 
-								v-for="item in companys"
+								v-for="item in companies"
 								:key="item.id"
-								:label="item.comp_name"
+								:label="item.company_name"
 								:value="item.id">
 							</el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="分包商公司名" prop="subcontractorid">
+					<el-form-item label="分包商" prop="subcontractorid" style="width:90%">
 						<el-select filterable v-model="insertdata.subcontractorid" 
-							clearable  style="margin-left:10px;"
-							placeholder="公司名">
+							clearable   style="width:100%"
+							placeholder="分包商">
 							<el-option 
 								v-for="item in subcontractorlks"
 								:key="item.id"
@@ -151,7 +169,7 @@
 						</el-select>
 					</el-form-item>
 				</el-tab-pane>
-				 <el-tab-pane label="图片管理" name="second"  style="overflow-y:scroll;height:330px;">
+				 <el-tab-pane label="图片管理" name="second"  style="overflow-y:scroll;height:400px;">
 					 <el-form-item>
 						 <el-upload
 								 class="upload-demo"
@@ -165,7 +183,8 @@
 								 :on-success="handleAvatarSuccess"
 								 :auto-upload="false"
 								 :file-list="fileList">
-							 <el-button size="small" style="margin-left:-20px;" type="primary">选择文件</el-button>
+							 <el-button v-if="illegal_pic_right.ops.indexOf('insert')>=0" slot="trigger" size="small" type="primary">选取文件</el-button>
+							 <el-button v-if="illegal_pic_right.ops.indexOf('insert')>=0" style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
 						 </el-upload>
 					 </el-form-item>
 					 <el-table
@@ -182,7 +201,8 @@
 						 </el-table-column>
 						 <el-table-column label="操作" width="130">
 							 <template slot-scope="scope">
-								 <el-button @click="removePic(scope.row)" size="mini" icon="el-icon-delete"></el-button>
+								 <el-button v-if="illegal_pic_right.ops.indexOf('view')>=0"  @click="removePic(scope.row)" size="mini" icon="el-icon-delete"></el-button>
+								 <el-button v-if="illegal_pic_right.ops.indexOf('delete')>=0"  size="mini" @click="oppic(`/kong/gongdi_mng/v1.0/illegal_pics/${scope.row.id}`)" icon="el-icon-view"></el-button>
 							 </template>
 						 </el-table-column>
 					 </el-table>
@@ -208,19 +228,17 @@ export default {
 			insertsubcompanyid:'',
 			employeeid:"",
 			insertdata:{
-				auditing_status:'',
+				auditing_status:0,
 				companyid:'',
 				illegal_time:'',
-				//illegal_type_name:'',
 				illegal_typeid:'',
 				memo:'',
 				recorder:'',
-				//rectify_emp_name:'',
 				rectify_empid:'',
 				rectify_time:'',
-				//subcon_com_name:'',
 				subcontractorid:'',
 				fileList:[],
+                casillegal_typeid:[],
             },
 			title:'',
 			fileList:[],
@@ -228,11 +246,14 @@ export default {
 			loading:false,
 			illegal_categoryid:'',
 			rules:{
+                companyid: [{ required: true, message: '请选择公司', trigger: 'change' }],
+                casillegal_typeid: [{ required: true, message: '请选择违规类型', trigger: 'change' }],
 			},
+            auditing_status:-1,
 			filter:{
 				auditing_status:0,
 				subcon_name:"",
-				illegal_typeid:0,
+                illegal_typeid:null,
 				page:1,
 				per_page:30,
 			},	
@@ -265,13 +286,21 @@ export default {
 						  picker.$emit('pick', date);
 					}
 				}]
-			}
+			},
+            auditing_statuss:[
+                {"id":-1,"name":"未审核"},
+                {"id":1,"name":"审核通过"},
+                {"id":2,"name":"审核未通过"}
+            ]
 		}
 	},
 	mounted: function() {
 		this.theheight=window.innerHeight-190;
         this.$nextTick(() => {
             this.loadSubconIllegals();
+            this.loadIllegaltypetree();
+            this.loadIllegaltype();
+            this.$store.dispatch('getCompanies');
         })
 	},	
 	filters: {
@@ -286,7 +315,12 @@ export default {
 			'subcontractorlks',
 			'subcon_illegals',
 			'illegal_categorys',
-			'employeeright',
+            'illegaltyplks',
+            'subcon_illegalstotal',
+            'companies',
+            'illegal_typetrees',
+			'subcon_illegal_right',
+			'illegal_pic_right',
 			'waitSIstatus',
 			'subconIllegalStatus',
             'sillegal_pics'
@@ -302,11 +336,20 @@ export default {
 	watch:{
 	},
 	methods: {
+        submitUpload() {
+            this.$refs.upload.submit();
+        },
+        oppic(url){
+            window.open(url,'_blank','')
+		},
         handleClick(tab, event) {
             console.log(tab, event);
         },
         beforeRemove(file, fileList) {
             return this.$confirm(`确定移除 ${ file.name }？`);
+        },
+        loadIllegaltypetree(){
+            this.$store.dispatch('loadIllTyeTree');
         },
         handleAvatarSuccess(file) {
             this.getPics();
@@ -316,6 +359,9 @@ export default {
             });
             this.fileList=[];
         },
+        cashandleChange(val){
+            console.log(val);
+        },
         getPics(){
             this.$store.dispatch('getSIllegal_pics',{id:this.insertdata.id});
         },
@@ -323,7 +369,21 @@ export default {
             this.insertdata.fileList = fileList;
         },
         loadSubconIllegals(){
+            for(var key in this.filter){
+				if(!this.filter[key]){
+					delete this.filter[key]
+				}
+			}
+			if(this.auditing_status && this.auditing_status==-1){
+                this.filter.auditing_status=0;
+			}
+			else if(this.auditing_status){
+                this.filter.auditing_status=this.auditing_status;
+			}
             this.$store.dispatch('loadSubconIllegals',this.filter);
+        },
+        loadIllegaltype(){
+            this.$store.dispatch('loadIllegalTypelks');
         },
 		loadcompany(){
 			this.$store.dispatch('loadSubcompany');
@@ -355,6 +415,7 @@ export default {
 			for (var key in data){
 				this.insertdata[key]=data[key];
 			};
+            this.insertdata.casillegal_typeid=data.illegal_typetree;
             this.getPics();
 			this.$store.dispatch('editSubconIllegal',{id:data.id});
         },
@@ -384,8 +445,18 @@ export default {
 		submitData(){
 			this.$refs.insertdata.validate((valid) => {
 				if (valid) {
-					this.$refs.upload.submit();
-					//this.$store.dispatch('saveSubconIllegal',this.insertdata);
+					//this.$refs.upload.submit();delete this.insertdata.illegal_typetree;
+                    this.insertdata.illegal_typeid=parseInt(this.insertdata.casillegal_typeid[this.insertdata.casillegal_typeid.length-1]);
+                    var a=new Date();
+                    this.insertdata.id=a.getFullYear()+a.getHours()+a.getMilliseconds();
+                    for(var key in this.insertdata){
+                        if(!this.insertdata[key]){
+                            delete this.insertdata[key]
+                        }
+                    }
+                    delete this.insertdata.illegal_typetree;
+					this.$store.dispatch('saveSubconIllegal',this.insertdata);
+
 				}
                 else {
                     return false;
@@ -407,18 +478,16 @@ export default {
 		},
 		resetForm(){
 			this.insertdata={
-				auditing_status:'',
-				companyid:'',
-				illegal_time:'',
-				//illegal_type_name:'',
-				illegal_typeid:'',
-				memo:'',
-				recorder:'',
-				//rectify_emp_name:'',
-				rectify_empid:'',
-				rectify_time:'',
-				//subcon_com_name:'',
-				subcontractorid:'',
+                auditing_status:0,
+                companyid:'',
+                illegal_time:'',
+                illegal_typeid:'',
+                memo:'',
+                recorder:'',
+                rectify_empid:'',
+                rectify_time:'',
+                subcontractorid:'',
+                casillegal_typeid:[],
             };
 		},
 		pageCurrentChange(val) {   

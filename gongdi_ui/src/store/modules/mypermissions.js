@@ -6,7 +6,6 @@ const state = {
 	rightLoad:false
 }
 
-// getters  �������Ҫ������ state ��� event, �Ǿ���Ҫд��getters
 const getters = {
 	employeeright:state=>state.data.employee||{},
 	illegal_category_right:state=>state.data.illegal_category||{},
@@ -14,6 +13,7 @@ const getters = {
 	subcontractors_right:state=>state.data.subcontractors||{},
 	emp_illegal_right:state=>state.data.emp_illegal||{},
 	subcon_illegal_right:state=>state.data.subcon_illegal||{},
+    illegal_pic_right:state=>state.data.illegal_pic||{},
 	danti_right:state=>state.data.danti||{},
 	gongdi_right:state=>state.data.gongdi||{},
 	buwei_right:state=>state.data.buwei||{},
@@ -29,7 +29,7 @@ const getters = {
 const actions = {
     loadpermissions ({ commit, state }) {
 		if (!state.loaded){			
-			axios.get(adapterUrl+'rightmanage/v1.0/cur-permissions?systemname=hoursweb')
+			axios.get(adapterUrl+'rightmanage/v1.0/cur-permissions?systemname=scs')
 			.then(function(response){
 				commit('loadpermissions',response.data)
 			}).catch(function(error){

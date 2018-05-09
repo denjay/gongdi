@@ -1,3 +1,5 @@
 {
-  "presets": ["vue-app"]
-}
+	"presets": ["vue-app"],
+	"plugins": ["transform-runtime"],
+	"comments": false
+	}
